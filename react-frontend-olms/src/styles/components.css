@@ -145,8 +145,7 @@
   background-color: #fff3cd;
   border-color: #ffeaa7;
 }
-/* Navba
-r styles */
+/* Navbar styles */
 .navbar {
   background-color: var(--primary-color);
   color: white;
@@ -574,8 +573,9 @@ r styles */
   .sidebar-open {
     transform: none;
   }
-}/
-* Loading Spinner styles */
+}
+
+/* Loading Spinner styles */
 .loading-spinner-container {
   display: flex;
   flex-direction: column;
