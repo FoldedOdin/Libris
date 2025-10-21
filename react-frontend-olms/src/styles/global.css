@@ -32,35 +32,47 @@ code {
     monospace;
 }
 
-/* Enhanced CSS Variables for consistent theming */
+/* Enhanced CSS Variables for Light Theme */
 :root {
-  /* Brand Colors */
+  /* Primary Color Palette - Light Theme */
   --primary-color: #007bff;
   --primary-dark: #0056b3;
   --primary-light: #66b3ff;
+  --primary-50: #e3f2fd;
+  --primary-100: #bbdefb;
+  --primary-500: #2196f3;
+  --primary-600: #1976d2;
+  --primary-700: #1565c0;
+  
+  /* Secondary and Accent Colors */
   --secondary-color: #6c757d;
   --success-color: #28a745;
   --danger-color: #dc3545;
   --warning-color: #ffc107;
   --info-color: #17a2b8;
   
-  /* Background Colors */
+  /* Light Theme Background Colors */
   --bg-primary: #ffffff;
   --bg-secondary: #f8f9fa;
   --bg-tertiary: #e9ecef;
+  --bg-card: #ffffff;
+  --bg-navbar: #ffffff;
+  --bg-sidebar: #f8f9fa;
   --bg-dark: #343a40;
   --bg-light: #f8f9fa;
   
-  /* Text Colors */
+  /* Light Theme Text Colors - High Contrast */
   --text-primary: #212529;
-  --text-secondary: #6c757d;
-  --text-muted: #868e96;
+  --text-secondary: #495057;
+  --text-muted: #6c757d;
   --text-light: #ffffff;
   --text-dark: #343a40;
+  --text-link: #0066cc;
   
-  /* Border Colors */
+  /* Light Theme Border Colors */
   --border-color: #dee2e6;
   --border-light: #e9ecef;
+  --border-medium: #dee2e6;
   --border-dark: #adb5bd;
   
   /* Typography Scale */
@@ -102,12 +114,14 @@ code {
   --border-radius-xl: 0.75rem;   /* 12px */
   --border-radius-full: 9999px;
   
-  /* Shadows */
+  /* Light Theme Shadows - Soft and Subtle */
   --box-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   --box-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --box-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --box-shadow-navbar: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --box-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.1);
   
   /* Z-Index Scale */
   --z-dropdown: 1000;
@@ -122,6 +136,20 @@ code {
   --transition-fast: 0.15s ease-in-out;
   --transition-normal: 0.3s ease-in-out;
   --transition-slow: 0.5s ease-in-out;
+  
+  /* Light Theme Component Colors */
+  --input-bg: #ffffff;
+  --input-border: #ced4da;
+  --input-border-focus: #80bdff;
+  --button-primary-bg: #007bff;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: #6c757d;
+  --button-secondary-text: #ffffff;
+  --table-header-bg: #f8f9fa;
+  --table-stripe-bg: #f8f9fa;
+  --navbar-text: #212529;
+  --sidebar-active-bg: #e3f2fd;
+  --sidebar-active-accent: #1976d2;
   
   /* Breakpoints (for reference in media queries) */
   --breakpoint-sm: 576px;
@@ -152,7 +180,7 @@ p {
 }
 
 a {
-  color: var(--primary-color);
+  color: var(--text-link);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
@@ -460,24 +488,86 @@ a:hover {
   .d-sm-none { display: none; }
   .d-sm-block { display: block; }
   .d-sm-flex { display: flex; }
+  .d-sm-inline { display: inline; }
+  .d-sm-inline-block { display: inline-block; }
 }
 
 @media (max-width: 767.98px) {
   .d-md-none { display: none; }
   .d-md-block { display: block; }
   .d-md-flex { display: flex; }
+  .d-md-inline { display: inline; }
+  .d-md-inline-block { display: inline-block; }
 }
 
 @media (max-width: 991.98px) {
   .d-lg-none { display: none; }
   .d-lg-block { display: block; }
   .d-lg-flex { display: flex; }
+  .d-lg-inline { display: inline; }
+  .d-lg-inline-block { display: inline-block; }
 }
 
 @media (max-width: 1199.98px) {
   .d-xl-none { display: none; }
   .d-xl-block { display: block; }
   .d-xl-flex { display: flex; }
+  .d-xl-inline { display: inline; }
+  .d-xl-inline-block { display: inline-block; }
+}
+
+/* Additional responsive text utilities */
+@media (max-width: 767.98px) {
+  .text-md-left { text-align: left; }
+  .text-md-center { text-align: center; }
+  .text-md-right { text-align: right; }
+}
+
+@media (max-width: 575.98px) {
+  .text-sm-left { text-align: left; }
+  .text-sm-center { text-align: center; }
+  .text-sm-right { text-align: right; }
+}
+
+/* Responsive spacing utilities for mobile */
+@media (max-width: 767.98px) {
+  .p-md-0 { padding: 0; }
+  .p-md-1 { padding: var(--spacing-xs); }
+  .p-md-2 { padding: var(--spacing-sm); }
+  .p-md-3 { padding: var(--spacing-md); }
+  
+  .m-md-0 { margin: 0; }
+  .m-md-1 { margin: var(--spacing-xs); }
+  .m-md-2 { margin: var(--spacing-sm); }
+  .m-md-3 { margin: var(--spacing-md); }
+  
+  .mt-md-0 { margin-top: 0; }
+  .mt-md-1 { margin-top: var(--spacing-xs); }
+  .mt-md-2 { margin-top: var(--spacing-sm); }
+  .mt-md-3 { margin-top: var(--spacing-md); }
+  
+  .mb-md-0 { margin-bottom: 0; }
+  .mb-md-1 { margin-bottom: var(--spacing-xs); }
+  .mb-md-2 { margin-bottom: var(--spacing-sm); }
+  .mb-md-3 { margin-bottom: var(--spacing-md); }
+}
+
+@media (max-width: 575.98px) {
+  .p-sm-0 { padding: 0; }
+  .p-sm-1 { padding: var(--spacing-xs); }
+  .p-sm-2 { padding: var(--spacing-sm); }
+  
+  .m-sm-0 { margin: 0; }
+  .m-sm-1 { margin: var(--spacing-xs); }
+  .m-sm-2 { margin: var(--spacing-sm); }
+  
+  .mt-sm-0 { margin-top: 0; }
+  .mt-sm-1 { margin-top: var(--spacing-xs); }
+  .mt-sm-2 { margin-top: var(--spacing-sm); }
+  
+  .mb-sm-0 { margin-bottom: 0; }
+  .mb-sm-1 { margin-bottom: var(--spacing-xs); }
+  .mb-sm-2 { margin-bottom: var(--spacing-sm); }
 }
 
 /* Performance optimizations */
@@ -537,32 +627,108 @@ a:hover {
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-color: #1a1a1a;
-    --text-color: #ffffff;
-    --border-color: #333333;
-    --card-bg: #2d2d2d;
-  }
-  
-  body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-  }
-  
-  .card {
-    background-color: var(--card-bg);
-    border-color: var(--border-color);
-  }
+/* Light theme optimizations */
+:root {
+  /* Light theme specific optimizations */
+  --bg-color: var(--bg-primary);
+  --text-color: var(--text-primary);
+  --card-bg: var(--bg-card);
+}
+
+/* Ensure light theme consistency */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.card {
+  background-color: var(--bg-card);
+  border-color: var(--border-light);
+  box-shadow: var(--box-shadow-card);
+}
+
+/* Light Theme Utility Classes */
+.bg-navbar {
+  background-color: var(--bg-navbar);
+  box-shadow: var(--box-shadow-navbar);
+}
+
+.bg-sidebar {
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-light);
+}
+
+.bg-card {
+  background-color: var(--bg-card);
+  box-shadow: var(--box-shadow-card);
+}
+
+.text-navbar {
+  color: var(--navbar-text);
+}
+
+.text-link {
+  color: var(--text-link);
+}
+
+.border-light-theme {
+  border-color: var(--border-light);
+}
+
+.border-medium-theme {
+  border-color: var(--border-medium);
+}
+
+/* Light theme button utilities */
+.btn-light-theme {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  border: 1px solid var(--button-primary-bg);
+}
+
+.btn-light-theme:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.btn-secondary-light {
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--button-secondary-bg);
+}
+
+/* Light theme form utilities */
+.form-control-light {
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-primary);
+}
+
+.form-control-light:focus {
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Light theme table utilities */
+.table-light-theme {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.table-light-theme thead th {
+  background-color: var(--table-header-bg);
+  border-bottom: 2px solid var(--border-medium);
+}
+
+.table-light-theme tbody tr:nth-child(even) {
+  background-color: var(--table-stripe-bg);
 }
 
 /* Print styles */
 @media print {
   .no-print,
   .navbar,
-  .sidebar,
-  .performance-monitor {
+  .sidebar {
     display: none !important;
   }
   

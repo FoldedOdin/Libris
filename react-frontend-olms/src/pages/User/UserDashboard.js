@@ -118,9 +118,9 @@ const UserDashboard = () => {
     <div>
       <Navbar />
       <div className="main-content">
-        <div className="admin-dashboard">
+        <div className="user-dashboard">
           {/* Dashboard Header */}
-          <div className="dashboard-header">
+          <div className="user-dashboard-header">
             <h1>Welcome back, {user?.first_name || user?.username}!</h1>
             <p>Here's an overview of your library activity</p>
           </div>
@@ -129,60 +129,52 @@ const UserDashboard = () => {
 
           {/* Dashboard Statistics */}
           <div className="dashboard-stats">
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-icon">📚</div>
-                <div className="stat-content">
-                  <h3>{dashboardData.stats.totalBorrowed}</h3>
-                  <p>Currently Borrowed</p>
-                </div>
+            <div className="user-stats-grid">
+              <div className="user-stat-card">
+                <span className="user-stat-number">{dashboardData.stats.totalBorrowed}</span>
+                <span className="user-stat-label">Currently Borrowed</span>
               </div>
               
-              <div className={`stat-card ${dashboardData.stats.overdueBooksCount > 0 ? 'overdue' : ''}`}>
-                <div className="stat-icon">⚠️</div>
-                <div className="stat-content">
-                  <h3>{dashboardData.stats.overdueBooksCount}</h3>
-                  <p>Overdue Books</p>
-                </div>
+              <div className={`user-stat-card ${dashboardData.stats.overdueBooksCount > 0 ? 'overdue' : ''}`}>
+                <span className="user-stat-number">{dashboardData.stats.overdueBooksCount}</span>
+                <span className="user-stat-label">Overdue Books</span>
               </div>
               
-              <div className="stat-card">
-                <div className="stat-icon">💝</div>
-                <div className="stat-content">
-                  <h3>{dashboardData.stats.totalDonations}</h3>
-                  <p>Total Donations</p>
-                </div>
+              <div className="user-stat-card">
+                <span className="user-stat-number">{dashboardData.stats.totalDonations}</span>
+                <span className="user-stat-label">Total Donations</span>
               </div>
               
-              <div className="stat-card">
-                <div className="stat-icon">💰</div>
-                <div className="stat-content">
-                  <h3>{dashboardData.stats.totalSales}</h3>
-                  <p>Total Sales</p>
-                </div>
+              <div className="user-stat-card">
+                <span className="user-stat-number">{dashboardData.stats.totalSales}</span>
+                <span className="user-stat-label">Total Sales</span>
               </div>
             </div>
           </div>
 
           {/* Quick Actions */}
-          <div className="dashboard-actions">
+          <div className="user-quick-actions">
             <h2>Quick Actions</h2>
-            <div className="actions-grid">
-              <Link to="/books" className="action-btn primary">
-                <span className="action-icon">🔍</span>
-                Browse Books
+            <div className="user-actions-grid">
+              <Link to="/books" className="user-action-card">
+                <div className="user-action-icon">🔍</div>
+                <div className="user-action-title">Browse Books</div>
+                <div className="user-action-description">Discover new books to borrow</div>
               </Link>
-              <Link to="/my-books" className="action-btn info">
-                <span className="action-icon">📖</span>
-                My Borrowed Books
+              <Link to="/my-books" className="user-action-card">
+                <div className="user-action-icon">📖</div>
+                <div className="user-action-title">My Borrowed Books</div>
+                <div className="user-action-description">View your current loans</div>
               </Link>
-              <Link to="/donate" className="action-btn success">
-                <span className="action-icon">💝</span>
-                Donate Books
+              <Link to="/donate" className="user-action-card">
+                <div className="user-action-icon">💝</div>
+                <div className="user-action-title">Donate Books</div>
+                <div className="user-action-description">Share books with the community</div>
               </Link>
-              <Link to="/sell" className="action-btn warning">
-                <span className="action-icon">💰</span>
-                Sell Books
+              <Link to="/sell" className="user-action-card">
+                <div className="user-action-icon">💰</div>
+                <div className="user-action-title">Sell Books</div>
+                <div className="user-action-description">List books for sale</div>
               </Link>
             </div>
           </div>

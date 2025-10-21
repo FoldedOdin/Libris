@@ -104,17 +104,19 @@ export const useVirtualScroll = (items, itemHeight, containerHeight) => {
   };
 };
 
-// Hook for measuring component performance
+// Hook for measuring component performance - DISABLED for production
 export const usePerformanceMonitor = (componentName) => {
   const renderCount = useRef(0);
   const startTime = useRef(performance.now());
 
   useEffect(() => {
     renderCount.current += 1;
-    const endTime = performance.now();
-    const renderTime = endTime - startTime.current;
-
-    if (process.env.NODE_ENV === 'development') {
+    
+    // Performance monitoring disabled in production for cleaner UI
+    if (process.env.NODE_ENV === 'development' && 
+        process.env.REACT_APP_SHOW_PERFORMANCE === 'true') {
+      const endTime = performance.now();
+      const renderTime = endTime - startTime.current;
       console.log(`${componentName} render #${renderCount.current}: ${renderTime.toFixed(2)}ms`);
     }
 
@@ -150,10 +152,13 @@ export const useOptimizedMemo = (factory, dependencies) => {
   return useMemo(factory, dependencies);
 };
 
-// Hook for Web Vitals monitoring
+// Hook for Web Vitals monitoring - DISABLED for production
 export const useWebVitals = () => {
   useEffect(() => {
-    if (process.env.REACT_APP_ENABLE_ANALYTICS === 'true') {
+    // Performance monitoring disabled in production for cleaner UI
+    if (process.env.NODE_ENV === 'development' && 
+        process.env.REACT_APP_ENABLE_ANALYTICS === 'true' &&
+        process.env.REACT_APP_SHOW_PERFORMANCE === 'true') {
       // Dynamically import web-vitals to avoid increasing bundle size
       import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
         getCLS(console.log);

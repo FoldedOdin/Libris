@@ -5,8 +5,8 @@ import { ToastProvider } from './contexts/ToastContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import ErrorBoundary from './components/common/ErrorBoundary';
-import PerformanceMonitor from './components/common/PerformanceMonitor';
-import { useWebVitals } from './hooks/usePerformance';
+
+
 import './styles/global.css';
 import './styles/components.css';
 import './styles/pages.css';
@@ -34,8 +34,6 @@ const SalesManagement = React.lazy(() => import('./pages/Admin/SalesManagement')
 const BorrowedBooksTracking = React.lazy(() => import('./pages/Admin/BorrowedBooksTracking'));
 
 function App() {
-  // Initialize Web Vitals monitoring
-  useWebVitals();
 
   return (
     <ErrorBoundary>
@@ -166,7 +164,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </Suspense>
-              <PerformanceMonitor />
+
             </div>
           </Router>
         </ToastProvider>
