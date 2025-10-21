@@ -1,0 +1,78 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}Sale Management - Online Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card p-4 d-flex justify-content-between align-items-center">
+                <h1 class="display-6 fw-bold mb-0">💰 Sale Management</h1>
+                <a href="{% url 'sell_book' %}" class="btn btn-gradient">
+                    <i class="fas fa-plus me-2"></i>New Sale
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            {% if sales %}
+            <div class="glass-card p-4 table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Book</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Date Listed</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sale in sales %}
+                        <tr>
+                            <td>{{ sale.user.username }}</td>
+                            <td>{{ sale.book.title }} by {{ sale.book.author }}</td>
+                            <td class="fw-bold text-success">₹{{ sale.price }}</td>
+                            <td>
+                                <span class="badge bg-{% if sale.status == 'sold' %}success{% elif sale.status == 'rejected' %}danger{% elif sale.status == 'approved' %}primary{% else %}warning{% endif %}">
+                                    {{ sale.status|title }}
+                                </span>
+                            </td>
+                            <td>{{ sale.created_at|date:"M d, Y" }}</td>
+                            <td class="d-flex gap-1">
+                                <!-- Optional: Add approve/reject buttons if needed -->
+                                <form action="#" method="post">
+                                    {% csrf_token %}
+                                    <button class="btn btn-sm btn-outline-dark">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-store fa-3x text-muted mb-3"></i>
+                <h4>No sales found</h4>
+                <p class="text-muted">Start managing book sales here.</p>
+                <a href="{% url 'sell_book' %}" class="btn btn-gradient">
+                    <i class="fas fa-dollar-sign me-2"></i>Add Sale
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.1);
+    }
+</style>
+{% endblock %}

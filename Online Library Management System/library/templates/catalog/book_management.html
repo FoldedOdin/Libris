@@ -1,0 +1,80 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}Book Management - Online Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card p-4 d-flex justify-content-between align-items-center">
+                <h1 class="display-6 fw-bold mb-0">📚 Book Management</h1>
+                <a href="{% url 'add_book' %}" class="btn btn-gradient">
+                    <i class="fas fa-plus me-2"></i>New Book
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Books Table -->
+    <div class="row">
+        <div class="col-12">
+            {% if books %}
+            <div class="glass-card p-4 table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Stock</th>
+                            <th>Price</th>
+                            <th>Date Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                        <tr>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.category }}</td>
+                            <td>{{ book.stock }}</td>
+                            <td>${{ book.price }}</td>
+                            <td>{{ book.created_at|date:"M d, Y" }}</td>
+                            <td class="d-flex gap-1">
+                                <a href="{% url 'edit_book' book.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{% url 'delete_book' book.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                <h4>No books found</h4>
+                <p class="text-muted">Start adding books to your library.</p>
+                <a href="{% url 'add_book' %}" class="btn btn-gradient">
+                    <i class="fas fa-plus me-2"></i>Add Book
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.1);
+    }
+</style>
+{% endblock %}

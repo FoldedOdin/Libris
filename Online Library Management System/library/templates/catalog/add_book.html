@@ -1,0 +1,23 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}Add Book - Online Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <h1 class="display-6 fw-bold mb-4">➕ Add New Book</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-gradient">
+                        <i class="fas fa-plus me-2"></i>Add Book
+                    </button>
+                    <a href="{% url 'book_management' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,563 @@
+{% extends "catalog/base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Hero Section with Live Stats -->
+<section class="hero-section" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{% static "catalog/images/library-bg.jpg" %}') no-repeat center center/cover; min-height: 100vh; display: flex; align-items: center;">
+    <div class="container">
+        <div class="row justify-content-center text-center text-white">
+            <div class="col-lg-10">
+                <div class="glass-card p-5">
+                    <h1 class="display-4 fw-bold mb-4">Welcome to <span class="text-gradient">Metropolitan Digital Library</span></h1>
+                    <p class="lead mb-4">Access thousands of books, donate your pre-loved books, or sell them to our community</p>
+                    
+                    <!-- Live Stats -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3 id="active-users">{{ active_users_count }}</h3>
+                                <p>Active Readers Now</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3>{{ total_books }}</h3>
+                                <p>Books Available</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3>{{ books_borrowed_today }}</h3>
+                                <p>Books Borrowed Today</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3>{{ new_arrivals }}</h3>
+                                <p>New Arrivals This Week</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if not user.is_authenticated %}
+                    <div class="d-grid gap-3 d-md-flex justify-content-center">
+                        <a href="{% url 'login' %}" class="btn btn-gradient btn-lg px-5 py-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login to Your Account
+                        </a>
+                        <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg px-5 py-3">
+                            <i class="fas fa-user-plus me-2"></i>Join Our Library
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="d-grid gap-3 d-md-flex justify-content-center">
+                        <a href="{% url 'dashboard' %}" class="btn btn-gradient btn-lg px-5 py-3">
+                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                        </a>
+                        <a href="{% url 'book_list' %}" class="btn btn-outline-light btn-lg px-5 py-3">
+                            <i class="fas fa-book me-2"></i>Browse Our Collection
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Actions Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Get Started</h2>
+            <p class="lead">What would you like to do today?</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="action-card text-center p-4 h-100">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4>Find Books</h4>
+                    <p>Search our extensive collection of books by title, author, or category</p>
+                    <a href="{% url 'book_list' %}" class="btn btn-primary">Browse Catalog</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="action-card text-center p-4 h-100">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h4>Donate Books</h4>
+                    <p>Share your pre-loved books with our community and help expand our collection</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'donate_book' %}" class="btn btn-primary">Donate Now</a>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary">Login to Donate</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="action-card text-center p-4 h-100">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h4>Sell Books</h4>
+                    <p>List your books for sale to the library or other members of our community</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'sell_book' %}" class="btn btn-primary">Sell Books</a>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary">Login to Sell</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Books Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h2 class="display-5 fw-bold text-white">Recently Added Books</h2>
+                <p class="lead text-white">Check out our latest additions to the collection</p>
+            </div>
+            <a href="{% url 'book_list' %}" class="btn btn-outline-light">View All Books</a>
+        </div>
+        
+        <div class="row g-4">
+            {% for book in recent_books %}
+            <div class="col-lg-3 col-md-6">
+                <div class="book-card h-100">
+                    <div class="book-cover">
+                        {% if book.cover_image %}
+                        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                        {% else %}
+                        <img src="{% static 'catalog/images/default-book-cover.jpg' %}" alt="{{ book.title }}">
+                        {% endif %}
+                        <div class="book-overlay">
+                            <a href="{% url 'book_detail' book.pk %}" class="btn btn-primary">View Details</a>
+                            {% if user.is_authenticated and book.is_available %}
+                            <a href="{% url 'borrow_book' book.pk %}" class="btn btn-success mt-2">Borrow</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h5>{{ book.title }}</h5>
+                        <p class="author">{{ book.author }}</p>
+                        <div class="book-meta">
+                            <span class="category">{{ book.category.name }}</span>
+                            <span class="availability {% if book.is_available %}available{% else %}unavailable{% endif %}">
+                                {% if book.is_available %}
+                                <i class="fas fa-check-circle"></i> Available
+                                {% else %}
+                                <i class="fas fa-times-circle"></i> Checked Out
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-white">No books available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Library Stats Section -->
+<section class="py-5 stats-section">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="stat">
+                    <h3 class="counter" data-target="{{ total_books }}">0</h3>
+                    <p>Books in Collection</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat">
+                    <h3 class="counter" data-target="{{ total_users }}">0</h3>
+                    <p>Registered Members</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat">
+                    <h3 class="counter" data-target="{{ total_donations }}">0</h3>
+                    <p>Books Donated</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat">
+                    <h3 class="counter" data-target="{{ books_borrowed_month }}">0</h3>
+                    <p>Books Borrowed This Month</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">How Our Library Works</h2>
+            <p class="lead">Simple steps to access our resources</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="step-card text-center p-4">
+                    <div class="step-number">1</div>
+                    <h4>Register an Account</h4>
+                    <p>Create your free library account to access all our services</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card text-center p-4">
+                    <div class="step-number">2</div>
+                    <h4>Browse & Borrow</h4>
+                    <p>Search our catalog and borrow books with a simple click</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card text-center p-4">
+                    <div class="step-number">3</div>
+                    <h4>Return or Renew</h4>
+                    <p>Return books on time or renew them if you need more time</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-4 mt-2">
+            <div class="col-md-6">
+                <div class="step-card text-center p-4">
+                    <div class="step-number">4</div>
+                    <h4>Donate Books</h4>
+                    <p>Contribute to our collection by donating your pre-loved books</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="step-card text-center p-4">
+                    <div class="step-number">5</div>
+                    <h4>Sell Books</h4>
+                    <p>Earn money by selling your books through our platform</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-white">What Our Members Say</h2>
+            <p class="lead text-white">Hear from our satisfied library users</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="testimonial-card p-4">
+                    <div class="testimonial-text">
+                        <p>"This library system has made borrowing books so convenient. I love the donation feature that allows me to share books with others."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <h5>Sarah Johnson</h5>
+                        <p>Student Member</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card p-4">
+                    <div class="testimonial-text">
+                        <p>"As a faculty member, I appreciate how easy it is to access academic resources. The book selling feature is a great addition!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <h5>Dr. Michael Chen</h5>
+                        <p>Faculty Member</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card p-4">
+                    <div class="testimonial-text">
+                        <p>"I've donated several books through this platform. The process is simple, and it feels great to contribute to the community."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <h5>Emma Rodriguez</h5>
+                        <p>Library Donor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Enhanced existing styles */
+    .text-gradient {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .hero-section {
+        position: relative;
+    }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-gradient {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        transition: transform 0.3s;
+    }
+    
+    .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+    
+    /* New styles for enhanced homepage */
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+    }
+    
+    .stat-card h3 {
+        font-size: 2rem;
+        margin-bottom: 0;
+        color: #fff;
+    }
+    
+    .stat-card p {
+        margin-bottom: 0;
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    
+    .action-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+    
+    .action-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .action-icon {
+        font-size: 3rem;
+        color: #667eea;
+    }
+    
+    .book-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+    
+    .book-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .book-cover {
+        position: relative;
+        overflow: hidden;
+        height: 250px;
+    }
+    
+    .book-cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .book-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .book-card:hover .book-overlay {
+        opacity: 1;
+    }
+    
+    .book-info {
+        padding: 15px;
+    }
+    
+    .book-info h5 {
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    
+    .author {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+    
+    .book-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .category {
+        background: #f0f0f0;
+        padding: 3px 8px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+    
+    .availability {
+        font-size: 0.85rem;
+        padding: 3px 8px;
+        border-radius: 15px;
+        display: inline-block;
+    }
+    
+    .available {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    
+    .unavailable {
+        background: #ffebee;
+        color: #c62828;
+    }
+    
+    /* Stats section */
+    .stats-section {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+    }
+    
+    .stat h3 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    /* Steps section */
+    .step-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        height: 100%;
+    }
+    
+    .step-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: #667eea;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0 auto 15px;
+    }
+    
+    /* Testimonials */
+    .testimonial-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        height: 100%;
+    }
+    
+    .testimonial-text {
+        font-style: italic;
+        margin-bottom: 20px;
+    }
+    
+    .testimonial-author h5 {
+        margin-bottom: 5px;
+    }
+    
+    .testimonial-author p {
+        color: #ccc;
+        margin-bottom: 0;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .hero-section {
+            min-height: 80vh;
+        }
+        
+        .glass-card {
+            padding: 2rem !important;
+        }
+        
+        .display-4 {
+            font-size: 2rem;
+        }
+        
+        .stat-card h3 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<script>
+    // Animated counters
+    document.addEventListener('DOMContentLoaded', function() {
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200; // The lower the slower
+        
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                
+                const inc = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(updateCount, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            
+            updateCount();
+        });
+    });
+</script>
+
+{% endblock %}

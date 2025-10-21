@@ -1,0 +1,50 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}Export Data - Online Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="feature-icon" style="width: 70px; height: 70px; font-size: 1.8rem; background: linear-gradient(45deg, #4facfe, #00f2fe);">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h2 class="fw-bold">Export Data</h2>
+                    <p class="text-muted">Select the data you want to export as CSV</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <a href="{% url 'export_data' %}?type=books" class="btn btn-outline-primary w-100 py-3">
+                            <i class="fas fa-book me-2"></i>Export Books
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'export_data' %}?type=users" class="btn btn-outline-success w-100 py-3">
+                            <i class="fas fa-users me-2"></i>Export Users
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'export_data' %}?type=transactions" class="btn btn-outline-info w-100 py-3">
+                            <i class="fas fa-exchange-alt me-2"></i>Export Transactions
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'export_data' %}?type=donations" class="btn btn-outline-warning w-100 py-3">
+                            <i class="fas fa-gift me-2"></i>Export Donations
+                        </a>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'dashboard' %}" class="text-decoration-none">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

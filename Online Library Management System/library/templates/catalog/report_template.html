@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Management System Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
+        .section { margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .summary { background-color: #f9f9f9; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Library Management System Report</h1>
+        <p>Generated on: {{ generated_date|date:"F j, Y H:i" }}</p>
+    </div>
+
+    <div class="summary">
+        <h3>System Summary</h3>
+        <p>Total Books: {{ total_books }}</p>
+        <p>Total Users: {{ total_users }}</p>
+        <p>Total Transactions: {{ total_transactions }}</p>
+    </div>
+
+    <div class="section">
+        <h3>Recent Transactions</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Book</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.user.username }}</td>
+                    <td>{{ transaction.book.title }}</td>
+                    <td>{{ transaction.transaction_type|title }}</td>
+                    <td>{{ transaction.date|date:"M j, Y" }}</td>
+                    <td>{{ transaction.due_date|date:"M j, Y"|default:"N/A" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h3>Book Inventory</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.category.name|default:"N/A" }}</td>
+                    <td>{{ book.stock }}</td>
+                    <td>₹{{ book.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

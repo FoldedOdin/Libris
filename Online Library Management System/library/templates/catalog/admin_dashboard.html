@@ -1,0 +1,210 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}Admin Dashboard - Online Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-6 fw-bold mb-2">👑 Admin Dashboard</h1>
+                        <p class="lead mb-0">Welcome, Administrator! Manage the entire library system.</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="/admin/" class="btn btn-gradient me-2" target="_blank">
+                            <i class="fas fa-cogs me-2"></i>Django Admin
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-2">
+            <div class="glass-card p-3 text-center stats-card">
+                <div class="stats-icon" style="background: linear-gradient(45deg, #667eea, #764ba2);">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3 class="fw-bold mt-2">{{ books_count }}</h3>
+                <small>Total Books</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="glass-card p-3 text-center stats-card">
+                <div class="stats-icon" style="background: linear-gradient(45deg, #f093fb, #f5576c);">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="fw-bold mt-2">{{ users_count }}</h3>
+                <small>Total Users</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="glass-card p-3 text-center stats-card">
+                <div class="stats-icon" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3 class="fw-bold mt-2">{{ transactions_count }}</h3>
+                <small>Transactions</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="glass-card p-3 text-center stats-card">
+                <div class="stats-icon" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <h3 class="fw-bold mt-2">{{ donations_count }}</h3>
+                <small>Donations</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="glass-card p-3 text-center stats-card">
+                <div class="stats-icon" style="background: linear-gradient(45deg, #ff9a9e, #fecfef);">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3 class="fw-bold mt-2">{{ pending_donations }}</h3>
+                <small>Pending Donations</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="glass-card p-3 text-center stats-card">
+                <div class="stats-icon" style="background: linear-gradient(45deg, #a8edea, #fed6e3);">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3 class="fw-bold mt-2">{{ pending_sales }}</h3>
+                <small>Pending Sales</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="glass-card p-4 h-100">
+                <h4 class="fw-bold mb-4"><i class="fas fa-cogs me-2"></i>System Management</h4>
+                <div class="d-grid gap-3">
+                    <a href="/admin/" class="btn btn-gradient btn-lg" target="_blank">
+                        <i class="fas fa-tools me-2"></i>Django Admin Panel
+                    </a>
+                    <a href="{% url 'book_management' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-book me-2"></i>Manage Books
+                    </a>
+                    <a href="{% url 'user_management' %}" class="btn btn-outline-success btn-lg">
+                        <i class="fas fa-users me-2"></i>Manage Users
+                    </a>
+                    <a href="{% url 'donation_management' %}" class="btn btn-outline-warning btn-lg">
+                        <i class="fas fa-gift me-2"></i>Manage Donations
+                    </a>
+                    <a href="{% url 'sale_list' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-shopping-cart me-2"></i>Manage Sales
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="glass-card p-4 h-100">
+                <h4 class="fw-bold mb-4"><i class="fas fa-tachometer-alt me-2"></i>Quick Stats & Actions</h4>
+                <div class="list-group">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Books needing restock</span>
+                        <span class="badge bg-danger">{{ low_stock_books }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Overdue books</span>
+                        <span class="badge bg-warning">{{ overdue_books }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Pending donations</span>
+                        <span class="badge bg-info">{{ pending_donations }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Pending sales</span>
+                        <span class="badge bg-secondary">{{ pending_sales }}</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 d-grid gap-2">
+                    <a href="{% url 'generate_pdf_report' %}" class="btn btn-outline-info">
+                        <i class="fas fa-file-pdf me-2"></i>Download Full PDF Report
+                    </a>
+                    <a href="{% url 'generate_books_pdf' %}" class="btn btn-outline-danger">
+                        <i class="fas fa-book me-2"></i>Download Books PDF
+                    </a>
+                    <a href="{% url 'export_selection' %}" class="btn btn-outline-dark">
+                        <i class="fas fa-download me-2"></i>Export Data (CSV)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <h4 class="fw-bold mb-4"><i class="fas fa-history me-2"></i>Recent Activity</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Book</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in recent_transactions %}
+                            <tr>
+                                <td>{{ transaction.user.username }}</td>
+                                <td>
+                                    <span class="badge bg-{% if transaction.transaction_type == 'borrow' %}primary{% else %}success{% endif %}">
+                                        {{ transaction.transaction_type|title }}
+                                    </span>
+                                </td>
+                                <td>{{ transaction.book.title }}</td>
+                                <td>{{ transaction.date|timesince }} ago</td>
+                                <td>
+                                    <span class="badge bg-{% if transaction.transaction_type == 'borrow' %}warning{% else %}info{% endif %}">
+                                        {% if transaction.transaction_type == 'borrow' %}Borrowed{% else %}Returned{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4">
+                                    <i class="fas fa-info-circle me-2"></i>No recent activity
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.stats-card { transition: transform 0.3s ease; }
+.stats-card:hover { transform: translateY(-5px); }
+.stats-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    color: white;
+    font-size: 1.2rem;
+}
+.list-group-item { background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); }
+</style>
+{% endblock %}

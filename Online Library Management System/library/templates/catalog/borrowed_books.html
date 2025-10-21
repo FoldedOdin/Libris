@@ -1,0 +1,33 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}My Borrowed Books{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">My Borrowed Books</h2>
+
+    {% if borrowed_transactions %}
+        <div class="list-group">
+            {% for transaction in borrowed_transactions %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ transaction.book.title }}</strong> by {{ transaction.book.author }}
+                        <br>
+                        Borrowed on: {{ transaction.date|date:"d M Y" }}
+                        <br>
+                        Due Date: {{ transaction.due_date|date:"d M Y" }}
+                    </div>
+                    <div>
+                        <form method="post" action="{% url 'return_book' transaction.book.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-success">Return</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You haven't borrowed any books yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

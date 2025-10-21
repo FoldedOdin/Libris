@@ -1,0 +1,92 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}Edit Donation - Online Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Edit Donation</h2>
+                    <p class="text-muted">Update the details of your donation</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Borrowed Book (optional, for hybrid donations) -->
+                    {% if form.borrowed_book %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Select Borrowed Book (Optional)</label>
+                        {{ form.borrowed_book }}
+                    </div>
+                    {% endif %}
+
+                    <!-- Title -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Book Title</label>
+                        {{ form.title }}
+                    </div>
+
+                    <!-- Author -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Author</label>
+                        {{ form.author }}
+                    </div>
+
+                    <!-- Category -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Category</label>
+                        {% if form.category %}
+                            {{ form.category }}
+                        {% else %}
+                            <p class="text-muted">No category assigned</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Condition -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Condition</label>
+                        {% if form.condition %}
+                            {{ form.condition }}
+                        {% else %}
+                            <p class="text-muted">No condition selected</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Status (only for admin) -->
+                    {% if request.user.is_superuser or request.user.role == 'admin' %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Status</label>
+                        {{ form.status }}
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-success w-100 py-2">
+                        Update Donation
+                    </button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a href="{% url 'donation_list' %}" class="btn btn-secondary">Back to Donations</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #43e97b;
+    box-shadow: 0 0 0 0.2rem rgba(67, 233, 123, 0.25);
+}
+</style>
+{% endblock %}

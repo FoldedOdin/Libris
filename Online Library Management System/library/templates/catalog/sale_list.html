@@ -1,0 +1,113 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}My Sales - Online Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-6 fw-bold mb-2">💰 My Sales</h1>
+                        <p class="lead mb-0">Manage your book sales</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="{% url 'sell_book' %}" class="btn btn-gradient">
+                            <i class="fas fa-plus me-2"></i>New Sale
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                {% if sales %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Date Listed</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sale in sales %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="book-cover-small me-3" style="width: 40px; height: 50px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white;">
+                                            <i class="fas fa-book"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold">{{ sale.book.title }}</div>
+                                            <small class="text-muted">by {{ sale.book.author }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="fw-bold text-success">₹{{ sale.price }}</td>
+                                <td>
+                                    <span class="badge bg-{% if sale.status == 'sold' %}success{% elif sale.status == 'rejected' %}danger{% elif sale.status == 'approved' %}primary{% else %}warning{% endif %}">
+                                        {{ sale.status|title }}
+                                    </span>
+                                </td>
+                                <td>{{ sale.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        {% if user.is_superuser or user.role == 'admin' %}
+                                            {% if sale.status == 'pending' %}
+                                                <a href="{% url 'approve_sale' sale.id %}" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                                <a href="{% url 'reject_sale' sale.id %}" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                            {% else %}
+                                                <span class="text-muted">No actions</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <a href="{% url 'edit_sale' sale.id %}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'delete_sale' sale.id %}" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-store fa-3x text-muted mb-3"></i>
+                    <h4>No sales yet</h4>
+                    <p class="text-muted">Start selling your books in our marketplace.</p>
+                    <a href="{% url 'sell_book' %}" class="btn btn-gradient">
+                        <i class="fas fa-dollar-sign me-2"></i>List Your First Book
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.book-cover-small {
+    font-size: 0.8rem;
+}
+.table-hover tbody tr:hover {
+    transform: scale(1.01);
+    transition: transform 0.2s ease;
+}
+</style>
+{% endblock %}

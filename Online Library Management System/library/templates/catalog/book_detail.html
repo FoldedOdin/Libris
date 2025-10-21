@@ -1,0 +1,109 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}{{ book.title }} - Online Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="glass-card p-4 text-center">
+                <div class="book-cover-large" style="width: 200px; height: 280px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 4rem; margin-bottom: 20px;">
+                    <i class="fas fa-book"></i>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    {% if book.stock > 0 %}
+                    <a href="{% url 'borrow_book' book.pk %}" class="btn btn-gradient btn-lg">
+                        <i class="fas fa-hand-holding me-2"></i>Borrow This Book
+                    </a>
+                    {% else %}
+                    <button class="btn btn-secondary btn-lg" disabled>
+                        <i class="fas fa-times me-2"></i>Currently Unavailable
+                    </button>
+                    {% endif %}
+                    
+                    <a href="{% url 'book_list' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Books
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="glass-card p-4">
+                <h1 class="display-6 fw-bold mb-3">{{ book.title }}</h1>
+                <p class="lead text-muted mb-4">by {{ book.author }}</p>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-tag me-3 text-primary"></i>
+                            <div>
+                                <small class="text-muted">Category</small>
+                                <div class="fw-semibold">{{ book.category.name|default:"General" }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-barcode me-3 text-primary"></i>
+                            <div>
+                                <small class="text-muted">ISBN</small>
+                                <div class="fw-semibold">{{ book.isbn|default:"Not specified" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-boxes me-3 text-primary"></i>
+                            <div>
+                                <small class="text-muted">Stock</small>
+                                <div class="fw-semibold">{{ book.stock }} copies available</div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-indian-rupee-sign me-3 text-primary"></i>
+                            <div>
+                                <small class="text-muted">Price</small>
+                                <div class="fw-semibold">₹{{ book.price }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="availability-badge mb-4">
+                    <span class="badge bg-{% if book.is_available %}success{% else %}danger{% endif %} p-2 fs-6">
+                        <i class="fas fa-{% if book.is_available %}check-circle{% else %}times-circle{% endif %} me-2"></i>
+                        {% if book.is_available %}Available for Borrowing{% else %}Currently Unavailable{% endif %}
+                    </span>
+                </div>
+                
+                <div class="book-actions mt-4">
+                    {% if user.is_superuser %}
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-warning btn-sm">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .book-cover-large {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .availability-badge .badge {
+        font-size: 1.1em;
+        padding: 10px 20px;
+    }
+</style>
+{% endblock %}

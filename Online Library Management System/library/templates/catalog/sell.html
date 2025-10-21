@@ -1,0 +1,72 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}Sell Books - Online Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="feature-icon" style="width: 70px; height: 70px; font-size: 1.8rem; background: linear-gradient(45deg, #ffd89b, #19547b);">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h2 class="fw-bold">Sell a Book</h2>
+                    <p class="text-muted">List your book for sale in our marketplace</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-book me-2"></i>Select Book
+                        </label>
+                        <select class="form-control form-control-lg" name="book_id" required>
+                            <option value="">Choose a book to sell...</option>
+                            {% for book in books %}
+                            <option value="{{ book.pk }}">{{ book.title }} by {{ book.author }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-tag me-2"></i>Selling Price (₹)
+                        </label>
+                        <input type="number" class="form-control form-control-lg" name="price" 
+                               placeholder="Enter selling price" step="0.01" min="0" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-warning btn-lg w-100 py-3" style="background: linear-gradient(45deg, #ffd89b, #19547b); border: none; color: white;">
+                        <i class="fas fa-rocket me-2"></i>List for Sale
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="mb-0">Check your 
+                        <a href="{% url 'sale_list' %}" class="text-decoration-none fw-semibold">sales history</a>
+                    </p>
+                    <a href="{% url 'dashboard' %}" class="text-decoration-none">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #ffd89b;
+        box-shadow: 0 0 0 0.2rem rgba(255, 216, 155, 0.25);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}Donate Books - Online Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="feature-icon" style="width: 70px; height: 70px; font-size: 1.8rem; background: linear-gradient(45deg, #43e97b, #38f9d7);">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h2 class="fw-bold">Donate a Book</h2>
+                    <p class="text-muted">Share knowledge with our community</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- 1️⃣ Borrowed Book Dropdown (Optional) -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-book me-2"></i>Select Borrowed Book (Optional)
+                        </label>
+                        {{ form.borrowed_book }}
+                    </div>
+
+                    <hr>
+                    <p class="text-muted">Or enter new book details:</p>
+
+                    <!-- 2️⃣ Title -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-book me-2"></i>Book Title
+                        </label>
+                        {{ form.title }}
+                    </div>
+
+                    <!-- 3️⃣ Author -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-user me-2"></i>Author
+                        </label>
+                        {{ form.author }}
+                    </div>
+
+                    <!-- 4️⃣ Category -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-tags me-2"></i>Category
+                        </label>
+                        {{ form.category }}
+                    </div>
+
+                    <!-- 5️⃣ Condition -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-stethoscope me-2"></i>Book Condition
+                        </label>
+                        {{ form.condition }}
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg w-100 py-3" style="background: linear-gradient(45deg, #43e97b, #38f9d7); border: none;">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Donation
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="mb-0">View your 
+                        <a href="{% url 'donation_list' %}" class="text-decoration-none fw-semibold">donation history</a>
+                    </p>
+                    <a href="{% url 'dashboard' %}" class="text-decoration-none">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #43e97b;
+        box-shadow: 0 0 0 0.2rem rgba(67, 233, 123, 0.25);
+    }
+</style>
+{% endblock %}
