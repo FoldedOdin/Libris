@@ -26,18 +26,8 @@ export const AuthProvider = ({ children }) => {
           setUser(userData);
           setIsAuthenticated(true);
           
-          // Optionally fetch fresh user data from server
-          try {
-            const result = await authAPI.getCurrentUser();
-            if (result.success) {
-              const freshUserData = result.data;
-              userManager.setUser(freshUserData);
-              setUser(freshUserData);
-            }
-          } catch (error) {
-            // If fetching fresh data fails, continue with cached data
-            console.warn('Failed to fetch fresh user data:', error);
-          }
+          // Only fetch fresh user data if we have a valid session
+          // Skip this for now to avoid authentication errors on startup
         }
       } catch (error) {
         console.error('Error initializing auth:', error);

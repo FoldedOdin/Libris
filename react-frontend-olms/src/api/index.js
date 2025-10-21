@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Create axios instance with base configuration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = 'http://localhost:8000/api'; // Direct calls to Django API
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -10,15 +10,27 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
   timeout: 10000, // 10 second timeout
+  withCredentials: true, // Include cookies for CSRF
 });
 
-// Request interceptor to add authentication token
+// Request interceptor to add CSRF token for Django
 apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  async (config) => {
+    // Get CSRF token from cookies
+    const cookies = document.cookie.split(';');
+    let csrfToken = null;
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split('=');
+      if (name === 'csrftoken') {
+        csrfToken = value;
+        break;
+      }
     }
+    
+    if (csrfToken) {
+      config.headers['X-CSRFToken'] = csrfToken;
+    }
+    
     return config;
   },
   (error) => {
@@ -32,8 +44,8 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Handle unauthorized access
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Handle unauthorized access or Django login redirects
+    if ((error.response?.status === 401 || error.response?.status === 302) && !originalRequest._retry) {
       originalRequest._retry = true;
       
       // Clear auth data and redirect to login

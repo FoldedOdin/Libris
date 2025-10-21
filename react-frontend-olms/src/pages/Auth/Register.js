@@ -91,7 +91,8 @@ const Register = () => {
         email: formData.email,
         first_name: formData.first_name,
         last_name: formData.last_name,
-        password: formData.password
+        password: formData.password,
+        password_confirm: formData.confirm_password
       };
 
       const result = await register(registrationData);

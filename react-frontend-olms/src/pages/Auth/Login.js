@@ -100,7 +100,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="username" className="form-label">
-              Username
+              Username or Email
             </label>
             <input
               type="text"
@@ -110,7 +110,7 @@ const Login = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               className={getFieldErrorClass('username', errors)}
-              placeholder="Enter your username"
+              placeholder="Enter your username or email"
               disabled={isLoading}
             />
             {renderFieldError('username', errors)}

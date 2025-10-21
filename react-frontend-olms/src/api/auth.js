@@ -1,22 +1,15 @@
 // Authentication API services
 import apiClient, { apiRequest } from './index';
 
-// Token management utilities
+// Token management utilities (adapted for Django sessions)
 export const tokenManager = {
   getToken: () => localStorage.getItem('authToken'),
   setToken: (token) => localStorage.setItem('authToken', token),
   removeToken: () => localStorage.removeItem('authToken'),
   isTokenValid: () => {
     const token = localStorage.getItem('authToken');
-    if (!token) return false;
-    
-    try {
-      // Basic token validation - check if it's not expired
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.exp * 1000 > Date.now();
-    } catch {
-      return false;
-    }
+    // For Django session-based auth, just check if token exists
+    return token === 'django-session';
   }
 };
 
@@ -37,56 +30,112 @@ export const userManager = {
   }
 };
 
+// Get CSRF token from Django
+const getCSRFToken = async () => {
+  try {
+    const response = await fetch('http://localhost:8000/api/csrf/', {
+      credentials: 'include'
+    });
+    const data = await response.json();
+    return data.csrfToken;
+  } catch (error) {
+    console.error('Error getting CSRF token:', error);
+    return null;
+  }
+};
+
 // Authentication state management helpers
 export const authHelpers = {
   login: async (credentials) => {
-    const result = await apiRequest(() => apiClient.post('/login/', credentials));
-    
-    if (result.success && result.data.token) {
-      tokenManager.setToken(result.data.token);
-      if (result.data.user) {
+    try {
+      console.log('Starting login process...', credentials.username);
+      
+      // Get CSRF token first
+      const csrfToken = await getCSRFToken();
+      console.log('CSRF token obtained:', csrfToken ? 'Yes' : 'No');
+      
+      const result = await apiRequest(() => apiClient.post('/login/', credentials));
+      console.log('API request result:', result);
+      
+      if (result.success && result.data.user) {
         userManager.setUser(result.data.user);
+        tokenManager.setToken('django-session');
+        console.log('Login successful, user saved:', result.data.user.username);
+        return { success: true, data: result.data };
+      } else {
+        console.log('Login failed:', result.error);
+        return { 
+          success: false, 
+          error: result.error?.message || 'Login failed' 
+        };
       }
+    } catch (error) {
+      console.error('Login error:', error);
+      return { 
+        success: false, 
+        error: 'An unexpected error occurred during login' 
+      };
     }
-    
-    return result;
   },
-  
+
   register: async (userData) => {
-    const result = await apiRequest(() => apiClient.post('/register/', userData));
-    
-    if (result.success && result.data.token) {
-      tokenManager.setToken(result.data.token);
-      if (result.data.user) {
+    try {
+      // Get CSRF token first
+      await getCSRFToken();
+      
+      const result = await apiRequest(() => apiClient.post('/register/', userData));
+      
+      if (result.success && result.data.user) {
         userManager.setUser(result.data.user);
+        tokenManager.setToken('django-session');
+        return { success: true, data: result.data };
+      } else {
+        return { 
+          success: false, 
+          error: result.error?.message || 'Registration failed',
+          data: result.data // Include validation errors
+        };
       }
+    } catch (error) {
+      console.error('Registration error:', error);
+      return { 
+        success: false, 
+        error: 'An unexpected error occurred during registration' 
+      };
     }
-    
-    return result;
   },
-  
+
   logout: async () => {
-    const result = await apiRequest(() => apiClient.post('/logout/'));
-    
-    // Clear local storage regardless of API response
-    tokenManager.removeToken();
-    userManager.removeUser();
-    
-    return result;
-  },
-  
-  refreshToken: async () => {
-    const result = await apiRequest(() => apiClient.post('/refresh-token/'));
-    
-    if (result.success && result.data.token) {
-      tokenManager.setToken(result.data.token);
+    try {
+      await apiRequest(() => apiClient.post('/logout/'));
+    } catch (error) {
+      console.warn('Logout API call failed:', error);
+    } finally {
+      // Always clear local state
+      tokenManager.removeToken();
+      userManager.removeUser();
     }
-    
-    return result;
+
+    return { success: true };
   },
-  
+
+  refreshToken: async () => {
+    // For Django session-based auth, no token refresh needed
+    return { success: true };
+  },
+
   getCurrentUser: async () => {
-    return await apiRequest(() => apiClient.get('/user/profile/'));
+    try {
+      const result = await apiRequest(() => apiClient.get('/user/'));
+      if (result.success) {
+        userManager.setUser(result.data);
+        return { success: true, data: result.data };
+      }
+      return { success: false, error: 'Failed to get user data' };
+    } catch (error) {
+      console.error('Get current user error:', error);
+      return { success: false, error: 'Failed to get user data' };
+    }
   }
 };
 
@@ -97,7 +146,7 @@ export const authAPI = {
   logout: () => authHelpers.logout(),
   refreshToken: () => authHelpers.refreshToken(),
   getCurrentUser: () => authHelpers.getCurrentUser(),
-  
+
   // Direct API calls (without state management)
   loginDirect: (credentials) => apiClient.post('/login/', credentials),
   registerDirect: (userData) => apiClient.post('/register/', userData),

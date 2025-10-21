@@ -27,10 +27,17 @@ const UserDashboard = () => {
   });
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    if (user) {
+      fetchDashboardData();
+    }
+  }, [user]);
 
   const fetchDashboardData = async () => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+    
     try {
       setLoading(true);
       setError('');
