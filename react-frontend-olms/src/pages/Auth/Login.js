@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { authAPI } from '../../api/auth';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/pages.css';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login, isAdmin } = useAuth();
+  
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -10,6 +15,9 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
+
+  // Get the intended destination or default redirect
+  const from = location.state?.from?.pathname || null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,14 +68,19 @@ const Login = () => {
     setApiError('');
 
     try {
-      const result = await authAPI.login({
+      const result = await login({
         username: formData.username,
         password: formData.password
       });
 
       if (result.success) {
-        // Redirect will be handled by the authentication context
-        window.location.reload(); // Temporary until routing is implemented
+        // Redirect based on user role and intended destination
+        if (from) {
+          navigate(from, { replace: true });
+        } else {
+          const redirectPath = isAdmin() ? '/admin/dashboard' : '/dashboard';
+          navigate(redirectPath, { replace: true });
+        }
       } else {
         setApiError(result.error || 'Login failed. Please check your credentials.');
       }
@@ -141,9 +154,13 @@ const Login = () => {
         <div className="auth-footer">
           <p>
             Don't have an account?{' '}
-            <a href="/register" className="auth-link">
+            <button 
+              type="button"
+              onClick={() => navigate('/register')}
+              className="auth-link"
+            >
               Sign up here
-            </a>
+            </button>
           </p>
         </div>
       </div>
