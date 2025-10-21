@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { salesAPI } from '../../api/sales';
 import { booksAPI } from '../../api/books';
+import { useFormValidation, validationSchemas, getFieldErrorClass, renderFieldError } from '../../utils/validation';
 import Navbar from '../../components/common/Navbar';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorMessage from '../../components/common/ErrorMessage';
@@ -18,8 +19,15 @@ const SellBook = () => {
   const [loadingSales, setLoadingSales] = useState(false);
   const [showSalesHistory, setShowSalesHistory] = useState(false);
 
-  // Form state
-  const [saleForm, setSaleForm] = useState({
+  // Form validation
+  const {
+    formData: saleForm,
+    errors: saleErrors,
+    handleChange,
+    handleBlur,
+    validateForm: validateSaleForm,
+    resetForm: resetSaleForm
+  } = useFormValidation(validationSchemas.sale, {
     book_id: '',
     price: '',
     condition: '',
@@ -74,28 +82,13 @@ const SellBook = () => {
     }
   };
 
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setSaleForm(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const validateForm = () => {
-    const errors = [];
-    if (!saleForm.book_id) errors.push('Please select a book');
-    if (!saleForm.price || parseFloat(saleForm.price) <= 0) errors.push('Please enter a valid price');
-    if (!saleForm.condition) errors.push('Please select the book condition');
-    return errors;
-  };
+  // No need for separate validation - using validation hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const validationErrors = validateForm();
-    if (validationErrors.length > 0) {
-      setError(validationErrors.join(', '));
+    if (!validateSaleForm()) {
+      setError('Please fix the validation errors before submitting.');
       return;
     }
 
@@ -121,7 +114,7 @@ const SellBook = () => {
       setSuccess('Book listed for sale successfully! It will be reviewed by an administrator.');
       
       // Reset form
-      setSaleForm({
+      resetSaleForm({
         book_id: '',
         price: '',
         condition: '',
@@ -198,9 +191,10 @@ const SellBook = () => {
                     <select
                       id="book_id"
                       name="book_id"
-                      className="form-input"
+                      className={getFieldErrorClass('book_id', saleErrors)}
                       value={saleForm.book_id}
-                      onChange={handleFormChange}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       required
                     >
                       <option value="">Choose a book to sell</option>
@@ -210,6 +204,7 @@ const SellBook = () => {
                         </option>
                       ))}
                     </select>
+                    {renderFieldError('book_id', saleErrors)}
                   </div>
 
                   {/* Selected Book Preview */}
@@ -252,23 +247,26 @@ const SellBook = () => {
                         type="number"
                         id="price"
                         name="price"
-                        className="form-input"
+                        className={getFieldErrorClass('price', saleErrors)}
                         value={saleForm.price}
-                        onChange={handleFormChange}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                         placeholder="0.00"
                         min="0.01"
                         step="0.01"
                         required
                       />
+                      {renderFieldError('price', saleErrors)}
                     </div>
                     <div className="form-group">
                       <label htmlFor="condition">Book Condition *</label>
                       <select
                         id="condition"
                         name="condition"
-                        className="form-input"
+                        className={getFieldErrorClass('condition', saleErrors)}
                         value={saleForm.condition}
-                        onChange={handleFormChange}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                         required
                       >
                         <option value="">Select condition</option>
@@ -278,6 +276,7 @@ const SellBook = () => {
                           </option>
                         ))}
                       </select>
+                      {renderFieldError('condition', saleErrors)}
                     </div>
                   </div>
 
@@ -286,12 +285,14 @@ const SellBook = () => {
                     <textarea
                       id="description"
                       name="description"
-                      className="form-input form-textarea"
+                      className={getFieldErrorClass('description', saleErrors, 'form-input form-textarea')}
                       value={saleForm.description}
-                      onChange={handleFormChange}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       placeholder="Any additional details about the book condition, reason for selling, etc..."
                       rows="3"
                     />
+                    {renderFieldError('description', saleErrors)}
                   </div>
 
                   <div className="form-actions">

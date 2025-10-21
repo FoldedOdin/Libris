@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { donationsAPI } from '../../api/donations';
 import { transactionsAPI } from '../../api/transactions';
+import { useFormValidation, validationSchemas, getFieldErrorClass, renderFieldError } from '../../utils/validation';
 import Navbar from '../../components/common/Navbar';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorMessage from '../../components/common/ErrorMessage';
@@ -19,8 +20,15 @@ const DonateBook = () => {
   const [loadingDonations, setLoadingDonations] = useState(false);
   const [showDonationHistory, setShowDonationHistory] = useState(false);
 
-  // Form state for new book donation
-  const [newBookForm, setNewBookForm] = useState({
+  // Form validation for new book donation
+  const {
+    formData: newBookForm,
+    errors: newBookErrors,
+    handleChange: handleNewBookChange,
+    handleBlur: handleNewBookBlur,
+    validateForm: validateNewBookForm,
+    resetForm: resetNewBookForm
+  } = useFormValidation(validationSchemas.donation, {
     title: '',
     author: '',
     category: '',
@@ -28,8 +36,15 @@ const DonateBook = () => {
     description: ''
   });
 
-  // Form state for borrowed book donation
-  const [borrowedBookForm, setBorrowedBookForm] = useState({
+  // Form validation for borrowed book donation
+  const {
+    formData: borrowedBookForm,
+    errors: borrowedBookErrors,
+    handleChange: handleBorrowedBookChange,
+    handleBlur: handleBorrowedBookBlur,
+    validateForm: validateBorrowedBookForm,
+    resetForm: resetBorrowedBookForm
+  } = useFormValidation(validationSchemas.sale, {
     borrowed_book_id: '',
     condition: '',
     description: ''
@@ -89,44 +104,13 @@ const DonateBook = () => {
     }
   };
 
-  const handleNewBookFormChange = (e) => {
-    const { name, value } = e.target;
-    setNewBookForm(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleBorrowedBookFormChange = (e) => {
-    const { name, value } = e.target;
-    setBorrowedBookForm(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const validateNewBookForm = () => {
-    const errors = [];
-    if (!newBookForm.title.trim()) errors.push('Title is required');
-    if (!newBookForm.author.trim()) errors.push('Author is required');
-    if (!newBookForm.category) errors.push('Category is required');
-    if (!newBookForm.condition) errors.push('Condition is required');
-    return errors;
-  };
-
-  const validateBorrowedBookForm = () => {
-    const errors = [];
-    if (!borrowedBookForm.borrowed_book_id) errors.push('Please select a borrowed book');
-    if (!borrowedBookForm.condition) errors.push('Condition is required');
-    return errors;
-  };
+  // No need for separate change handlers - using validation hooks
 
   const handleNewBookSubmit = async (e) => {
     e.preventDefault();
     
-    const validationErrors = validateNewBookForm();
-    if (validationErrors.length > 0) {
-      setError(validationErrors.join(', '));
+    if (!validateNewBookForm()) {
+      setError('Please fix the validation errors before submitting.');
       return;
     }
 
@@ -147,7 +131,7 @@ const DonateBook = () => {
       setSuccess('Book donation submitted successfully! It will be reviewed by an administrator.');
       
       // Reset form
-      setNewBookForm({
+      resetNewBookForm({
         title: '',
         author: '',
         category: '',
@@ -170,9 +154,8 @@ const DonateBook = () => {
   const handleBorrowedBookSubmit = async (e) => {
     e.preventDefault();
     
-    const validationErrors = validateBorrowedBookForm();
-    if (validationErrors.length > 0) {
-      setError(validationErrors.join(', '));
+    if (!validateBorrowedBookForm()) {
+      setError('Please fix the validation errors before submitting.');
       return;
     }
 
@@ -204,7 +187,7 @@ const DonateBook = () => {
       setSuccess('Borrowed book donation submitted successfully! It will be reviewed by an administrator.');
       
       // Reset form
-      setBorrowedBookForm({
+      resetBorrowedBookForm({
         borrowed_book_id: '',
         condition: '',
         description: ''
@@ -306,12 +289,14 @@ const DonateBook = () => {
                         type="text"
                         id="title"
                         name="title"
-                        className="form-input"
+                        className={getFieldErrorClass('title', newBookErrors)}
                         value={newBookForm.title}
-                        onChange={handleNewBookFormChange}
+                        onChange={handleNewBookChange}
+                        onBlur={handleNewBookBlur}
                         placeholder="Enter book title"
                         required
                       />
+                      {renderFieldError('title', newBookErrors)}
                     </div>
                     <div className="form-group">
                       <label htmlFor="author">Author *</label>
@@ -319,12 +304,14 @@ const DonateBook = () => {
                         type="text"
                         id="author"
                         name="author"
-                        className="form-input"
+                        className={getFieldErrorClass('author', newBookErrors)}
                         value={newBookForm.author}
-                        onChange={handleNewBookFormChange}
+                        onChange={handleNewBookChange}
+                        onBlur={handleNewBookBlur}
                         placeholder="Enter author name"
                         required
                       />
+                      {renderFieldError('author', newBookErrors)}
                     </div>
                   </div>
 
@@ -334,9 +321,10 @@ const DonateBook = () => {
                       <select
                         id="category"
                         name="category"
-                        className="form-input"
+                        className={getFieldErrorClass('category', newBookErrors)}
                         value={newBookForm.category}
-                        onChange={handleNewBookFormChange}
+                        onChange={handleNewBookChange}
+                        onBlur={handleNewBookBlur}
                         required
                       >
                         <option value="">Select a category</option>
@@ -344,15 +332,17 @@ const DonateBook = () => {
                           <option key={category} value={category}>{category}</option>
                         ))}
                       </select>
+                      {renderFieldError('category', newBookErrors)}
                     </div>
                     <div className="form-group">
                       <label htmlFor="condition">Condition *</label>
                       <select
                         id="condition"
                         name="condition"
-                        className="form-input"
+                        className={getFieldErrorClass('condition', newBookErrors)}
                         value={newBookForm.condition}
-                        onChange={handleNewBookFormChange}
+                        onChange={handleNewBookChange}
+                        onBlur={handleNewBookBlur}
                         required
                       >
                         <option value="">Select condition</option>
@@ -362,6 +352,7 @@ const DonateBook = () => {
                           </option>
                         ))}
                       </select>
+                      {renderFieldError('condition', newBookErrors)}
                     </div>
                   </div>
 
@@ -370,12 +361,14 @@ const DonateBook = () => {
                     <textarea
                       id="description"
                       name="description"
-                      className="form-input form-textarea"
+                      className={getFieldErrorClass('description', newBookErrors, 'form-input form-textarea')}
                       value={newBookForm.description}
-                      onChange={handleNewBookFormChange}
+                      onChange={handleNewBookChange}
+                      onBlur={handleNewBookBlur}
                       placeholder="Any additional details about the book..."
                       rows="3"
                     />
+                    {renderFieldError('description', newBookErrors)}
                   </div>
 
                   <div className="form-actions">
@@ -408,9 +401,10 @@ const DonateBook = () => {
                       <select
                         id="borrowed_book_id"
                         name="borrowed_book_id"
-                        className="form-input"
+                        className={getFieldErrorClass('borrowed_book_id', borrowedBookErrors)}
                         value={borrowedBookForm.borrowed_book_id}
-                        onChange={handleBorrowedBookFormChange}
+                        onChange={handleBorrowedBookChange}
+                        onBlur={handleBorrowedBookBlur}
                         required
                       >
                         <option value="">Choose a book to donate</option>
@@ -423,6 +417,7 @@ const DonateBook = () => {
                           );
                         })}
                       </select>
+                      {renderFieldError('borrowed_book_id', borrowedBookErrors)}
                     </div>
 
                     <div className="form-group">
@@ -430,9 +425,10 @@ const DonateBook = () => {
                       <select
                         id="borrowed_condition"
                         name="condition"
-                        className="form-input"
+                        className={getFieldErrorClass('condition', borrowedBookErrors)}
                         value={borrowedBookForm.condition}
-                        onChange={handleBorrowedBookFormChange}
+                        onChange={handleBorrowedBookChange}
+                        onBlur={handleBorrowedBookBlur}
                         required
                       >
                         <option value="">Select condition</option>
@@ -442,6 +438,7 @@ const DonateBook = () => {
                           </option>
                         ))}
                       </select>
+                      {renderFieldError('condition', borrowedBookErrors)}
                     </div>
 
                     <div className="form-group">
@@ -449,12 +446,14 @@ const DonateBook = () => {
                       <textarea
                         id="borrowed_description"
                         name="description"
-                        className="form-input form-textarea"
+                        className={getFieldErrorClass('description', borrowedBookErrors, 'form-input form-textarea')}
                         value={borrowedBookForm.description}
-                        onChange={handleBorrowedBookFormChange}
+                        onChange={handleBorrowedBookChange}
+                        onBlur={handleBorrowedBookBlur}
                         placeholder="Any additional details about the book condition..."
                         rows="3"
                       />
+                      {renderFieldError('description', borrowedBookErrors)}
                     </div>
 
                     <div className="form-actions">

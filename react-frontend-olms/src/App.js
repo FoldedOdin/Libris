@@ -1,6 +1,6 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { ToastProvider } from './contexts/ToastContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import './styles/global.css';
 import './styles/components.css';
@@ -29,9 +29,10 @@ import BorrowedBooksTracking from './pages/Admin/BorrowedBooksTracking';
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <div className="App">
-          <Routes>
+      <ToastProvider>
+        <Router>
+          <div className="App">
+            <Routes>
             {/* Public routes */}
             <Route path="/" element={<Home />} />
             
@@ -151,9 +152,10 @@ function App() {
 
             {/* Catch all route - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </div>
-      </Router>
+            </Routes>
+          </div>
+        </Router>
+      </ToastProvider>
     </AuthProvider>
   );
 }

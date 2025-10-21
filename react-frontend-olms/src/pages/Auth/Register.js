@@ -1,13 +1,39 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useFormValidation, validationSchemas, validationRules, getFieldErrorClass, renderFieldError } from '../../utils/validation';
+import { useApiError } from '../../hooks/useApiError';
+import ErrorMessage from '../../components/common/ErrorMessage';
 import '../../styles/pages.css';
 
 const Register = () => {
   const navigate = useNavigate();
   const { register, isAdmin } = useAuth();
   
-  const [formData, setFormData] = useState({
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Use API error handling hook
+  const { 
+    error: apiError, 
+    errorType, 
+    isTemporary,
+    handleError: handleApiError, 
+    clearError: clearApiError,
+    getErrorMessage 
+  } = useApiError();
+
+  // Create custom validation schema for registration with password confirmation
+  const registerSchema = validationSchemas.register;
+  
+  // Use form validation hook
+  const {
+    formData,
+    errors,
+    handleChange: handleFormChange,
+    handleBlur,
+    validateForm: validateFormFields,
+    setFormData
+  } = useFormValidation(registerSchema, {
     username: '',
     email: '',
     first_name: '',
@@ -15,82 +41,38 @@ const Register = () => {
     password: '',
     confirm_password: ''
   });
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [apiError, setApiError] = useState('');
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear field-specific error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+    handleFormChange(e);
     
     // Clear API error when user makes changes
     if (apiError) {
-      setApiError('');
+      clearApiError();
     }
   };
 
   const validateForm = () => {
-    const newErrors = {};
-
-    // Username validation
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
-      newErrors.username = 'Username can only contain letters, numbers, and underscores';
+    // First validate basic fields
+    const isBasicValid = validateFormFields();
+    
+    // Then validate password confirmation separately
+    const confirmPasswordError = validationRules.passwordConfirm(
+      formData.confirm_password, 
+      formData.password
+    );
+    
+    if (confirmPasswordError) {
+      setFormData(prev => ({
+        ...prev,
+        errors: {
+          ...prev.errors,
+          confirm_password: confirmPasswordError
+        }
+      }));
+      return false;
     }
-
-    // Email validation
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-
-    // First name validation
-    if (!formData.first_name.trim()) {
-      newErrors.first_name = 'First name is required';
-    } else if (formData.first_name.length < 2) {
-      newErrors.first_name = 'First name must be at least 2 characters';
-    }
-
-    // Last name validation
-    if (!formData.last_name.trim()) {
-      newErrors.last_name = 'Last name is required';
-    } else if (formData.last_name.length < 2) {
-      newErrors.last_name = 'Last name must be at least 2 characters';
-    }
-
-    // Password validation
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
-    }
-
-    // Confirm password validation
-    if (!formData.confirm_password) {
-      newErrors.confirm_password = 'Please confirm your password';
-    } else if (formData.password !== formData.confirm_password) {
-      newErrors.confirm_password = 'Passwords do not match';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    
+    return isBasicValid;
   };
 
   const handleSubmit = async (e) => {
@@ -101,7 +83,7 @@ const Register = () => {
     }
 
     setIsLoading(true);
-    setApiError('');
+    clearApiError();
 
     try {
       const registrationData = {
@@ -119,23 +101,10 @@ const Register = () => {
         const redirectPath = isAdmin() ? '/admin/dashboard' : '/dashboard';
         navigate(redirectPath, { replace: true });
       } else {
-        // Handle specific validation errors from the backend
-        if (result.data && typeof result.data === 'object') {
-          const backendErrors = {};
-          Object.keys(result.data).forEach(field => {
-            if (Array.isArray(result.data[field])) {
-              backendErrors[field] = result.data[field][0];
-            } else {
-              backendErrors[field] = result.data[field];
-            }
-          });
-          setErrors(backendErrors);
-        } else {
-          setApiError(result.error || 'Registration failed. Please try again.');
-        }
+        handleApiError(result.error);
       }
     } catch (error) {
-      setApiError('An unexpected error occurred. Please try again.');
+      handleApiError(error);
     } finally {
       setIsLoading(false);
     }
@@ -148,9 +117,13 @@ const Register = () => {
         <p className="auth-subtitle">Sign up for a new account</p>
         
         {apiError && (
-          <div className="error-message">
-            {apiError}
-          </div>
+          <ErrorMessage 
+            message={getErrorMessage()}
+            errorType={errorType}
+            isTemporary={isTemporary}
+            onClose={clearApiError}
+            onRetry={isTemporary ? handleSubmit : null}
+          />
         )}
 
         <form onSubmit={handleSubmit} className="auth-form">
@@ -165,13 +138,12 @@ const Register = () => {
                 name="first_name"
                 value={formData.first_name}
                 onChange={handleChange}
-                className={`form-input ${errors.first_name ? 'error' : ''}`}
+                onBlur={handleBlur}
+                className={getFieldErrorClass('first_name', errors)}
                 placeholder="Enter your first name"
                 disabled={isLoading}
               />
-              {errors.first_name && (
-                <span className="field-error">{errors.first_name}</span>
-              )}
+              {renderFieldError('first_name', errors)}
             </div>
 
             <div className="form-group">
@@ -184,13 +156,12 @@ const Register = () => {
                 name="last_name"
                 value={formData.last_name}
                 onChange={handleChange}
-                className={`form-input ${errors.last_name ? 'error' : ''}`}
+                onBlur={handleBlur}
+                className={getFieldErrorClass('last_name', errors)}
                 placeholder="Enter your last name"
                 disabled={isLoading}
               />
-              {errors.last_name && (
-                <span className="field-error">{errors.last_name}</span>
-              )}
+              {renderFieldError('last_name', errors)}
             </div>
           </div>
 
@@ -204,13 +175,12 @@ const Register = () => {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className={`form-input ${errors.username ? 'error' : ''}`}
+              onBlur={handleBlur}
+              className={getFieldErrorClass('username', errors)}
               placeholder="Choose a username"
               disabled={isLoading}
             />
-            {errors.username && (
-              <span className="field-error">{errors.username}</span>
-            )}
+            {renderFieldError('username', errors)}
           </div>
 
           <div className="form-group">
@@ -223,13 +193,12 @@ const Register = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`form-input ${errors.email ? 'error' : ''}`}
+              onBlur={handleBlur}
+              className={getFieldErrorClass('email', errors)}
               placeholder="Enter your email address"
               disabled={isLoading}
             />
-            {errors.email && (
-              <span className="field-error">{errors.email}</span>
-            )}
+            {renderFieldError('email', errors)}
           </div>
 
           <div className="form-group">
@@ -242,13 +211,12 @@ const Register = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className={`form-input ${errors.password ? 'error' : ''}`}
+              onBlur={handleBlur}
+              className={getFieldErrorClass('password', errors)}
               placeholder="Create a password"
               disabled={isLoading}
             />
-            {errors.password && (
-              <span className="field-error">{errors.password}</span>
-            )}
+            {renderFieldError('password', errors)}
           </div>
 
           <div className="form-group">
@@ -261,13 +229,12 @@ const Register = () => {
               name="confirm_password"
               value={formData.confirm_password}
               onChange={handleChange}
-              className={`form-input ${errors.confirm_password ? 'error' : ''}`}
+              onBlur={handleBlur}
+              className={getFieldErrorClass('confirm_password', errors)}
               placeholder="Confirm your password"
               disabled={isLoading}
             />
-            {errors.confirm_password && (
-              <span className="field-error">{errors.confirm_password}</span>
-            )}
+            {renderFieldError('confirm_password', errors)}
           </div>
 
           <button
@@ -275,7 +242,13 @@ const Register = () => {
             className={`auth-button ${isLoading ? 'loading' : ''}`}
             disabled={isLoading}
           >
-            {isLoading ? 'Creating Account...' : 'Create Account'}
+            {isLoading ? (
+              <>
+                <span className="button-spinner-text">Creating Account...</span>
+              </>
+            ) : (
+              'Create Account'
+            )}
           </button>
         </form>
 
