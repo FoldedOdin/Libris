@@ -1,38 +1,50 @@
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import LoadingSpinner from './components/common/LoadingSpinner';
+import ErrorBoundary from './components/common/ErrorBoundary';
+import PerformanceMonitor from './components/common/PerformanceMonitor';
+import { useWebVitals } from './hooks/usePerformance';
 import './styles/global.css';
 import './styles/components.css';
 import './styles/pages.css';
 
-// Import page components
-import Home from './pages/Home';
+// Import critical pages (loaded immediately for better UX)
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 
-// User pages
-import UserDashboard from './pages/User/UserDashboard';
-import BookCatalog from './pages/User/BookCatalog';
-import BorrowedBooks from './pages/User/BorrowedBooks';
-import DonateBook from './pages/User/DonateBook';
-import SellBook from './pages/User/SellBook';
+// Lazy load pages for code splitting and better performance
+const Home = React.lazy(() => import('./pages/Home'));
 
-// Admin pages
-import AdminDashboard from './pages/Admin/AdminDashboard';
-import BookManagement from './pages/Admin/BookManagement';
-import UserManagement from './pages/Admin/UserManagement';
-import DonationManagement from './pages/Admin/DonationManagement';
-import SalesManagement from './pages/Admin/SalesManagement';
-import BorrowedBooksTracking from './pages/Admin/BorrowedBooksTracking';
+// User pages (lazy loaded)
+const UserDashboard = React.lazy(() => import('./pages/User/UserDashboard'));
+const BookCatalog = React.lazy(() => import('./pages/User/BookCatalog'));
+const BorrowedBooks = React.lazy(() => import('./pages/User/BorrowedBooks'));
+const DonateBook = React.lazy(() => import('./pages/User/DonateBook'));
+const SellBook = React.lazy(() => import('./pages/User/SellBook'));
+
+// Admin pages (lazy loaded)
+const AdminDashboard = React.lazy(() => import('./pages/Admin/AdminDashboard'));
+const BookManagement = React.lazy(() => import('./pages/Admin/BookManagement'));
+const UserManagement = React.lazy(() => import('./pages/Admin/UserManagement'));
+const DonationManagement = React.lazy(() => import('./pages/Admin/DonationManagement'));
+const SalesManagement = React.lazy(() => import('./pages/Admin/SalesManagement'));
+const BorrowedBooksTracking = React.lazy(() => import('./pages/Admin/BorrowedBooksTracking'));
 
 function App() {
+  // Initialize Web Vitals monitoring
+  useWebVitals();
+
   return (
-    <AuthProvider>
-      <ToastProvider>
-        <Router>
-          <div className="App">
-            <Routes>
+    <ErrorBoundary>
+      <AuthProvider>
+        <ToastProvider>
+          <Router>
+            <div className="App">
+              <Suspense fallback={<LoadingSpinner />}>
+                <Routes>
             {/* Public routes */}
             <Route path="/" element={<Home />} />
             
@@ -152,11 +164,14 @@ function App() {
 
             {/* Catch all route - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </div>
-        </Router>
-      </ToastProvider>
-    </AuthProvider>
+                </Routes>
+              </Suspense>
+              <PerformanceMonitor />
+            </div>
+          </Router>
+        </ToastProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
