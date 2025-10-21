@@ -1,1 +1,194 @@
+# Kiro IDE
 .kiro
+
+# React Frontend Dependencies
+react-frontend-olms/node_modules/
+react-frontend-olms/npm-debug.log*
+react-frontend-olms/yarn-debug.log*
+react-frontend-olms/yarn-error.log*
+
+# React Frontend Build Output
+react-frontend-olms/build/
+react-frontend-olms/dist/
+
+# React Frontend Environment Variables
+react-frontend-olms/.env
+react-frontend-olms/.env.local
+react-frontend-olms/.env.development.local
+react-frontend-olms/.env.test.local
+react-frontend-olms/.env.production.local
+
+# React Frontend Testing
+react-frontend-olms/coverage/
+react-frontend-olms/.nyc_output/
+
+# React Frontend Logs
+react-frontend-olms/logs/
+react-frontend-olms/*.log
+
+# React Frontend Runtime
+react-frontend-olms/pids/
+react-frontend-olms/*.pid
+react-frontend-olms/*.seed
+react-frontend-olms/*.pid.lock
+
+# React Frontend Cache
+react-frontend-olms/.npm/
+react-frontend-olms/.eslintcache
+react-frontend-olms/.cache/
+
+# React Frontend Editor directories and files
+react-frontend-olms/.vscode/
+react-frontend-olms/.idea/
+react-frontend-olms/*.swp
+react-frontend-olms/*.swo
+react-frontend-olms/*~
+
+# React Frontend OS generated files
+react-frontend-olms/.DS_Store
+react-frontend-olms/.DS_Store?
+react-frontend-olms/._*
+react-frontend-olms/.Spotlight-V100
+react-frontend-olms/.Trashes
+react-frontend-olms/ehthumbs.db
+react-frontend-olms/Thumbs.db
+
+# React Frontend Deployment
+react-frontend-olms/netlify.toml
+react-frontend-olms/vercel.json
+react-frontend-olms/Dockerfile
+react-frontend-olms/nginx.conf
+react-frontend-olms/.dockerignore
+
+# React Frontend Performance and Analysis
+react-frontend-olms/performance-budget.json
+react-frontend-olms/bundle-analyzer-report.html
+react-frontend-olms/lighthouse-report.html
+
+# React Frontend Temporary files
+react-frontend-olms/tmp/
+react-frontend-olms/temp/
+
+# Django Backend (if present)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Django Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django Database
+*.sqlite3
+*.db
+
+# Django Static files
+staticfiles/
+static/
+
+# Django Media files
+media/
+
+# Django Logs
+*.log
+
+# Django Cache
+.cache/
+
+# Django Sessions
+django_session/
+
+# Django Migrations (optional - uncomment if you want to ignore)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Package manager files
+package-lock.json
+yarn.lock
+Pipfile.lock
+
+# Testing
+.coverage
+.pytest_cache/
+.tox/
+.nox/
+htmlcov/
+
+# Documentation
+docs/_build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
