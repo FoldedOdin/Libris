@@ -309,6 +309,1112 @@
   background-color: #fef5f5;
 }
 
+/* Admin Dashboard Styles */
+.admin-dashboard {
+  padding: var(--spacing-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.dashboard-header h1 {
+  color: var(--dark-color);
+  margin-bottom: var(--spacing-sm);
+}
+
+.dashboard-header p {
+  color: var(--secondary-color);
+  font-size: var(--font-size-lg);
+}
+
+/* Dashboard Statistics */
+.dashboard-stats {
+  margin-bottom: var(--spacing-xl);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.stat-card {
+  background: white;
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  transition: transform 0.2s ease-in-out;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card.overdue {
+  border-left: 4px solid #e74c3c;
+}
+
+.stat-card.pending {
+  border-left: 4px solid #f39c12;
+}
+
+.stat-icon {
+  font-size: 2rem;
+  opacity: 0.8;
+}
+
+.stat-content h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.stat-content p {
+  color: var(--secondary-color);
+  margin: var(--spacing-xs) 0 0 0;
+  font-size: var(--font-size-sm);
+}
+
+/* Quick Actions */
+.dashboard-actions {
+  margin-bottom: var(--spacing-xl);
+}
+
+.dashboard-actions h2 {
+  color: var(--dark-color);
+  margin-bottom: var(--spacing-lg);
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+  justify-content: center;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn.primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background-color: var(--primary-dark);
+}
+
+.action-btn.secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.action-btn.secondary:hover {
+  background-color: #5a6268;
+}
+
+.action-btn.warning {
+  background-color: #f39c12;
+  color: white;
+}
+
+.action-btn.warning:hover {
+  background-color: #e67e22;
+}
+
+.action-btn.info {
+  background-color: #3498db;
+  color: white;
+}
+
+.action-btn.info:hover {
+  background-color: #2980b9;
+}
+
+.action-btn.success {
+  background-color: #27ae60;
+  color: white;
+}
+
+.action-btn.success:hover {
+  background-color: #229954;
+}
+
+.action-icon {
+  font-size: 1.2rem;
+}
+
+/* Recent Activities */
+.dashboard-activities {
+  margin-bottom: var(--spacing-xl);
+}
+
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.activity-section {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+}
+
+.activity-section h3 {
+  background-color: var(--primary-color);
+  color: white;
+  padding: var(--spacing-md);
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.activity-list {
+  padding: var(--spacing-md);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--light-color);
+  gap: var(--spacing-md);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-info {
+  flex: 1;
+}
+
+.activity-title {
+  font-weight: 600;
+  color: var(--dark-color);
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: var(--font-size-md);
+}
+
+.activity-subtitle {
+  color: var(--secondary-color);
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: var(--font-size-sm);
+}
+
+.activity-date {
+  color: var(--secondary-color);
+  margin: 0;
+  font-size: var(--font-size-xs);
+}
+
+.status-badge {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 12px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-borrowed {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.status-returned {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-overdue {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-default {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+.no-data {
+  text-align: center;
+  color: var(--secondary-color);
+  font-style: italic;
+  padding: var(--spacing-lg);
+}
+
+/* Book Management Styles */
+.book-management {
+  padding: var(--spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--light-color);
+}
+
+.page-header h1 {
+  color: var(--dark-color);
+  margin: 0;
+}
+
+/* Search and Filter Section */
+.search-filter-section {
+  background: white;
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: var(--spacing-lg);
+}
+
+.search-form {
+  margin: 0;
+}
+
+.search-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: var(--spacing-md);
+  align-items: end;
+}
+
+.search-input {
+  min-width: 0;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-md);
+}
+
+.modal-content {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-small {
+  max-width: 400px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--light-color);
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: var(--dark-color);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--secondary-color);
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  color: var(--dark-color);
+}
+
+.modal-body {
+  padding: var(--spacing-lg);
+}
+
+/* Book Form Styles */
+.book-form {
+  padding: var(--spacing-lg);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: var(--spacing-xs);
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.form-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--light-color);
+}
+
+/* Books Section */
+.books-section {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+}
+
+.books-header {
+  padding: var(--spacing-lg);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.books-header h2 {
+  margin: 0;
+}
+
+/* Books Table */
+.books-table {
+  overflow-x: auto;
+}
+
+.books-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.books-table th,
+.books-table td {
+  padding: var(--spacing-md);
+  text-align: left;
+  border-bottom: 1px solid var(--light-color);
+}
+
+.books-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: var(--dark-color);
+  position: sticky;
+  top: 0;
+}
+
+.books-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.book-title-cell strong {
+  display: block;
+  color: var(--dark-color);
+}
+
+.book-isbn {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-color);
+  margin-top: var(--spacing-xs);
+}
+
+.category-badge {
+  background-color: var(--primary-color);
+  color: white;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 12px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.availability-badge {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 12px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.availability-badge.available {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.availability-badge.unavailable {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background-color: #f8f9fa;
+}
+
+.pagination-info {
+  color: var(--secondary-color);
+  font-size: var(--font-size-sm);
+}
+
+/* No Data State */
+.no-data {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--secondary-color);
+}
+
+.no-data p {
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-lg);
+}
+
+/* Warning Text */
+.text-warning {
+  color: #856404;
+  font-size: var(--font-size-sm);
+  margin: var(--spacing-sm) 0 0 0;
+}
+
+/* User Management Styles */
+.user-management {
+  padding: var(--spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header-stats {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.stat-item {
+  background-color: var(--primary-color);
+  color: white;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+/* User Form Styles */
+.user-form {
+  padding: var(--spacing-lg);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  cursor: pointer;
+  margin-top: var(--spacing-md);
+}
+
+.form-checkbox {
+  margin: 0;
+}
+
+/* Users Section */
+.users-section {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+}
+
+.users-header {
+  padding: var(--spacing-lg);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.users-header h2 {
+  margin: 0;
+}
+
+/* Users Table */
+.users-table {
+  overflow-x: auto;
+}
+
+.users-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th,
+.users-table td {
+  padding: var(--spacing-md);
+  text-align: left;
+  border-bottom: 1px solid var(--light-color);
+}
+
+.users-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: var(--dark-color);
+  position: sticky;
+  top: 0;
+}
+
+.users-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.user-info-cell strong {
+  display: block;
+  color: var(--dark-color);
+}
+
+.user-full-name {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-color);
+  margin-top: var(--spacing-xs);
+}
+
+.role-badge {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 12px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.role-admin {
+  background-color: #dc3545;
+  color: white;
+}
+
+.role-user {
+  background-color: #28a745;
+  color: white;
+}
+
+.role-default {
+  background-color: #6c757d;
+  color: white;
+}
+
+.status-active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Donation Management Styles */
+.donation-management {
+  padding: var(--spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.stat-item.pending {
+  background-color: #f39c12;
+}
+
+/* Donations Section */
+.donations-section {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+}
+
+.donations-header {
+  padding: var(--spacing-lg);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.donations-header h2 {
+  margin: 0;
+}
+
+/* Donations Table */
+.donations-table {
+  overflow-x: auto;
+}
+
+.donations-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.donations-table th,
+.donations-table td {
+  padding: var(--spacing-md);
+  text-align: left;
+  border-bottom: 1px solid var(--light-color);
+}
+
+.donations-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: var(--dark-color);
+  position: sticky;
+  top: 0;
+}
+
+.donations-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.book-details-cell strong {
+  display: block;
+  color: var(--dark-color);
+}
+
+.book-author {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-color);
+  margin-top: var(--spacing-xs);
+}
+
+/* Condition Badges */
+.condition-badge {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 12px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.condition-excellent {
+  background-color: #28a745;
+  color: white;
+}
+
+.condition-good {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.condition-fair {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.condition-poor {
+  background-color: #dc3545;
+  color: white;
+}
+
+.condition-default {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Donation Details Modal */
+.donation-details {
+  margin-bottom: var(--spacing-lg);
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: var(--spacing-md);
+  align-items: center;
+}
+
+.detail-row label {
+  font-weight: 600;
+  color: var(--dark-color);
+  min-width: 120px;
+  margin-right: var(--spacing-md);
+}
+
+.detail-row span {
+  flex: 1;
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--light-color);
+}
+
+/* Info Text */
+.text-info {
+  color: #0c5460;
+  font-size: var(--font-size-sm);
+  margin: var(--spacing-sm) 0 0 0;
+}
+
+/* Sales Management Styles */
+.sales-management {
+  padding: var(--spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.stat-item.approved {
+  background-color: #28a745;
+}
+
+.stat-item.sold {
+  background-color: #17a2b8;
+}
+
+/* Price Filter */
+.price-filter-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--light-color);
+}
+
+.price-filter-row label {
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.price-input {
+  width: 100px;
+}
+
+/* Sales Section */
+.sales-section {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+}
+
+.sales-header {
+  padding: var(--spacing-lg);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.sales-header h2 {
+  margin: 0;
+}
+
+/* Sales Table */
+.sales-table {
+  overflow-x: auto;
+}
+
+.sales-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sales-table th,
+.sales-table td {
+  padding: var(--spacing-md);
+  text-align: left;
+  border-bottom: 1px solid var(--light-color);
+}
+
+.sales-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: var(--dark-color);
+  position: sticky;
+  top: 0;
+}
+
+.sales-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Price Display */
+.price-display {
+  font-weight: 600;
+  color: #28a745;
+  font-size: var(--font-size-lg);
+}
+
+/* Sale Details Modal */
+.sale-details {
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Status Badge for Sold */
+.status-sold {
+  background-color: #17a2b8;
+  color: white;
+}
+
+/* Responsive Sales Management */
+@media (max-width: 768px) {
+  .sales-management {
+    padding: var(--spacing-md);
+  }
+  
+  .price-filter-row {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+  
+  .price-input {
+    width: 80px;
+  }
+}
+
+/* Borrowed Books Tracking Styles */
+.borrowed-books-tracking {
+  padding: var(--spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.stat-item.overdue {
+  background-color: #dc3545;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: var(--spacing-lg);
+  overflow: hidden;
+}
+
+.tab-button {
+  flex: 1;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: none;
+  background: white;
+  color: var(--secondary-color);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-button:hover {
+  background-color: #f8f9fa;
+  color: var(--dark-color);
+}
+
+.tab-button.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-bottom-color: var(--primary-dark);
+}
+
+/* Overdue Styling */
+.overdue-date {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.overdue-days {
+  color: #dc3545;
+  font-weight: 600;
+  background-color: #f8d7da;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 12px;
+  font-size: var(--font-size-sm);
+}
+
+.not-overdue {
+  color: var(--secondary-color);
+}
+
+/* Status Badge for Overdue */
+.status-overdue {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Responsive Borrowed Books Tracking */
+@media (max-width: 768px) {
+  .borrowed-books-tracking {
+    padding: var(--spacing-md);
+  }
+  
+  .tab-navigation {
+    flex-direction: column;
+  }
+  
+  .tab-button {
+    border-bottom: 1px solid var(--light-color);
+    border-right: none;
+  }
+  
+  .tab-button:last-child {
+    border-bottom: none;
+  }
+  
+  .tab-button.active {
+    border-bottom-color: var(--primary-dark);
+    border-left: 3px solid var(--primary-dark);
+  }
+}
+
+/* Responsive Book Management Styles */
+@media (max-width: 768px) {
+  .book-management {
+    padding: var(--spacing-md);
+  }
+  
+  .page-header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: stretch;
+  }
+  
+  .search-row {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .books-table {
+    font-size: var(--font-size-sm);
+  }
+  
+  .books-table th,
+  .books-table td {
+    padding: var(--spacing-sm);
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .modal-content {
+    margin: var(--spacing-sm);
+    max-height: calc(100vh - 2 * var(--spacing-sm));
+  }
+  
+  .modal-header,
+  .modal-body,
+  .book-form {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Responsive Dashboard Styles */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: var(--spacing-md);
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .activities-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .activity-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .status-badge {
+    align-self: flex-start;
+    margin-top: var(--spacing-xs);
+  }
+}
+
 /* Responsive auth styles */
 @media (max-width: 768px) {
   .auth-container {
@@ -321,5 +1427,157 @@
   
   .form-row {
     grid-template-columns: 1fr;
+  }
+}/* B
+ook Catalog Styles */
+.book-catalog {
+  padding: var(--spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Book List View Styles */
+.book-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.book-list-item {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-lg);
+  transition: transform 0.2s ease-in-out;
+}
+
+.book-list-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.book-list-info {
+  flex: 1;
+}
+
+.book-list-info .book-title {
+  margin: 0 0 var(--spacing-xs) 0;
+  color: var(--dark-color);
+  font-size: var(--font-size-lg);
+}
+
+.book-list-info .book-author {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--secondary-color);
+}
+
+.book-list-info .book-description {
+  margin: var(--spacing-sm) 0 0 0;
+  color: var(--secondary-color);
+  line-height: 1.5;
+}
+
+.book-list-info .book-stock {
+  margin: var(--spacing-xs) 0 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--secondary-color);
+}
+
+.book-list-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  min-width: 120px;
+}
+
+/* Book Card Enhancements */
+.book-card .book-description {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-color);
+  line-height: 1.4;
+  margin: var(--spacing-sm) 0;
+}
+
+.book-card .book-stock {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-color);
+  margin: var(--spacing-xs) 0;
+}
+
+.book-card .book-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+}
+
+.book-card .book-details {
+  margin-top: var(--spacing-sm);
+}
+
+/* Book Details Modal Enhancements */
+.book-details .detail-row {
+  display: flex;
+  margin-bottom: var(--spacing-md);
+  align-items: flex-start;
+}
+
+.book-details .detail-row label {
+  font-weight: 600;
+  color: var(--dark-color);
+  min-width: 120px;
+  margin-right: var(--spacing-md);
+}
+
+.book-details .detail-row span {
+  flex: 1;
+  word-break: break-word;
+}
+
+/* Price Display */
+.price-display {
+  font-weight: 600;
+  color: #28a745;
+  font-size: var(--font-size-lg);
+}
+
+/* Responsive Book Catalog */
+@media (max-width: 768px) {
+  .book-catalog {
+    padding: var(--spacing-md);
+  }
+  
+  .book-list-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .book-list-actions {
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: auto;
+  }
+  
+  .book-card .book-actions {
+    flex-direction: column;
+  }
+  
+  .search-row {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  .book-details .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .book-details .detail-row label {
+    min-width: auto;
+    margin-right: 0;
+    margin-bottom: var(--spacing-xs);
   }
 }

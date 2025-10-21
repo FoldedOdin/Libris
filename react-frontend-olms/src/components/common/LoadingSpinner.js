@@ -1,11 +1,26 @@
-// Loading spinner component placeholder
 import React from 'react';
 
-const LoadingSpinner = () => {
+const LoadingSpinner = ({ 
+  size = 'medium', 
+  color = 'primary', 
+  text = 'Loading...', 
+  showText = true,
+  className = '' 
+}) => {
+  const sizeClass = `loading-spinner-${size}`;
+  const colorClass = `loading-spinner-${color}`;
+
   return (
-    <div>
-      {/* Loading spinner implementation will be added in later tasks */}
-      Loading...
+    <div className={`loading-spinner-container ${className}`}>
+      <div className={`loading-spinner ${sizeClass} ${colorClass}`}>
+        <div className="loading-spinner-circle"></div>
+        <div className="loading-spinner-circle"></div>
+        <div className="loading-spinner-circle"></div>
+        <div className="loading-spinner-circle"></div>
+      </div>
+      {showText && text && (
+        <div className="loading-spinner-text">{text}</div>
+      )}
     </div>
   );
 };

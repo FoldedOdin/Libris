@@ -24,6 +24,7 @@ import BookManagement from './pages/Admin/BookManagement';
 import UserManagement from './pages/Admin/UserManagement';
 import DonationManagement from './pages/Admin/DonationManagement';
 import SalesManagement from './pages/Admin/SalesManagement';
+import BorrowedBooksTracking from './pages/Admin/BorrowedBooksTracking';
 
 function App() {
   return (
@@ -132,6 +133,14 @@ function App() {
               element={
                 <ProtectedRoute requireAdmin={true}>
                   <SalesManagement />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/borrowed-books" 
+              element={
+                <ProtectedRoute requireAdmin={true}>
+                  <BorrowedBooksTracking />
                 </ProtectedRoute>
               } 
             />
