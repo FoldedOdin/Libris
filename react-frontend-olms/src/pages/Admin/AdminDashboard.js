@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { transactionsAPI } from '../../api/transactions';
 import { booksAPI } from '../../api/books';
 import { usersAPI } from '../../api/users';
@@ -10,6 +11,7 @@ import ErrorMessage from '../../components/common/ErrorMessage';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dashboardData, setDashboardData] = useState({
@@ -162,11 +164,24 @@ const AdminDashboard = () => {
     );
   }
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
   return (
     <div className="admin-dashboard">
-      <div className="dashboard-header">
-        <h1>Admin Dashboard</h1>
-        <p>Welcome to the library management system</p>
+      <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Welcome, {user?.username || 'Admin'}</p>
+        </div>
+        <button 
+          className="btn btn-danger"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </div>
 
       {/* Key Statistics */}

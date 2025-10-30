@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { transactionsAPI } from '../../api/transactions';
 import { donationsAPI } from '../../api/donations';
@@ -9,8 +9,9 @@ import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorMessage from '../../components/common/ErrorMessage';
 
 const UserDashboard = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [dashboardData, setDashboardData] = useState({
@@ -128,9 +129,20 @@ const UserDashboard = () => {
       <div className="main-content">
         <div className="user-dashboard">
           {/* Dashboard Header */}
-          <div className="user-dashboard-header">
-            <h1>Welcome back, {user?.first_name || user?.username}!</h1>
-            <p>Here's an overview of your library activity</p>
+          <div className="user-dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h1>Welcome back, {user?.first_name || user?.username}!</h1>
+              <p>Here's an overview of your library activity</p>
+            </div>
+            <button 
+              className="btn btn-danger"
+              onClick={async () => {
+                await logout();
+                navigate('/');
+              }}
+            >
+              Logout
+            </button>
           </div>
 
           {error && <ErrorMessage message={error} />}
