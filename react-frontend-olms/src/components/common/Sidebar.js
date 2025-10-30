@@ -19,26 +19,30 @@ const Sidebar = ({ isOpen, onToggle }) => {
     return null;
   }
 
-  // Mock function to fetch dashboard statistics
-  // This will be replaced with actual API calls when dashboard API is implemented
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setIsLoading(true);
-        // TODO: Replace with actual API calls when dashboard endpoints are available
-        // For now, using mock data
-        setTimeout(() => {
+        const response = await fetch('/api/dashboard/stats/', {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
           setStats({
-            totalBooks: 150,
-            totalUsers: 45,
-            pendingDonations: 8,
-            pendingSales: 12,
-            borrowedBooks: 23
+            totalBooks: data.total_books || 0,
+            totalUsers: data.total_users || 0,
+            pendingDonations: data.pending_donations || 0,
+            pendingSales: data.pending_sales || 0,
+            borrowedBooks: data.overdue_books || 0
           });
-          setIsLoading(false);
-        }, 1000);
+        }
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);
+      } finally {
         setIsLoading(false);
       }
     };

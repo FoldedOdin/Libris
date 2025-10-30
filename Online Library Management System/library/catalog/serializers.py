@@ -10,37 +10,42 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(source='category.name', read_only=True)
+    is_available = serializers.BooleanField(read_only=True)
     
     class Meta:
         model = Book
         fields = [
-            'id', 'title', 'author', 'isbn', 'category', 'category_name', 
+            'id', 'title', 'author', 'isbn', 'category', 
             'description', 'publication_date', 'pages', 'language', 
-            'available_copies', 'total_copies', 'image', 'created_at'
+            'available_copies', 'total_copies', 'price', 'image', 
+            'is_available', 'created_at', 'updated_at'
         ]
 
 
 class DonationSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
+    category_name = serializers.CharField(source='category.name', read_only=True, allow_null=True)
     
     class Meta:
         model = Donation
         fields = [
             'id', 'user', 'user_name', 'book_title', 'author', 'category', 
-            'condition', 'description', 'status', 'created_at', 'updated_at'
+            'category_name', 'condition', 'description', 'status', 
+            'created_at', 'updated_at'
         ]
         read_only_fields = ['user', 'created_at', 'updated_at']
 
 
 class SaleSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
+    category_name = serializers.CharField(source='category.name', read_only=True, allow_null=True)
     
     class Meta:
         model = Sale
         fields = [
             'id', 'user', 'user_name', 'book_title', 'author', 'category', 
-            'condition', 'price', 'description', 'status', 'created_at', 'updated_at'
+            'category_name', 'condition', 'price', 'description', 'status', 
+            'created_at', 'updated_at'
         ]
         read_only_fields = ['user', 'created_at', 'updated_at']
 
@@ -49,6 +54,9 @@ class TransactionSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
     book_title = serializers.CharField(source='book.title', read_only=True)
     book_author = serializers.CharField(source='book.author', read_only=True)
+    date = serializers.DateTimeField(read_only=True)
+    due_date = serializers.SerializerMethodField()
+    return_date = serializers.SerializerMethodField()
     
     class Meta:
         model = Transaction
@@ -56,6 +64,22 @@ class TransactionSerializer(serializers.ModelSerializer):
             'id', 'user', 'user_name', 'book', 'book_title', 'book_author',
             'transaction_type', 'date', 'due_date', 'returned', 'return_date'
         ]
+    
+    def get_due_date(self, obj):
+        if obj.due_date:
+            # Convert datetime to date if needed
+            if hasattr(obj.due_date, 'date'):
+                return obj.due_date.date()
+            return obj.due_date
+        return None
+    
+    def get_return_date(self, obj):
+        if obj.return_date:
+            # Convert datetime to date if needed
+            if hasattr(obj.return_date, 'date'):
+                return obj.return_date.date()
+            return obj.return_date
+        return None
 
 
 class UserSerializer(serializers.ModelSerializer):

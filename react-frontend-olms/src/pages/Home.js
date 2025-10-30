@@ -101,12 +101,12 @@ const Home = () => {
               onRetry={handleRetry}
               className="landing-error"
             />
-            
+
             <div className="fallback-navigation">
               <h2 className="fallback-title">Continue to:</h2>
               <div className="fallback-links">
-                <a 
-                  href="/login" 
+                <a
+                  href="/login"
                   className="btn btn-primary btn-lg fallback-link"
                   onClick={(e) => {
                     e.preventDefault();
@@ -115,8 +115,8 @@ const Home = () => {
                 >
                   Login Page
                 </a>
-                <a 
-                  href="/register" 
+                <a
+                  href="/register"
                   className="btn btn-secondary btn-lg fallback-link"
                   onClick={(e) => {
                     e.preventDefault();

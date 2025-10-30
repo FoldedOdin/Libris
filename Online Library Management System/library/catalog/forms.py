@@ -29,12 +29,13 @@ class CustomAuthenticationForm(AuthenticationForm):
 class DonationForm(forms.ModelForm):
     class Meta:
         model = Donation
-        fields = ['title', 'author', 'category', 'condition']
+        fields = ['book_title', 'author', 'category', 'condition', 'description']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'book_title': forms.TextInput(attrs={'class': 'form-control'}),
             'author': forms.TextInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
-            'condition': forms.Select(attrs={'class': 'form-control'}),
+            'condition': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
 
@@ -49,7 +50,7 @@ class HybridDonationForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-    title = forms.CharField(
+    book_title = forms.CharField(
         max_length=255,
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control'})
@@ -68,10 +69,14 @@ class HybridDonationForm(forms.ModelForm):
         choices=[('Excellent','Excellent'),('Good','Good'),('Fair','Fair'),('Poor','Poor')],
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
+    )
 
     class Meta:
         model = Donation
-        fields = ['borrowed_book', 'title', 'author', 'category', 'condition']
+        fields = ['borrowed_book', 'book_title', 'author', 'category', 'condition', 'description']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -81,16 +86,18 @@ class HybridDonationForm(forms.ModelForm):
         if user:
             self.fields['borrowed_book'].queryset = Book.objects.filter(
                 transaction__user=user,
-                transaction__transaction_type='borrow'
+                transaction__transaction_type='borrow',
+                transaction__returned=False
             ).distinct()
 
         # Pre-populate fields if editing
         if self.instance and self.instance.pk:
-            self.fields['title'].initial = self.instance.title
+            self.fields['book_title'].initial = self.instance.book_title
             self.fields['author'].initial = self.instance.author
             if self.instance.category:
                 self.fields['category'].initial = self.instance.category.pk
             self.fields['condition'].initial = self.instance.condition
+            self.fields['description'].initial = self.instance.description
 
     def clean(self):
         cleaned_data = super().clean()
@@ -98,9 +105,8 @@ class HybridDonationForm(forms.ModelForm):
 
         # Auto-fill fields if borrowed book selected
         if borrowed:
-            cleaned_data['title'] = borrowed.title
+            cleaned_data['book_title'] = borrowed.title
             cleaned_data['author'] = borrowed.author
-            cleaned_data['category'] = borrowed.category  # must be Category instance
 
         return cleaned_data
 
@@ -110,10 +116,10 @@ class HybridDonationForm(forms.ModelForm):
         category = self.cleaned_data.get('category')
 
         if borrowed:
-            donation.title = borrowed.title
+            donation.book_title = borrowed.title
             donation.author = borrowed.author
-            donation.category = borrowed.category
-        elif isinstance(category, Category):
+        
+        if isinstance(category, Category):
             donation.category = category
         else:
             donation.category = None
@@ -126,22 +132,33 @@ class HybridDonationForm(forms.ModelForm):
 class SaleForm(forms.ModelForm):
     class Meta:
         model = Sale
-        fields = ['book', 'price','status']
+        fields = ['book_title', 'author', 'category', 'condition', 'price', 'description']
         widgets = {
-            'book': forms.Select(attrs={'class': 'form-control'}),
+            'book_title': forms.TextInput(attrs={'class': 'form-control'}),
+            'author': forms.TextInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'condition': forms.TextInput(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
 # Book Form (for admin)
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['title', 'author', 'isbn', 'category', 'stock', 'price']
+        fields = ['title', 'author', 'isbn', 'category', 'description', 'publication_date', 
+                  'pages', 'language', 'total_copies', 'available_copies', 'price', 'image']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'author': forms.TextInput(attrs={'class': 'form-control'}),
             'isbn': forms.TextInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
-            'stock': forms.NumberInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'publication_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'pages': forms.NumberInput(attrs={'class': 'form-control'}),
+            'language': forms.Select(attrs={'class': 'form-control'}),
+            'total_copies': forms.NumberInput(attrs={'class': 'form-control'}),
+            'available_copies': forms.NumberInput(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
         }

@@ -64,11 +64,14 @@ const BookCatalog = () => {
         filters.category = selectedCategory;
       }
 
+      console.log('📡 Fetching books with filters:', filters);
       const response = await booksAPI.getAll(filters);
       const data = response.data;
+      console.log('📡 API Response:', data);
 
       if (data.results) {
         // Paginated response
+        console.log('📚 Setting books (paginated):', data.results.length, 'books');
         setBooks(data.results);
         setPagination(prev => ({
           ...prev,
@@ -77,6 +80,7 @@ const BookCatalog = () => {
         }));
       } else {
         // Non-paginated response
+        console.log('📚 Setting books (non-paginated):', Array.isArray(data) ? data.length : 0, 'books');
         setBooks(Array.isArray(data) ? data : []);
         setPagination(prev => ({
           ...prev,
@@ -85,7 +89,7 @@ const BookCatalog = () => {
         }));
       }
     } catch (err) {
-      console.error('Error fetching books:', err);
+      console.error('🔴 Error fetching books:', err);
       setError('Failed to load books. Please try again.');
       setBooks([]);
     } finally {
@@ -104,18 +108,45 @@ const BookCatalog = () => {
       setError('');
       setSuccess('');
 
-      await booksAPI.borrow(bookId);
-      setSuccess('Book borrowed successfully!');
+      console.log('🔵 BEFORE BORROW - Book state:', books.find(b => b.id === bookId));
+      
+      const response = await booksAPI.borrow(bookId);
+      console.log('🟢 BORROW RESPONSE:', response);
+      console.log('🟢 BORROW RESPONSE DATA:', response.data);
+      console.log('🟢 BORROW RESPONSE ERROR:', response.error);
+      
+      // Check if the response indicates failure
+      if (!response.success || response.error) {
+        console.error('🔴 BORROW FAILED:', response.error);
+        throw new Error(response.error?.userMessage || response.error?.message || 'Borrow failed');
+      }
       
       // Refresh the books list to update availability
-      fetchBooks();
+      console.log('🔄 Fetching updated books...');
+      await fetchBooks();
+      
+      // Use setTimeout to check state after React has updated
+      setTimeout(() => {
+        console.log('🟢 AFTER FETCH (delayed) - Book state:', books.find(b => b.id === bookId));
+      }, 100);
+      
+      setSuccess('Book borrowed successfully!');
       
       // Close book details modal if open
       setShowBookDetails(false);
       setSelectedBook(null);
     } catch (err) {
-      console.error('Error borrowing book:', err);
-      setError(err.response?.data?.error || 'Failed to borrow book. Please try again.');
+      console.error('🔴 Error borrowing book:', err);
+      console.error('🔴 Error response:', err.response);
+      console.error('🔴 Error response data:', err.response?.data);
+      console.error('🔴 Error message:', err.message);
+      
+      // Show the actual error message from backend
+      const errorMessage = err.response?.data?.error || 
+                          err.response?.data?.message || 
+                          err.response?.data?.detail ||
+                          'Failed to borrow book. Please try again.';
+      setError(errorMessage);
     } finally {
       setBorrowingBook(null);
     }
@@ -152,7 +183,7 @@ const BookCatalog = () => {
         <p className="book-author">by {book.author}</p>
         <div className="book-details">
           <span className="category-badge">{book.category}</span>
-          <p className="book-stock">Stock: {book.stock || 0}</p>
+          <p className="book-stock">Available: {book.available_copies || 0} / {book.total_copies || 0}</p>
           {book.description && (
             <p className="book-description">
               {book.description.length > 100 
@@ -171,7 +202,7 @@ const BookCatalog = () => {
           </button>
           <button 
             onClick={() => handleBorrowBook(book.id)}
-            disabled={borrowingBook === book.id || !book.is_available || (book.stock && book.stock <= 0)}
+            disabled={borrowingBook === book.id || !book.is_available || book.available_copies <= 0}
             className="btn btn-primary btn-sm"
           >
             {borrowingBook === book.id ? 'Borrowing...' : 'Borrow'}
@@ -187,7 +218,7 @@ const BookCatalog = () => {
         <h3 className="book-title">{book.title}</h3>
         <p className="book-author">by {book.author}</p>
         <span className="category-badge">{book.category}</span>
-        <p className="book-stock">Stock: {book.stock || 0}</p>
+        <p className="book-stock">Available: {book.available_copies || 0} / {book.total_copies || 0}</p>
         {book.description && (
           <p className="book-description">
             {book.description.length > 200 
@@ -206,7 +237,7 @@ const BookCatalog = () => {
         </button>
         <button 
           onClick={() => handleBorrowBook(book.id)}
-          disabled={borrowingBook === book.id || !book.is_available || (book.stock && book.stock <= 0)}
+          disabled={borrowingBook === book.id || !book.is_available || book.available_copies <= 0}
           className="btn btn-primary btn-sm"
         >
           {borrowingBook === book.id ? 'Borrowing...' : 'Borrow'}
@@ -388,8 +419,8 @@ const BookCatalog = () => {
                   </div>
                 )}
                 <div className="detail-row">
-                  <label>Stock:</label>
-                  <span>{selectedBook.stock || 0} available</span>
+                  <label>Available Copies:</label>
+                  <span>{selectedBook.available_copies || 0} / {selectedBook.total_copies || 0}</span>
                 </div>
                 {selectedBook.price && (
                   <div className="detail-row">
@@ -414,7 +445,7 @@ const BookCatalog = () => {
               <div className="modal-actions">
                 <button 
                   onClick={() => handleBorrowBook(selectedBook.id)}
-                  disabled={borrowingBook === selectedBook.id || !selectedBook.is_available || (selectedBook.stock && selectedBook.stock <= 0)}
+                  disabled={borrowingBook === selectedBook.id || !selectedBook.is_available || selectedBook.available_copies <= 0}
                   className="btn btn-primary"
                 >
                   {borrowingBook === selectedBook.id ? 'Borrowing...' : 'Borrow This Book'}

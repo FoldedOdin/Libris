@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { transactionsAPI } from '../../api/transactions';
 import { donationsAPI } from '../../api/donations';
@@ -10,6 +10,7 @@ import ErrorMessage from '../../components/common/ErrorMessage';
 
 const UserDashboard = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [dashboardData, setDashboardData] = useState({
@@ -30,7 +31,7 @@ const UserDashboard = () => {
     if (user) {
       fetchDashboardData();
     }
-  }, [user]);
+  }, [user, location.pathname]); // Refetch when route changes
 
   const fetchDashboardData = async () => {
     if (!user) {

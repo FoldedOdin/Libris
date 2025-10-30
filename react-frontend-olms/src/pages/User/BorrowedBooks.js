@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { transactionsAPI } from '../../api/transactions';
 import Navbar from '../../components/common/Navbar';
@@ -8,6 +9,7 @@ import SuccessMessage from '../../components/common/SuccessMessage';
 
 const BorrowedBooks = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [borrowedBooks, setBorrowedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -17,9 +19,10 @@ const BorrowedBooks = () => {
   const [borrowingHistory, setBorrowingHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
+  // Fetch borrowed books whenever we navigate to this page
   useEffect(() => {
     fetchBorrowedBooks();
-  }, []);
+  }, [location.pathname]); // Refetch when route changes
 
   useEffect(() => {
     if (selectedTab === 'history' && borrowingHistory.length === 0) {
@@ -195,21 +198,15 @@ const BorrowedBooks = () => {
                     </thead>
                     <tbody>
                       {borrowedBooks.map((transaction, index) => {
-                        const book = transaction.book || {};
                         const daysUntilDue = getDaysUntilDue(transaction.due_date);
                         const bookIsOverdue = isOverdue(transaction.due_date);
                         
                         return (
                           <tr key={transaction.id || index}>
                             <td className="book-title-cell">
-                              <strong>{book.title || 'Unknown Title'}</strong>
+                              <strong>{transaction.book_title || 'Unknown Title'}</strong>
                               <div className="book-isbn">
-                                by {book.author || 'Unknown Author'}
-                                {book.category && (
-                                  <span className="category-badge" style={{ marginLeft: 'var(--spacing-sm)' }}>
-                                    {book.category}
-                                  </span>
-                                )}
+                                by {transaction.book_author || 'Unknown Author'}
                               </div>
                             </td>
                             <td>{formatDate(transaction.date || transaction.borrowed_date)}</td>
@@ -243,7 +240,7 @@ const BorrowedBooks = () => {
                             <td>
                               <div className="action-buttons">
                                 <button
-                                  onClick={() => handleReturnBook(transaction.id, book.title)}
+                                  onClick={() => handleReturnBook(transaction.id, transaction.book_title)}
                                   disabled={returningBook === transaction.id}
                                   className="btn btn-success btn-sm"
                                 >
@@ -291,33 +288,27 @@ const BorrowedBooks = () => {
                     </thead>
                     <tbody>
                       {borrowingHistory.map((transaction, index) => {
-                        const book = transaction.book || {};
-                        const wasOverdue = transaction.returned_date && 
-                          new Date(transaction.returned_date) > new Date(transaction.due_date);
+                        const wasOverdue = transaction.return_date && 
+                          new Date(transaction.return_date) > new Date(transaction.due_date);
                         
                         return (
                           <tr key={transaction.id || index}>
                             <td className="book-title-cell">
-                              <strong>{book.title || 'Unknown Title'}</strong>
+                              <strong>{transaction.book_title || 'Unknown Title'}</strong>
                               <div className="book-isbn">
-                                by {book.author || 'Unknown Author'}
-                                {book.category && (
-                                  <span className="category-badge" style={{ marginLeft: 'var(--spacing-sm)' }}>
-                                    {book.category}
-                                  </span>
-                                )}
+                                by {transaction.book_author || 'Unknown Author'}
                               </div>
                             </td>
                             <td>{formatDate(transaction.date || transaction.borrowed_date)}</td>
                             <td>{formatDate(transaction.due_date)}</td>
-                            <td>{formatDate(transaction.returned_date)}</td>
+                            <td>{formatDate(transaction.return_date)}</td>
                             <td>
                               <span className={`status-badge ${getStatusBadgeClass(
-                                transaction.returned_date ? 
+                                transaction.return_date ? 
                                   (wasOverdue ? 'overdue' : 'returned') : 
                                   'borrowed'
                               )}`}>
-                                {transaction.returned_date ? 
+                                {transaction.return_date ? 
                                   (wasOverdue ? 'Returned Late' : 'Returned') : 
                                   'Borrowed'
                                 }

@@ -36,17 +36,33 @@ class Book(models.Model):
         ('History', 'History'),
         ('DataScience','DataScience'),
     ]
+    
+    LANGUAGE_CHOICES = [
+        ('English', 'English'),
+        ('Spanish', 'Spanish'),
+        ('French', 'French'),
+        ('German', 'German'),
+        ('Other', 'Other'),
+    ]
 
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     isbn = models.CharField(max_length=50, blank=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
-    stock = models.IntegerField(default=1)
     description = models.TextField(blank=True, null=True)
+    publication_date = models.DateField(null=True, blank=True)
+    pages = models.IntegerField(null=True, blank=True)
+    language = models.CharField(max_length=50, choices=LANGUAGE_CHOICES, default='English')
     price = models.DecimalField(max_digits=8, decimal_places=2, default=0)
-    is_available = models.BooleanField(default=True)
+    total_copies = models.IntegerField(default=1)
+    available_copies = models.IntegerField(default=1)
+    image = models.ImageField(upload_to='book_covers/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)   
     updated_at = models.DateTimeField(auto_now=True)
+    
+    @property
+    def is_available(self):
+        return self.available_copies > 0
 
     def __str__(self):
         return self.title
@@ -57,20 +73,25 @@ class Transaction(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) 
     transaction_type = models.CharField(max_length=10, choices=TRAN_TYPE)
     date = models.DateTimeField(auto_now_add=True)
-    due_date = models.DateTimeField(null=True, blank=True)  # only for borrow
+    due_date = models.DateField(null=True, blank=True)
+    returned = models.BooleanField(default=False)
+    return_date = models.DateField(null=True, blank=True)
     fine = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     
     def save(self, *args, **kwargs):
         # Assign due date if borrow
         if self.transaction_type == 'borrow' and not self.due_date:
-            self.due_date = timezone.now() + timedelta(days=14)  # 2 weeks
+            self.due_date = (timezone.now() + timedelta(days=14)).date()
         # Fine calculation if return and late
-        if self.transaction_type == 'return' and self.due_date:
-            if timezone.now() > self.due_date:
-                days_late = (timezone.now() - self.due_date).days
+        if self.returned and self.return_date and self.due_date:
+            # Ensure both are date objects for comparison
+            due_date = self.due_date.date() if hasattr(self.due_date, 'date') else self.due_date
+            return_date = self.return_date.date() if hasattr(self.return_date, 'date') else self.return_date
+            
+            if return_date > due_date:
+                days_late = (return_date - due_date).days
                 self.fine = days_late * 5  # Rs.5 per day late
         super().save(*args, **kwargs)
-
 
     def __str__(self):
         return f"{self.user.username} - {self.transaction_type} - {self.book.title}"
@@ -82,15 +103,17 @@ class Donation(models.Model):
         ('rejected', 'Rejected'),
     )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
+    book_title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     condition = models.CharField(max_length=100, default="Good")
+    description = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Donation: {self.title} by {self.user.username}"
+        return f"Donation: {self.book_title} by {self.user.username}"
 
 
 class Sale(models.Model):
@@ -101,10 +124,15 @@ class Sale(models.Model):
         ('sold', 'Sold'),
     )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book_title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    condition = models.CharField(max_length=100, default="Good")
+    description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Sale: {self.book.title} by {self.user.username} ({self.status})"
+        return f"Sale: {self.book_title} by {self.user.username} ({self.status})"

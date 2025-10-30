@@ -16,6 +16,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:frontend": "react-scripts start",
+    "start:backend": "cd \"../Online Library Management System/library\" && python manage.py runserver",
+    "start:all": "concurrently \"npm run start:backend\" \"npm run start:frontend\" --names \"backend,frontend\" --prefix-colors \"blue,green\"",
+    "dev": "npm run start:all",
     "build": "react-scripts build",
     "build:dev": "node scripts/build-config.js development && react-scripts build",
     "build:staging": "node scripts/build-config.js staging && react-scripts build",
@@ -50,6 +54,7 @@
   },
   "proxy": "http://localhost:8000",
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "http-proxy-middleware": "^3.0.5"
   }
 }

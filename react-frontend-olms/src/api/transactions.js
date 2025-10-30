@@ -63,7 +63,7 @@ export const transactionsAPI = {
   // Borrowed books management
   getBorrowedBooks: (filters = {}) => {
     const searchParams = transactionFilters.buildSearchParams(filters);
-    const url = searchParams ? `/my-borrowed/?${searchParams}` : '/my-borrowed/';
+    const url = searchParams ? `/my-borrowed-books/?${searchParams}` : '/my-borrowed-books/';
     return apiRequest(() => apiClient.get(url));
   },
   
@@ -76,7 +76,7 @@ export const transactionsAPI = {
   // Borrowing history and tracking
   getBorrowingHistory: (filters = {}) => {
     const searchParams = transactionFilters.buildSearchParams(filters);
-    const url = searchParams ? `/borrowing-history/?${searchParams}` : '/borrowing-history/';
+    const url = searchParams ? `/transactions/?${searchParams}` : '/transactions/';
     return apiRequest(() => apiClient.get(url));
   },
   
@@ -198,12 +198,12 @@ export const transactionsAPI = {
   getDashboardDirect: () => apiClient.get('/dashboard/'),
   getBorrowedBooksDirect: (filters = {}) => {
     const searchParams = transactionFilters.buildSearchParams(filters);
-    const url = searchParams ? `/my-borrowed/?${searchParams}` : '/my-borrowed/';
+    const url = searchParams ? `/my-borrowed-books/?${searchParams}` : '/my-borrowed-books/';
     return apiClient.get(url);
   },
   getBorrowingHistoryDirect: (filters = {}) => {
     const searchParams = transactionFilters.buildSearchParams(filters);
-    const url = searchParams ? `/borrowing-history/?${searchParams}` : '/borrowing-history/';
+    const url = searchParams ? `/transactions/?${searchParams}` : '/transactions/';
     return apiClient.get(url);
   },
   getAllBorrowedBooksDirect: (filters = {}) => {

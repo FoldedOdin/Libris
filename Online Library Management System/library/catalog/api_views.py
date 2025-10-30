@@ -110,11 +110,13 @@ class CurrentUserView(APIView):
 class BookListCreateView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     def get_queryset(self):
         queryset = Book.objects.all()
         search = self.request.query_params.get('search', None)
         category = self.request.query_params.get('category', None)
+        available = self.request.query_params.get('available', None)
         
         if search:
             queryset = queryset.filter(
@@ -125,6 +127,10 @@ class BookListCreateView(generics.ListCreateAPIView):
         
         if category:
             queryset = queryset.filter(category__name__icontains=category)
+        
+        # Filter by availability if requested
+        if available is not None and available.lower() == 'true':
+            queryset = queryset.filter(available_copies__gt=0)
             
         return queryset.order_by('-created_at')
 
@@ -132,10 +138,12 @@ class BookListCreateView(generics.ListCreateAPIView):
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class AvailableBooksView(generics.ListAPIView):
     serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     def get_queryset(self):
         return Book.objects.filter(available_copies__gt=0).order_by('-created_at')
@@ -145,6 +153,7 @@ class AvailableBooksView(generics.ListAPIView):
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [permissions.AllowAny]
 
 
 # Donations API
@@ -264,8 +273,11 @@ def reject_sale(request, pk):
 # Transactions API (Borrowed Books)
 class TransactionListView(generics.ListAPIView):
     serializer_class = TransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Transaction.objects.none()
         if self.request.user.is_staff:
             return Transaction.objects.all().order_by('-date')
         return Transaction.objects.filter(user=self.request.user).order_by('-date')
@@ -273,8 +285,11 @@ class TransactionListView(generics.ListAPIView):
 
 class MyBorrowedBooksView(generics.ListAPIView):
     serializer_class = TransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Transaction.objects.none()
         return Transaction.objects.filter(
             user=self.request.user,
             transaction_type='borrow',
@@ -294,11 +309,27 @@ class BorrowedBooksView(generics.ListAPIView):
 
 
 @api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
 def borrow_book(request, book_id):
+    print(f"\n{'='*60}")
+    print(f"BORROW REQUEST RECEIVED")
+    print(f"User: {request.user} (authenticated: {request.user.is_authenticated})")
+    print(f"Book ID: {book_id}")
+    print(f"Request data: {request.data}")
+    print(f"{'='*60}\n")
+    
+    if not request.user.is_authenticated:
+        print("ERROR: User not authenticated!")
+        return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+    
     try:
         book = Book.objects.get(id=book_id)
         
+        print(f"Book found: {book.title}")
+        print(f"Available copies: {book.available_copies}")
+        
         if book.available_copies <= 0:
+            print("ERROR: No copies available")
             return Response({'error': 'Book not available'}, status=status.HTTP_400_BAD_REQUEST)
         
         # Check if user already has this book borrowed
@@ -310,6 +341,7 @@ def borrow_book(request, book_id):
         ).exists()
         
         if existing_transaction:
+            print("ERROR: User already has this book borrowed")
             return Response({'error': 'You already have this book borrowed'}, status=status.HTTP_400_BAD_REQUEST)
         
         # Create transaction
@@ -325,13 +357,22 @@ def borrow_book(request, book_id):
         book.available_copies -= 1
         book.save()
         
+        print(f"SUCCESS: Book borrowed! New available count: {book.available_copies}")
+        print(f"Transaction ID: {transaction.id}")
+        
         return Response({
             'message': 'Book borrowed successfully',
             'transaction': TransactionSerializer(transaction).data
         })
         
     except Book.DoesNotExist:
+        print(f"ERROR: Book with ID {book_id} not found")
         return Response({'error': 'Book not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(f"ERROR: Unexpected exception: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['POST'])
