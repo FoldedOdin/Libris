@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { transactionsAPI } from '../../api/transactions';
 import Navbar from '../../components/common/Navbar';
@@ -10,6 +10,7 @@ import SuccessMessage from '../../components/common/SuccessMessage';
 const BorrowedBooks = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [borrowedBooks, setBorrowedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -138,7 +139,15 @@ const BorrowedBooks = () => {
         <div className="borrowed-books-tracking">
           {/* Page Header */}
           <div className="page-header">
-            <h1>My Borrowed Books</h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button 
+                className="btn btn-secondary"
+                onClick={() => navigate('/user/dashboard')}
+              >
+                ← Back
+              </button>
+              <h1>My Borrowed Books</h1>
+            </div>
             <div className="header-stats">
               <span className="stat-item">
                 {stats.total} books borrowed

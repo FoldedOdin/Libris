@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { booksAPI } from '../../api/books';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorMessage from '../../components/common/ErrorMessage';
 import SuccessMessage from '../../components/common/SuccessMessage';
 
 const BookManagement = () => {
+  const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -181,6 +183,13 @@ const BookManagement = () => {
   return (
     <div className="book-management">
       <div className="page-header">
+        <button 
+          className="btn btn-secondary"
+          onClick={() => navigate('/admin/dashboard')}
+          style={{ marginRight: '10px' }}
+        >
+          ← Back to Dashboard
+        </button>
         <h1>Book Management</h1>
         <button 
           className="btn btn-primary"

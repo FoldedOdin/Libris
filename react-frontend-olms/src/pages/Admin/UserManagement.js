@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usersAPI } from '../../api/users';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorMessage from '../../components/common/ErrorMessage';
 import SuccessMessage from '../../components/common/SuccessMessage';
 
 const UserManagement = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -191,7 +193,15 @@ const UserManagement = () => {
   return (
     <div className="user-management">
       <div className="page-header">
-        <h1>User Management</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button 
+            className="btn btn-secondary"
+            onClick={() => navigate('/admin/dashboard')}
+          >
+            ← Back
+          </button>
+          <h1>User Management</h1>
+        </div>
         <div className="header-stats">
           <span className="stat-item">Total Users: {pagination.totalCount}</span>
         </div>

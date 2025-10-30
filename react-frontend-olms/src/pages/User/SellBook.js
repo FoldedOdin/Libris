@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { salesAPI } from '../../api/sales';
 import { booksAPI } from '../../api/books';
@@ -10,6 +11,7 @@ import SuccessMessage from '../../components/common/SuccessMessage';
 
 const SellBook = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -162,7 +164,15 @@ const SellBook = () => {
         <div className="book-management">
           {/* Page Header */}
           <div className="page-header">
-            <h1>Sell a Book</h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button 
+                className="btn btn-secondary"
+                onClick={() => navigate('/user/dashboard')}
+              >
+                ← Back
+              </button>
+              <h1>Sell a Book</h1>
+            </div>
             <div className="header-stats">
               <button
                 onClick={() => setShowSalesHistory(!showSalesHistory)}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { booksAPI } from '../../api/books';
 import Navbar from '../../components/common/Navbar';
@@ -8,6 +9,7 @@ import SuccessMessage from '../../components/common/SuccessMessage';
 
 const BookCatalog = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -253,7 +255,15 @@ const BookCatalog = () => {
         <div className="book-management">
           {/* Page Header */}
           <div className="page-header">
-            <h1>Book Catalog</h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button 
+                className="btn btn-secondary"
+                onClick={() => navigate('/user/dashboard')}
+              >
+                ← Back
+              </button>
+              <h1>Book Catalog</h1>
+            </div>
             <div className="header-stats">
               <span className="stat-item">
                 {pagination.totalCount} books available

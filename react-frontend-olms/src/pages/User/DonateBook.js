@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { donationsAPI } from '../../api/donations';
 import { transactionsAPI } from '../../api/transactions';
@@ -10,6 +11,7 @@ import SuccessMessage from '../../components/common/SuccessMessage';
 
 const DonateBook = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -227,7 +229,15 @@ const DonateBook = () => {
         <div className="book-management">
           {/* Page Header */}
           <div className="page-header">
-            <h1>Donate a Book</h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button 
+                className="btn btn-secondary"
+                onClick={() => navigate('/user/dashboard')}
+              >
+                ← Back
+              </button>
+              <h1>Donate a Book</h1>
+            </div>
             <div className="header-stats">
               <button
                 onClick={() => setShowDonationHistory(!showDonationHistory)}

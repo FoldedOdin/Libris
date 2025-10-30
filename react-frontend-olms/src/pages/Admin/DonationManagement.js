@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { donationsAPI } from '../../api/donations';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorMessage from '../../components/common/ErrorMessage';
 import SuccessMessage from '../../components/common/SuccessMessage';
 
 const DonationManagement = () => {
+  const navigate = useNavigate();
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -159,7 +161,15 @@ const DonationManagement = () => {
   return (
     <div className="donation-management">
       <div className="page-header">
-        <h1>Donation Management</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button 
+            className="btn btn-secondary"
+            onClick={() => navigate('/admin/dashboard')}
+          >
+            ← Back
+          </button>
+          <h1>Donation Management</h1>
+        </div>
         <div className="header-stats">
           <span className="stat-item">Total: {pagination.totalCount}</span>
           <span className="stat-item pending">Pending: {getPendingCount()}</span>
