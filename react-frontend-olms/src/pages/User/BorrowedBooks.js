@@ -325,7 +325,7 @@ const BorrowedBooks = () => {
                               {transaction.fine && transaction.fine > 0 && (
                                 <div style={{ fontSize: 'var(--font-size-sm)', marginTop: 'var(--spacing-xs)' }}>
                                   <span style={{ color: '#dc3545', fontWeight: '600' }}>
-                                    Fine: ${transaction.fine}
+                                    Fine: ₹{transaction.fine}
                                   </span>
                                 </div>
                               )}

@@ -350,7 +350,7 @@ const AdminDashboard = () => {
                         {sale.book_title || 'Unknown Book'}
                       </p>
                       <p className="activity-subtitle">
-                        ${sale.price} - {sale.user_name || 'Unknown User'}
+                        ₹{sale.price} - {sale.user_name || 'Unknown User'}
                       </p>
                       <p className="activity-date">{formatDate(sale.created_at)}</p>
                     </div>

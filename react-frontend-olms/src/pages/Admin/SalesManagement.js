@@ -302,7 +302,7 @@ const SalesManagement = () => {
                 </div>
                 <div className="detail-row">
                   <label>Price:</label>
-                  <span className="price-display">${viewingSale.price?.toFixed(2) || '0.00'}</span>
+                  <span className="price-display">₹{viewingSale.price?.toFixed(2) || '0.00'}</span>
                 </div>
                 <div className="detail-row">
                   <label>Status:</label>
@@ -450,7 +450,7 @@ const SalesManagement = () => {
                             <span className="category-badge">{sale.book?.category || 'N/A'}</span>
                           </td>
                           <td>
-                            <span className="price-display">${sale.price ? parseFloat(sale.price).toFixed(2) : '0.00'}</span>
+                            <span className="price-display">₹{sale.price ? parseFloat(sale.price).toFixed(2) : '0.00'}</span>
                           </td>
                           <td>{sale.user?.username || 'Unknown'}</td>
                           <td>

@@ -360,7 +360,7 @@ const SellBook = () => {
                               )}
                             </td>
                             <td>
-                              <span className="price-display">${sale.price}</span>
+                              <span className="price-display">₹{sale.price}</span>
                             </td>
                             <td>
                               <span className={`condition-badge condition-${sale.condition}`}>

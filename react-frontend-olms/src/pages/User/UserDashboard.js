@@ -306,7 +306,7 @@ const UserDashboard = () => {
                           <p className="activity-date">
                             Listed: {formatDate(sale.created_at)}
                             {sale.price && (
-                              <span className="price-display"> - ${sale.price}</span>
+                              <span className="price-display"> - ₹{sale.price}</span>
                             )}
                           </p>
                         </div>

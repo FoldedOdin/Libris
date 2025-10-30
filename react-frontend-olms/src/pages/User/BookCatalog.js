@@ -435,7 +435,7 @@ const BookCatalog = () => {
                 {selectedBook.price && (
                   <div className="detail-row">
                     <label>Price:</label>
-                    <span className="price-display">${selectedBook.price}</span>
+                    <span className="price-display">₹{selectedBook.price}</span>
                   </div>
                 )}
                 {selectedBook.description && (
