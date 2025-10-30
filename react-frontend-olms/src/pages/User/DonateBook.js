@@ -120,11 +120,11 @@ const DonateBook = () => {
       setSuccess('');
 
       const donationData = {
-        title: newBookForm.title.trim(),
+        book_title: newBookForm.title.trim(),
         author: newBookForm.author.trim(),
-        category: newBookForm.category,
+        category: newBookForm.category || null,
         condition: newBookForm.condition,
-        description: newBookForm.description.trim() || undefined
+        description: newBookForm.description.trim() || ''
       };
 
       await donationsAPI.create(donationData);
@@ -175,11 +175,11 @@ const DonateBook = () => {
 
       const book = selectedTransaction.book || {};
       const donationData = {
-        title: book.title || 'Unknown Title',
+        book_title: book.title || 'Unknown Title',
         author: book.author || 'Unknown Author',
-        category: book.category || 'Uncategorized',
+        category: book.category || null,
         condition: borrowedBookForm.condition,
-        description: borrowedBookForm.description.trim() || undefined,
+        description: borrowedBookForm.description.trim() || '',
         borrowed_book_id: borrowedBookForm.borrowed_book_id
       };
 

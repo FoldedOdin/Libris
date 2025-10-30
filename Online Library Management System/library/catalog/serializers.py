@@ -25,6 +25,11 @@ class BookSerializer(serializers.ModelSerializer):
 class DonationSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True, allow_null=True)
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+        required=False,
+        allow_null=True
+    )
     
     class Meta:
         model = Donation
@@ -34,26 +39,71 @@ class DonationSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at'
         ]
         read_only_fields = ['user', 'created_at', 'updated_at']
+    
+    def to_internal_value(self, data):
+        # Handle category as string - convert to ID
+        if 'category' in data and data['category']:
+            category_value = data['category']
+            if isinstance(category_value, str) and not category_value.isdigit():
+                # It's a category name, find or create it
+                category, _ = Category.objects.get_or_create(name=category_value)
+                data = data.copy()
+                data['category'] = category.id
+        return super().to_internal_value(data)
 
 
 class SaleSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True, allow_null=True)
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+        required=False,
+        allow_null=True
+    )
+    # Add nested objects for frontend compatibility
+    book = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
     
     class Meta:
         model = Sale
         fields = [
-            'id', 'user', 'user_name', 'book_title', 'author', 'category', 
+            'id', 'user', 'user_name', 'book', 'book_title', 'author', 'category', 
             'category_name', 'condition', 'price', 'description', 'status', 
             'created_at', 'updated_at'
         ]
-        read_only_fields = ['user', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+    
+    def get_book(self, obj):
+        """Return book data in nested format for frontend"""
+        return {
+            'title': obj.book_title,
+            'author': obj.author,
+            'category': obj.category.name if obj.category else None
+        }
+    
+    def get_user(self, obj):
+        """Return user data in nested format for frontend"""
+        return {
+            'id': obj.user.id if obj.user else None,
+            'username': obj.user.username if obj.user else 'Unknown'
+        }
+    
+    def to_internal_value(self, data):
+        # Handle category as string - convert to ID
+        if 'category' in data and data['category']:
+            category_value = data['category']
+            if isinstance(category_value, str) and not category_value.isdigit():
+                # It's a category name, find or create it
+                category, _ = Category.objects.get_or_create(name=category_value)
+                data = data.copy()
+                data['category'] = category.id
+        return super().to_internal_value(data)
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-    user_name = serializers.CharField(source='user.username', read_only=True)
-    book_title = serializers.CharField(source='book.title', read_only=True)
-    book_author = serializers.CharField(source='book.author', read_only=True)
+    user_name = serializers.SerializerMethodField()
+    book_title = serializers.SerializerMethodField()
+    book_author = serializers.SerializerMethodField()
     date = serializers.DateTimeField(read_only=True)
     due_date = serializers.SerializerMethodField()
     return_date = serializers.SerializerMethodField()
@@ -64,6 +114,24 @@ class TransactionSerializer(serializers.ModelSerializer):
             'id', 'user', 'user_name', 'book', 'book_title', 'book_author',
             'transaction_type', 'date', 'due_date', 'returned', 'return_date'
         ]
+    
+    def get_user_name(self, obj):
+        try:
+            return obj.user.username if obj.user else 'Unknown User'
+        except:
+            return 'Unknown User'
+    
+    def get_book_title(self, obj):
+        try:
+            return obj.book.title if obj.book else 'Unknown Book'
+        except:
+            return 'Unknown Book'
+    
+    def get_book_author(self, obj):
+        try:
+            return obj.book.author if obj.book else 'Unknown Author'
+        except:
+            return 'Unknown Author'
     
     def get_due_date(self, obj):
         if obj.due_date:

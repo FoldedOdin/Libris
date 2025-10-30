@@ -450,7 +450,7 @@ const BookManagement = () => {
                               {book.is_available ? 'Yes' : 'No'}
                             </span>
                           </td>
-                          <td>${book.price?.toFixed(2) || '0.00'}</td>
+                          <td>${book.price ? parseFloat(book.price).toFixed(2) : '0.00'}</td>
                           <td>
                             <div className="action-buttons">
                               <button

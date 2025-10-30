@@ -69,7 +69,7 @@ export const transactionsAPI = {
   
   getAllBorrowedBooks: (filters = {}) => {
     const searchParams = transactionFilters.buildSearchParams(filters);
-    const url = searchParams ? `/dashboard/borrowed-books/?${searchParams}` : '/dashboard/borrowed-books/';
+    const url = searchParams ? `/borrowed-books/?${searchParams}` : '/borrowed-books/';
     return apiRequest(() => apiClient.get(url));
   },
   
@@ -82,7 +82,7 @@ export const transactionsAPI = {
   
   getAllBorrowingHistory: (filters = {}) => {
     const searchParams = transactionFilters.buildSearchParams(filters);
-    const url = searchParams ? `/dashboard/borrowing-history/?${searchParams}` : '/dashboard/borrowing-history/';
+    const url = searchParams ? `/transactions/?${searchParams}` : '/transactions/';
     return apiRequest(() => apiClient.get(url));
   },
   
@@ -208,7 +208,7 @@ export const transactionsAPI = {
   },
   getAllBorrowedBooksDirect: (filters = {}) => {
     const searchParams = transactionFilters.buildSearchParams(filters);
-    const url = searchParams ? `/dashboard/borrowed-books/?${searchParams}` : '/dashboard/borrowed-books/';
+    const url = searchParams ? `/borrowed-books/?${searchParams}` : '/borrowed-books/';
     return apiClient.get(url);
   },
   returnBookDirect: (transactionId, returnData = {}) => apiClient.post(`/transactions/${transactionId}/return/`, returnData),

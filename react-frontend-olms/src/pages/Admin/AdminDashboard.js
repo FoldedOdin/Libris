@@ -280,10 +280,10 @@ const AdminDashboard = () => {
                   <div key={index} className="activity-item">
                     <div className="activity-info">
                       <p className="activity-title">
-                        {transaction.book?.title || 'Unknown Book'}
+                        {transaction.book_title || 'Unknown Book'}
                       </p>
                       <p className="activity-subtitle">
-                        {transaction.user?.username || 'Unknown User'} - {transaction.transaction_type}
+                        {transaction.user_name || 'Unknown User'} - {transaction.transaction_type}
                       </p>
                       <p className="activity-date">{formatDate(transaction.date)}</p>
                     </div>
@@ -306,9 +306,9 @@ const AdminDashboard = () => {
                 dashboardData.recentDonations.map((donation, index) => (
                   <div key={index} className="activity-item">
                     <div className="activity-info">
-                      <p className="activity-title">{donation.title}</p>
+                      <p className="activity-title">{donation.book_title}</p>
                       <p className="activity-subtitle">
-                        by {donation.author} - {donation.user?.username || 'Unknown User'}
+                        by {donation.author} - {donation.user_name || 'Unknown User'}
                       </p>
                       <p className="activity-date">{formatDate(donation.created_at)}</p>
                     </div>
@@ -332,10 +332,10 @@ const AdminDashboard = () => {
                   <div key={index} className="activity-item">
                     <div className="activity-info">
                       <p className="activity-title">
-                        {sale.book?.title || 'Unknown Book'}
+                        {sale.book_title || 'Unknown Book'}
                       </p>
                       <p className="activity-subtitle">
-                        ${sale.price} - {sale.user?.username || 'Unknown User'}
+                        ${sale.price} - {sale.user_name || 'Unknown User'}
                       </p>
                       <p className="activity-date">{formatDate(sale.created_at)}</p>
                     </div>

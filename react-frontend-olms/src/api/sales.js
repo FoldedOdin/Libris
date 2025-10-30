@@ -72,11 +72,11 @@ export const salesAPI = {
   
   // Admin approval and rejection operations
   approve: (id, approvalData = {}) => apiRequest(() => 
-    apiClient.post(`/sales/approve/${id}/`, approvalData)
+    apiClient.post(`/sales/${id}/approve/`, approvalData)
   ),
   
   reject: (id, rejectionData = {}) => apiRequest(() => 
-    apiClient.post(`/sales/reject/${id}/`, rejectionData)
+    apiClient.post(`/sales/${id}/reject/`, rejectionData)
   ),
   
   // Status-based filtering
@@ -192,6 +192,6 @@ export const salesAPI = {
   createDirect: (data) => apiClient.post('/sell/', data),
   updateDirect: (id, data) => apiClient.put(`/sales/${id}/`, data),
   deleteDirect: (id) => apiClient.delete(`/sales/${id}/`),
-  approveDirect: (id, approvalData = {}) => apiClient.post(`/sales/approve/${id}/`, approvalData),
-  rejectDirect: (id, rejectionData = {}) => apiClient.post(`/sales/reject/${id}/`, rejectionData),
+  approveDirect: (id, approvalData = {}) => apiClient.post(`/sales/${id}/approve/`, approvalData),
+  rejectDirect: (id, rejectionData = {}) => apiClient.post(`/sales/${id}/reject/`, rejectionData),
 };

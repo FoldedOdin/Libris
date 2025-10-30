@@ -46,15 +46,15 @@ export const usersAPI = {
   // Admin user management operations
   getAll: (filters = {}) => {
     const searchParams = userFilters.buildSearchParams(filters);
-    const url = searchParams ? `/dashboard/users/?${searchParams}` : '/dashboard/users/';
+    const url = searchParams ? `/users/?${searchParams}` : '/users/';
     return apiRequest(() => apiClient.get(url));
   },
   
-  getById: (id) => apiRequest(() => apiClient.get(`/dashboard/users/${id}/`)),
+  getById: (id) => apiRequest(() => apiClient.get(`/users/${id}/`)),
   
-  update: (id, data) => apiRequest(() => apiClient.put(`/dashboard/users/${id}/`, data)),
+  update: (id, data) => apiRequest(() => apiClient.put(`/users/${id}/`, data)),
   
-  delete: (id) => apiRequest(() => apiClient.delete(`/dashboard/users/${id}/`)),
+  delete: (id) => apiRequest(() => apiClient.delete(`/users/${id}/`)),
   
   // User search and filtering
   search: (query, filters = {}) => {
@@ -89,39 +89,39 @@ export const usersAPI = {
   
   // User status management
   activateUser: (id) => apiRequest(() => 
-    apiClient.patch(`/dashboard/users/${id}/`, { is_active: true })
+    apiClient.patch(`/users/${id}/`, { is_active: true })
   ),
   
   deactivateUser: (id) => apiRequest(() => 
-    apiClient.patch(`/dashboard/users/${id}/`, { is_active: false })
+    apiClient.patch(`/users/${id}/`, { is_active: false })
   ),
   
   changeUserRole: (id, role) => apiRequest(() => 
-    apiClient.patch(`/dashboard/users/${id}/`, { role })
+    apiClient.patch(`/users/${id}/`, { role })
   ),
   
   // Bulk operations
   bulkUpdate: (userIds, updateData) => apiRequest(() => 
-    apiClient.patch('/dashboard/users/bulk-update/', { 
+    apiClient.patch('/users/bulk-update/', { 
       user_ids: userIds, 
       update_data: updateData 
     })
   ),
   
   bulkDelete: (userIds) => apiRequest(() => 
-    apiClient.delete('/dashboard/users/bulk-delete/', { 
+    apiClient.delete('/users/bulk-delete/', { 
       data: { user_ids: userIds } 
     })
   ),
   
   // User statistics
-  getUserStats: () => apiRequest(() => apiClient.get('/dashboard/users/stats/')),
+  getUserStats: () => apiRequest(() => apiClient.get('/users/stats/')),
   
   getUserActivity: (id, filters = {}) => {
     const searchParams = userFilters.buildSearchParams(filters);
     const url = searchParams ? 
-      `/dashboard/users/${id}/activity/?${searchParams}` : 
-      `/dashboard/users/${id}/activity/`;
+      `/users/${id}/activity/?${searchParams}` : 
+      `/users/${id}/activity/`;
     return apiRequest(() => apiClient.get(url));
   },
   
@@ -134,11 +134,11 @@ export const usersAPI = {
   // Direct API calls (without wrapper)
   getAllDirect: (filters = {}) => {
     const searchParams = userFilters.buildSearchParams(filters);
-    const url = searchParams ? `/dashboard/users/?${searchParams}` : '/dashboard/users/';
+    const url = searchParams ? `/users/?${searchParams}` : '/users/';
     return apiClient.get(url);
   },
   
-  getByIdDirect: (id) => apiClient.get(`/dashboard/users/${id}/`),
-  updateDirect: (id, data) => apiClient.put(`/dashboard/users/${id}/`, data),
-  deleteDirect: (id) => apiClient.delete(`/dashboard/users/${id}/`),
+  getByIdDirect: (id) => apiClient.get(`/users/${id}/`),
+  updateDirect: (id, data) => apiClient.put(`/users/${id}/`, data),
+  deleteDirect: (id) => apiClient.delete(`/users/${id}/`),
 };

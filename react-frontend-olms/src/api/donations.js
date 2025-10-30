@@ -58,7 +58,7 @@ export const donationsAPI = {
   
   getById: (id) => apiRequest(() => apiClient.get(`/donations/${id}/`)),
   
-  create: (data) => apiRequest(() => apiClient.post('/donate/', data)),
+  create: (data) => apiRequest(() => apiClient.post('/donations/', data)),
   
   update: (id, data) => apiRequest(() => apiClient.put(`/donations/${id}/`, data)),
   
@@ -66,11 +66,11 @@ export const donationsAPI = {
   
   // Admin approval and rejection functions
   approve: (id, approvalData = {}) => apiRequest(() => 
-    apiClient.post(`/dashboard/donations/approve/${id}/`, approvalData)
+    apiClient.post(`/donations/${id}/approve/`, approvalData)
   ),
   
   reject: (id, rejectionData = {}) => apiRequest(() => 
-    apiClient.post(`/dashboard/donations/reject/${id}/`, rejectionData)
+    apiClient.post(`/donations/${id}/reject/`, rejectionData)
   ),
   
   // Status-based filtering
@@ -134,14 +134,14 @@ export const donationsAPI = {
   
   // Bulk operations
   bulkApprove: (donationIds, approvalData = {}) => apiRequest(() => 
-    apiClient.post('/dashboard/donations/bulk-approve/', { 
+    apiClient.post('/donations/bulk-approve/', { 
       donation_ids: donationIds, 
       approval_data: approvalData 
     })
   ),
   
   bulkReject: (donationIds, rejectionData = {}) => apiRequest(() => 
-    apiClient.post('/dashboard/donations/bulk-reject/', { 
+    apiClient.post('/donations/bulk-reject/', { 
       donation_ids: donationIds, 
       rejection_data: rejectionData 
     })
@@ -164,9 +164,9 @@ export const donationsAPI = {
   },
   
   getByIdDirect: (id) => apiClient.get(`/donations/${id}/`),
-  createDirect: (data) => apiClient.post('/donate/', data),
+  createDirect: (data) => apiClient.post('/donations/', data),
   updateDirect: (id, data) => apiClient.put(`/donations/${id}/`, data),
   deleteDirect: (id) => apiClient.delete(`/donations/${id}/`),
-  approveDirect: (id, approvalData = {}) => apiClient.post(`/dashboard/donations/approve/${id}/`, approvalData),
-  rejectDirect: (id, rejectionData = {}) => apiClient.post(`/dashboard/donations/reject/${id}/`, rejectionData),
+  approveDirect: (id, approvalData = {}) => apiClient.post(`/donations/${id}/approve/`, approvalData),
+  rejectDirect: (id, rejectionData = {}) => apiClient.post(`/donations/${id}/reject/`, rejectionData),
 };

@@ -98,7 +98,7 @@ class ErrorBoundary extends React.Component {
                 <pre className="error-stack">
                   {this.state.error && this.state.error.toString()}
                   <br />
-                  {this.state.errorInfo.componentStack}
+                  {this.state.errorInfo?.componentStack}
                 </pre>
               </details>
             )}
@@ -123,7 +123,7 @@ class ErrorBoundary extends React.Component {
             </p>
           </div>
           
-          <style jsx>{`
+          <style>{`
             .error-boundary {
               display: flex;
               align-items: center;

@@ -267,7 +267,7 @@ const BorrowedBooksTracking = () => {
               <h2>Confirm Return</h2>
             </div>
             <div className="modal-body">
-              <p>Mark "{returnConfirm.book?.title}" as returned?</p>
+              <p>Mark "{returnConfirm.book_title}" as returned?</p>
               <p className="text-info">This will update the book's availability status.</p>
             </div>
             <div className="form-actions">
@@ -324,11 +324,11 @@ const BorrowedBooksTracking = () => {
                         <tr key={transaction.id}>
                           <td>
                             <div className="book-details-cell">
-                              <strong>{transaction.book?.title || 'N/A'}</strong>
-                              <div className="book-author">by {transaction.book?.author || 'Unknown'}</div>
+                              <strong>{transaction.book_title || 'N/A'}</strong>
+                              <div className="book-author">by {transaction.book_author || 'Unknown'}</div>
                             </div>
                           </td>
-                          <td>{transaction.user?.username || 'Unknown'}</td>
+                          <td>{transaction.user_name || 'Unknown'}</td>
                           <td>{formatDate(transaction.date)}</td>
                           <td>
                             <span className={isOverdue(transaction.due_date) ? 'overdue-date' : ''}>

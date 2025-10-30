@@ -159,8 +159,11 @@ class CategoryListView(generics.ListAPIView):
 # Donations API
 class DonationListCreateView(generics.ListCreateAPIView):
     serializer_class = DonationSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Donation.objects.none()
         if self.request.user.is_staff:
             return Donation.objects.all().order_by('-created_at')
         return Donation.objects.filter(user=self.request.user).order_by('-created_at')
@@ -171,32 +174,75 @@ class DonationListCreateView(generics.ListCreateAPIView):
 
 class MyDonationsView(generics.ListAPIView):
     serializer_class = DonationSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Donation.objects.none()
         return Donation.objects.filter(user=self.request.user).order_by('-created_at')
 
 
 class DonationDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DonationSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Donation.objects.none()
         if self.request.user.is_staff:
             return Donation.objects.all()
         return Donation.objects.filter(user=self.request.user)
 
 
 @api_view(['POST'])
+@permission_classes([permissions.IsAdminUser])
 def approve_donation(request, pk):
     if not request.user.is_staff:
         return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
     
     try:
         donation = Donation.objects.get(pk=pk)
+        
+        # Check if already approved
+        if donation.status == 'approved':
+            return Response({'message': 'Donation already approved'})
+        
+        # Get category name from the Category object if it exists
+        category_name = donation.category.name if donation.category else 'Fiction'
+        
+        # Ensure category matches one of the Book model choices
+        valid_categories = ['Science', 'Fiction', 'Mathematics', 'History', 'DataScience']
+        if category_name not in valid_categories:
+            category_name = 'Fiction'  # Default to Fiction if not in valid choices
+        
+        # Create a new book from the donation
+        book = Book.objects.create(
+            title=donation.book_title,
+            author=donation.author,
+            category=category_name,
+            description=donation.description or f"Donated by {donation.user.username}",
+            available_copies=1,
+            total_copies=1,
+            price=0.00,  # Donated books are free
+            publication_date=None,
+            pages=None,
+            language='English',
+            isbn=''
+        )
+        
+        # Update donation status
         donation.status = 'approved'
         donation.save()
-        return Response({'message': 'Donation approved successfully'})
+        
+        return Response({
+            'message': 'Donation approved successfully',
+            'book_id': book.id,
+            'book_title': book.title
+        })
     except Donation.DoesNotExist:
         return Response({'error': 'Donation not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': f'Error approving donation: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['POST'])
@@ -216,8 +262,11 @@ def reject_donation(request, pk):
 # Sales API
 class SaleListCreateView(generics.ListCreateAPIView):
     serializer_class = SaleSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Sale.objects.none()
         if self.request.user.is_staff:
             return Sale.objects.all().order_by('-created_at')
         return Sale.objects.filter(user=self.request.user).order_by('-created_at')
@@ -228,15 +277,21 @@ class SaleListCreateView(generics.ListCreateAPIView):
 
 class MySalesView(generics.ListAPIView):
     serializer_class = SaleSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Sale.objects.none()
         return Sale.objects.filter(user=self.request.user).order_by('-created_at')
 
 
 class SaleDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SaleSerializer
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Sale.objects.none()
         if self.request.user.is_staff:
             return Sale.objects.all()
         return Sale.objects.filter(user=self.request.user)
