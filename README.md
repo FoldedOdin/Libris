@@ -46,7 +46,38 @@ A comprehensive web-based library management system built with Django REST Frame
 
 ## Installation & Setup
 
-### Quick Start (Run Both Backend & Frontend Together)
+### Automated Installation (Recommended)
+
+#### For Windows:
+```bash
+install.bat
+```
+
+#### For Linux/Mac:
+```bash
+chmod +x install.sh
+./install.sh
+```
+
+The installation script will:
+1. Install root dependencies (concurrently)
+2. Install frontend dependencies
+3. Install backend dependencies
+4. Run database migrations
+
+After installation, run:
+```bash
+cd .\react-frontend-olms\
+```
+```bash
+npm run dev
+```
+
+This will start:
+- Backend API at: `http://localhost:8000`
+- Frontend at: `http://localhost:3000`
+
+### Manual Installation (Alternative)
 
 1. Install root dependencies:
 
@@ -209,13 +240,17 @@ New users can register through the signup page:
 4. **Donate Books**
 
    - Navigate to "Donate Books"
-   - Enter book details (title, author, category, condition)
+   - Enter book details (title, author, category, condition, quantity)
+   - Specify how many copies you're donating
    - Submit for admin approval
+   - Approved donations are added to the library catalog as free books
 
 5. **Sell Books**
    - Navigate to "Sell Books"
-   - Enter book details and set your price
+   - Enter your own book details and set your price
    - Submit for admin approval
+   - Approved sales are added to the catalog with your specified price
+   - If the book already exists, only the price is updated
 
 ### For Administrators
 
@@ -365,20 +400,3 @@ set PORT=3001 && npm start
 rm -rf node_modules package-lock.json
 npm install
 ```
-
-## Contributing
-
-This is a project for educational purposes. Feel free to fork and modify as needed.
-
-## License
-
-This project is open source and available for educational use.
-
-## Support
-
-For issues or questions, please refer to the documentation or contact the system administrator.
-
----
-
-**Last Updated:** October 30, 2025
-**Version:** 1.0.0
