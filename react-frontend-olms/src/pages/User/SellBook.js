@@ -106,10 +106,12 @@ const SellBook = () => {
       }
 
       const saleData = {
-        book_id: parseInt(saleForm.book_id),
+        book_title: selectedBook.title,
+        author: selectedBook.author,
+        category: selectedBook.category,
         price: parseFloat(saleForm.price),
         condition: saleForm.condition,
-        description: saleForm.description.trim() || undefined
+        description: saleForm.description.trim() || ''
       };
 
       await salesAPI.create(saleData);
@@ -252,7 +254,7 @@ const SellBook = () => {
 
                   <div className="form-row">
                     <div className="form-group">
-                      <label htmlFor="price">Selling Price ($) *</label>
+                      <label htmlFor="price">Selling Price (₹) *</label>
                       <input
                         type="number"
                         id="price"

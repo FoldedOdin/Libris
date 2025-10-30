@@ -1,0 +1,22 @@
+{
+  "name": "online-library-management-system",
+  "version": "1.0.0",
+  "description": "Online Library Management System - Full Stack Application",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd \"Online Library Management System/library\" && python manage.py runserver",
+    "frontend": "cd react-frontend-olms && npm start",
+    "install-all": "cd react-frontend-olms && npm install"
+  },
+  "keywords": [
+    "library",
+    "management",
+    "django",
+    "react"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

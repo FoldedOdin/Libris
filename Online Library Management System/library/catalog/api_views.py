@@ -164,9 +164,31 @@ class DonationListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return Donation.objects.none()
+        
+        # Base queryset
         if self.request.user.is_staff:
-            return Donation.objects.all().order_by('-created_at')
-        return Donation.objects.filter(user=self.request.user).order_by('-created_at')
+            queryset = Donation.objects.all()
+        else:
+            queryset = Donation.objects.filter(user=self.request.user)
+        
+        # Apply filters from query parameters
+        status_filter = self.request.query_params.get('status', None)
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        
+        category_filter = self.request.query_params.get('category', None)
+        if category_filter:
+            queryset = queryset.filter(category__name=category_filter)
+        
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = queryset.filter(
+                Q(book_title__icontains=search) |
+                Q(author__icontains=search) |
+                Q(user__username__icontains=search)
+            )
+        
+        return queryset.order_by('-created_at')
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -267,9 +289,31 @@ class SaleListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return Sale.objects.none()
+        
+        # Base queryset
         if self.request.user.is_staff:
-            return Sale.objects.all().order_by('-created_at')
-        return Sale.objects.filter(user=self.request.user).order_by('-created_at')
+            queryset = Sale.objects.all()
+        else:
+            queryset = Sale.objects.filter(user=self.request.user)
+        
+        # Apply filters from query parameters
+        status_filter = self.request.query_params.get('status', None)
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        
+        category_filter = self.request.query_params.get('category', None)
+        if category_filter:
+            queryset = queryset.filter(category__name=category_filter)
+        
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = queryset.filter(
+                Q(book_title__icontains=search) |
+                Q(author__icontains=search) |
+                Q(user__username__icontains=search)
+            )
+        
+        return queryset.order_by('-created_at')
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

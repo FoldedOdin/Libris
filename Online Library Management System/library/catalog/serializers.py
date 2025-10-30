@@ -30,6 +30,8 @@ class DonationSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True
     )
+    # Add nested objects for frontend compatibility
+    user = serializers.SerializerMethodField()
     
     class Meta:
         model = Donation
@@ -38,7 +40,14 @@ class DonationSerializer(serializers.ModelSerializer):
             'category_name', 'condition', 'description', 'status', 
             'created_at', 'updated_at'
         ]
-        read_only_fields = ['user', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+    
+    def get_user(self, obj):
+        """Return user data in nested format for frontend"""
+        return {
+            'id': obj.user.id if obj.user else None,
+            'username': obj.user.username if obj.user else 'Unknown'
+        }
     
     def to_internal_value(self, data):
         # Handle category as string - convert to ID
@@ -104,6 +113,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
     book_title = serializers.SerializerMethodField()
     book_author = serializers.SerializerMethodField()
+    book = serializers.SerializerMethodField()
     date = serializers.DateTimeField(read_only=True)
     due_date = serializers.SerializerMethodField()
     return_date = serializers.SerializerMethodField()
@@ -114,6 +124,21 @@ class TransactionSerializer(serializers.ModelSerializer):
             'id', 'user', 'user_name', 'book', 'book_title', 'book_author',
             'transaction_type', 'date', 'due_date', 'returned', 'return_date'
         ]
+    
+    def get_book(self, obj):
+        """Return book data in nested format for frontend"""
+        try:
+            if obj.book:
+                return {
+                    'id': obj.book.id,
+                    'title': obj.book.title,
+                    'author': obj.book.author,
+                    'isbn': obj.book.isbn,
+                    'category': obj.book.category
+                }
+            return None
+        except:
+            return None
     
     def get_user_name(self, obj):
         try:
@@ -153,7 +178,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'date_joined']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'date_joined']
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -198,7 +223,7 @@ class UserLoginSerializer(serializers.Serializer):
             if not user:
                 raise serializers.ValidationError('Invalid credentials')
             if not user.is_active:
-                raise serializers.ValidationError('User account is disabled')
+                raise serializers.ValidationError('Your account has been deactivated. Please contact the administrator.')
             attrs['user'] = user
         else:
             raise serializers.ValidationError('Must include username and password')

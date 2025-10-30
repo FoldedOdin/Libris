@@ -64,7 +64,7 @@ export const salesAPI = {
   
   getById: (id) => apiRequest(() => apiClient.get(`/sales/${id}/`)),
   
-  create: (data) => apiRequest(() => apiClient.post('/sell/', data)),
+  create: (data) => apiRequest(() => apiClient.post('/sales/', data)),
   
   update: (id, data) => apiRequest(() => apiClient.put(`/sales/${id}/`, data)),
   

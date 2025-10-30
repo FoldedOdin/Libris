@@ -12,10 +12,15 @@ const DonationManagement = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [activeTab, setActiveTab] = useState('pending'); // 'pending', 'approved', 'rejected'
   const [categoryFilter, setCategoryFilter] = useState('');
   const [viewingDonation, setViewingDonation] = useState(null);
   const [actionConfirm, setActionConfirm] = useState(null);
+  const [tabCounts, setTabCounts] = useState({
+    pending: 0,
+    approved: 0,
+    rejected: 0
+  });
   const [pagination, setPagination] = useState({
     page: 1,
     totalPages: 1,
@@ -24,7 +29,26 @@ const DonationManagement = () => {
 
   useEffect(() => {
     fetchDonations();
-  }, [searchTerm, statusFilter, categoryFilter, pagination.page]);
+    fetchTabCounts();
+  }, [searchTerm, activeTab, categoryFilter, pagination.page]);
+
+  const fetchTabCounts = async () => {
+    try {
+      const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
+        donationsAPI.getAll({ status: 'pending', page_size: 1 }),
+        donationsAPI.getAll({ status: 'approved', page_size: 1 }),
+        donationsAPI.getAll({ status: 'rejected', page_size: 1 })
+      ]);
+
+      setTabCounts({
+        pending: pendingRes.success ? (pendingRes.data.count || 0) : 0,
+        approved: approvedRes.success ? (approvedRes.data.count || 0) : 0,
+        rejected: rejectedRes.success ? (rejectedRes.data.count || 0) : 0
+      });
+    } catch (err) {
+      console.error('Error fetching tab counts:', err);
+    }
+  };
 
   const fetchDonations = async () => {
     try {
@@ -34,14 +58,12 @@ const DonationManagement = () => {
       const filters = {
         page: pagination.page,
         page_size: 10,
-        ordering: '-created_at'
+        ordering: '-created_at',
+        status: activeTab // Filter by active tab
       };
 
       if (searchTerm) {
         filters.search = searchTerm;
-      }
-      if (statusFilter) {
-        filters.status = statusFilter;
       }
       if (categoryFilter) {
         filters.category = categoryFilter;
@@ -83,7 +105,8 @@ const DonationManagement = () => {
       if (response.success) {
         setSuccess('Donation approved successfully!');
         setActionConfirm(null);
-        fetchDonations();
+        // Refresh both donations and tab counts
+        await Promise.all([fetchDonations(), fetchTabCounts()]);
       } else {
         setError(response.error?.message || 'Failed to approve donation');
       }
@@ -105,7 +128,8 @@ const DonationManagement = () => {
       if (response.success) {
         setSuccess('Donation rejected successfully!');
         setActionConfirm(null);
-        fetchDonations();
+        // Refresh both donations and tab counts
+        await Promise.all([fetchDonations(), fetchTabCounts()]);
       } else {
         setError(response.error?.message || 'Failed to reject donation');
       }
@@ -155,7 +179,15 @@ const DonationManagement = () => {
   };
 
   const getPendingCount = () => {
-    return donations.filter(donation => donation.status === 'pending').length;
+    return tabCounts.pending;
+  };
+
+  const getApprovedCount = () => {
+    return tabCounts.approved;
+  };
+
+  const getRejectedCount = () => {
+    return tabCounts.rejected;
   };
 
   return (
@@ -171,13 +203,47 @@ const DonationManagement = () => {
           <h1>Donation Management</h1>
         </div>
         <div className="header-stats">
-          <span className="stat-item">Total: {pagination.totalCount}</span>
-          <span className="stat-item pending">Pending: {getPendingCount()}</span>
+          <span className="stat-item">
+            {activeTab === 'pending' && `Pending: ${pagination.totalCount}`}
+            {activeTab === 'approved' && `Approved: ${pagination.totalCount}`}
+            {activeTab === 'rejected' && `Rejected: ${pagination.totalCount}`}
+          </span>
         </div>
       </div>
 
       {error && <ErrorMessage message={error} onClose={() => setError(null)} />}
       {success && <SuccessMessage message={success} onClose={() => setSuccess(null)} />}
+
+      {/* Tab Navigation */}
+      <div className="tab-navigation" style={{ marginBottom: '20px' }}>
+        <button
+          className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('pending');
+            setPagination({ ...pagination, page: 1 });
+          }}
+        >
+          Pending ({getPendingCount()})
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'approved' ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('approved');
+            setPagination({ ...pagination, page: 1 });
+          }}
+        >
+          Approved ({getApprovedCount()})
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'rejected' ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('rejected');
+            setPagination({ ...pagination, page: 1 });
+          }}
+        >
+          Rejected ({getRejectedCount()})
+        </button>
+      </div>
 
       {/* Search and Filter Section */}
       <div className="search-filter-section">
@@ -190,16 +256,6 @@ const DonationManagement = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="form-input search-input"
             />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="form-select"
-            >
-              <option value="">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="approved">Approved</option>
-              <option value="rejected">Rejected</option>
-            </select>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
@@ -451,12 +507,11 @@ const DonationManagement = () => {
             ) : (
               <div className="no-data">
                 <p>No donations found.</p>
-                {(searchTerm || statusFilter || categoryFilter) && (
+                {(searchTerm || categoryFilter) && (
                   <button 
                     className="btn btn-secondary"
                     onClick={() => {
                       setSearchTerm('');
-                      setStatusFilter('');
                       setCategoryFilter('');
                     }}
                   >

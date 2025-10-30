@@ -12,11 +12,17 @@ const SalesManagement = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [activeTab, setActiveTab] = useState('pending'); // 'pending', 'approved', 'rejected', 'sold'
   const [categoryFilter, setCategoryFilter] = useState('');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [viewingSale, setViewingSale] = useState(null);
   const [actionConfirm, setActionConfirm] = useState(null);
+  const [tabCounts, setTabCounts] = useState({
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+    sold: 0
+  });
   const [pagination, setPagination] = useState({
     page: 1,
     totalPages: 1,
@@ -25,7 +31,28 @@ const SalesManagement = () => {
 
   useEffect(() => {
     fetchSales();
-  }, [searchTerm, statusFilter, categoryFilter, pagination.page]);
+    fetchTabCounts();
+  }, [searchTerm, activeTab, categoryFilter, pagination.page]);
+
+  const fetchTabCounts = async () => {
+    try {
+      const [pendingRes, approvedRes, rejectedRes, soldRes] = await Promise.all([
+        salesAPI.getAll({ status: 'pending', page_size: 1 }),
+        salesAPI.getAll({ status: 'approved', page_size: 1 }),
+        salesAPI.getAll({ status: 'rejected', page_size: 1 }),
+        salesAPI.getAll({ status: 'sold', page_size: 1 })
+      ]);
+
+      setTabCounts({
+        pending: pendingRes.success ? (pendingRes.data.count || 0) : 0,
+        approved: approvedRes.success ? (approvedRes.data.count || 0) : 0,
+        rejected: rejectedRes.success ? (rejectedRes.data.count || 0) : 0,
+        sold: soldRes.success ? (soldRes.data.count || 0) : 0
+      });
+    } catch (err) {
+      console.error('Error fetching tab counts:', err);
+    }
+  };
 
   const fetchSales = async () => {
     try {
@@ -35,14 +62,12 @@ const SalesManagement = () => {
       const filters = {
         page: pagination.page,
         page_size: 10,
-        ordering: '-created_at'
+        ordering: '-created_at',
+        status: activeTab // Filter by active tab
       };
 
       if (searchTerm) {
         filters.search = searchTerm;
-      }
-      if (statusFilter) {
-        filters.status = statusFilter;
       }
       if (categoryFilter) {
         filters.category = categoryFilter;
@@ -90,7 +115,7 @@ const SalesManagement = () => {
       if (response.success) {
         setSuccess('Sale approved successfully!');
         setActionConfirm(null);
-        fetchSales();
+        await Promise.all([fetchSales(), fetchTabCounts()]);
       } else {
         setError(response.error?.message || 'Failed to approve sale');
       }
@@ -112,7 +137,7 @@ const SalesManagement = () => {
       if (response.success) {
         setSuccess('Sale rejected successfully!');
         setActionConfirm(null);
-        fetchSales();
+        await Promise.all([fetchSales(), fetchTabCounts()]);
       } else {
         setError(response.error?.message || 'Failed to reject sale');
       }
@@ -171,15 +196,19 @@ const SalesManagement = () => {
   };
 
   const getPendingCount = () => {
-    return sales.filter(sale => sale.status === 'pending').length;
+    return tabCounts.pending;
   };
 
   const getApprovedCount = () => {
-    return sales.filter(sale => sale.status === 'approved').length;
+    return tabCounts.approved;
+  };
+
+  const getRejectedCount = () => {
+    return tabCounts.rejected;
   };
 
   const getSoldCount = () => {
-    return sales.filter(sale => sale.status === 'sold').length;
+    return tabCounts.sold;
   };
 
   return (
@@ -195,15 +224,57 @@ const SalesManagement = () => {
           <h1>Sales Management</h1>
         </div>
         <div className="header-stats">
-          <span className="stat-item">Total: {pagination.totalCount}</span>
-          <span className="stat-item pending">Pending: {getPendingCount()}</span>
-          <span className="stat-item approved">Approved: {getApprovedCount()}</span>
-          <span className="stat-item sold">Sold: {getSoldCount()}</span>
+          <span className="stat-item">
+            {activeTab === 'pending' && `Pending: ${pagination.totalCount}`}
+            {activeTab === 'approved' && `Approved: ${pagination.totalCount}`}
+            {activeTab === 'rejected' && `Rejected: ${pagination.totalCount}`}
+            {activeTab === 'sold' && `Sold: ${pagination.totalCount}`}
+          </span>
         </div>
       </div>
 
       {error && <ErrorMessage message={error} onClose={() => setError(null)} />}
       {success && <SuccessMessage message={success} onClose={() => setSuccess(null)} />}
+
+      {/* Tab Navigation */}
+      <div className="tab-navigation" style={{ marginBottom: '20px' }}>
+        <button
+          className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('pending');
+            setPagination({ ...pagination, page: 1 });
+          }}
+        >
+          Pending ({getPendingCount()})
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'approved' ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('approved');
+            setPagination({ ...pagination, page: 1 });
+          }}
+        >
+          Approved ({getApprovedCount()})
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'rejected' ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('rejected');
+            setPagination({ ...pagination, page: 1 });
+          }}
+        >
+          Rejected ({getRejectedCount()})
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'sold' ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('sold');
+            setPagination({ ...pagination, page: 1 });
+          }}
+        >
+          Sold ({getSoldCount()})
+        </button>
+      </div>
 
       {/* Search and Filter Section */}
       <div className="search-filter-section">
@@ -216,17 +287,6 @@ const SalesManagement = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="form-input search-input"
             />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="form-select"
-            >
-              <option value="">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="approved">Approved</option>
-              <option value="rejected">Rejected</option>
-              <option value="sold">Sold</option>
-            </select>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
@@ -302,7 +362,7 @@ const SalesManagement = () => {
                 </div>
                 <div className="detail-row">
                   <label>Price:</label>
-                  <span className="price-display">₹{viewingSale.price?.toFixed(2) || '0.00'}</span>
+                  <span className="price-display">₹{viewingSale.price ? parseFloat(viewingSale.price).toFixed(2) : '0.00'}</span>
                 </div>
                 <div className="detail-row">
                   <label>Status:</label>
@@ -529,12 +589,11 @@ const SalesManagement = () => {
             ) : (
               <div className="no-data">
                 <p>No sales found.</p>
-                {(searchTerm || statusFilter || categoryFilter || priceRange.min || priceRange.max) && (
+                {(searchTerm || categoryFilter || priceRange.min || priceRange.max) && (
                   <button 
                     className="btn btn-secondary"
                     onClick={() => {
                       setSearchTerm('');
-                      setStatusFilter('');
                       setCategoryFilter('');
                       setPriceRange({ min: '', max: '' });
                     }}

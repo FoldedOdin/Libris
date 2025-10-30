@@ -68,7 +68,10 @@ const Login = () => {
         if (from) {
           navigate(from, { replace: true });
         } else {
-          const redirectPath = isAdmin() ? '/admin/dashboard' : '/dashboard';
+          // Check admin status from the fresh user data
+          const userData = JSON.parse(localStorage.getItem('user'));
+          const isUserAdmin = userData?.role === 'admin' || userData?.is_staff === true;
+          const redirectPath = isUserAdmin ? '/admin/dashboard' : '/dashboard';
           navigate(redirectPath, { replace: true });
         }
       } else {

@@ -15,9 +15,6 @@ const DonateBook = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [donationType, setDonationType] = useState('new'); // 'new' or 'borrowed'
-  const [borrowedBooks, setBorrowedBooks] = useState([]);
-  const [loadingBorrowedBooks, setLoadingBorrowedBooks] = useState(false);
   const [myDonations, setMyDonations] = useState([]);
   const [loadingDonations, setLoadingDonations] = useState(false);
   const [showDonationHistory, setShowDonationHistory] = useState(false);
@@ -38,19 +35,7 @@ const DonateBook = () => {
     description: ''
   });
 
-  // Form validation for borrowed book donation
-  const {
-    formData: borrowedBookForm,
-    errors: borrowedBookErrors,
-    handleChange: handleBorrowedBookChange,
-    handleBlur: handleBorrowedBookBlur,
-    validateForm: validateBorrowedBookForm,
-    resetForm: resetBorrowedBookForm
-  } = useFormValidation(validationSchemas.sale, {
-    borrowed_book_id: '',
-    condition: '',
-    description: ''
-  });
+
 
   // Available categories and conditions
   const categories = [
@@ -66,11 +51,7 @@ const DonateBook = () => {
     { value: 'poor', label: 'Poor - Significant wear' }
   ];
 
-  useEffect(() => {
-    if (donationType === 'borrowed') {
-      fetchBorrowedBooks();
-    }
-  }, [donationType]);
+
 
   useEffect(() => {
     if (showDonationHistory && myDonations.length === 0) {
@@ -78,19 +59,7 @@ const DonateBook = () => {
     }
   }, [showDonationHistory]);
 
-  const fetchBorrowedBooks = async () => {
-    try {
-      setLoadingBorrowedBooks(true);
-      const response = await transactionsAPI.getBorrowedBooks();
-      const books = response.data?.results || response.data || [];
-      setBorrowedBooks(books);
-    } catch (err) {
-      console.error('Error fetching borrowed books:', err);
-      setError('Failed to load borrowed books. Please try again.');
-    } finally {
-      setLoadingBorrowedBooks(false);
-    }
-  };
+
 
   const fetchMyDonations = async () => {
     try {
@@ -153,60 +122,7 @@ const DonateBook = () => {
     }
   };
 
-  const handleBorrowedBookSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateBorrowedBookForm()) {
-      setError('Please fix the validation errors before submitting.');
-      return;
-    }
 
-    try {
-      setLoading(true);
-      setError('');
-      setSuccess('');
-
-      const selectedTransaction = borrowedBooks.find(
-        book => book.id.toString() === borrowedBookForm.borrowed_book_id
-      );
-
-      if (!selectedTransaction) {
-        setError('Selected book not found');
-        return;
-      }
-
-      const book = selectedTransaction.book || {};
-      const donationData = {
-        book_title: book.title || 'Unknown Title',
-        author: book.author || 'Unknown Author',
-        category: book.category || null,
-        condition: borrowedBookForm.condition,
-        description: borrowedBookForm.description.trim() || '',
-        borrowed_book_id: borrowedBookForm.borrowed_book_id
-      };
-
-      await donationsAPI.create(donationData);
-      setSuccess('Borrowed book donation submitted successfully! It will be reviewed by an administrator.');
-      
-      // Reset form
-      resetBorrowedBookForm({
-        borrowed_book_id: '',
-        condition: '',
-        description: ''
-      });
-
-      // Refresh borrowed books and donation history
-      fetchBorrowedBooks();
-      if (showDonationHistory) {
-        fetchMyDonations();
-      }
-    } catch (err) {
-      console.error('Error submitting borrowed book donation:', err);
-      setError(err.response?.data?.error || 'Failed to submit donation. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -251,47 +167,13 @@ const DonateBook = () => {
           {error && <ErrorMessage message={error} />}
           {success && <SuccessMessage message={success} />}
 
-          {/* Donation Type Selection */}
-          <div className="search-filter-section">
-            <h2>Choose Donation Type</h2>
-            <div className="form-row">
-              <div className="form-group">
-                <label>
-                  <input
-                    type="radio"
-                    name="donationType"
-                    value="new"
-                    checked={donationType === 'new'}
-                    onChange={(e) => setDonationType(e.target.value)}
-                    style={{ marginRight: 'var(--spacing-xs)' }}
-                  />
-                  Donate a new book
-                </label>
-              </div>
-              <div className="form-group">
-                <label>
-                  <input
-                    type="radio"
-                    name="donationType"
-                    value="borrowed"
-                    checked={donationType === 'borrowed'}
-                    onChange={(e) => setDonationType(e.target.value)}
-                    style={{ marginRight: 'var(--spacing-xs)' }}
-                  />
-                  Donate a borrowed book
-                </label>
-              </div>
-            </div>
-          </div>
-
           {/* New Book Donation Form */}
-          {donationType === 'new' && (
-            <div className="books-section">
-              <div className="books-header">
-                <h2>Donate a New Book</h2>
-              </div>
-              <div className="modal-body">
-                <form onSubmit={handleNewBookSubmit} className="book-form">
+          <div className="books-section">
+            <div className="books-header">
+              <h2>Donate a Book</h2>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleNewBookSubmit} className="book-form">
                   <div className="form-row">
                     <div className="form-group">
                       <label htmlFor="title">Book Title *</label>
@@ -393,100 +275,6 @@ const DonateBook = () => {
                 </form>
               </div>
             </div>
-          )}
-
-          {/* Borrowed Book Donation Form */}
-          {donationType === 'borrowed' && (
-            <div className="books-section">
-              <div className="books-header">
-                <h2>Donate a Borrowed Book</h2>
-              </div>
-              <div className="modal-body">
-                {loadingBorrowedBooks ? (
-                  <LoadingSpinner />
-                ) : borrowedBooks.length > 0 ? (
-                  <form onSubmit={handleBorrowedBookSubmit} className="book-form">
-                    <div className="form-group">
-                      <label htmlFor="borrowed_book_id">Select Borrowed Book *</label>
-                      <select
-                        id="borrowed_book_id"
-                        name="borrowed_book_id"
-                        className={getFieldErrorClass('borrowed_book_id', borrowedBookErrors)}
-                        value={borrowedBookForm.borrowed_book_id}
-                        onChange={handleBorrowedBookChange}
-                        onBlur={handleBorrowedBookBlur}
-                        required
-                      >
-                        <option value="">Choose a book to donate</option>
-                        {borrowedBooks.map(transaction => {
-                          const book = transaction.book || {};
-                          return (
-                            <option key={transaction.id} value={transaction.id}>
-                              {book.title || 'Unknown Title'} by {book.author || 'Unknown Author'}
-                            </option>
-                          );
-                        })}
-                      </select>
-                      {renderFieldError('borrowed_book_id', borrowedBookErrors)}
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="borrowed_condition">Condition *</label>
-                      <select
-                        id="borrowed_condition"
-                        name="condition"
-                        className={getFieldErrorClass('condition', borrowedBookErrors)}
-                        value={borrowedBookForm.condition}
-                        onChange={handleBorrowedBookChange}
-                        onBlur={handleBorrowedBookBlur}
-                        required
-                      >
-                        <option value="">Select condition</option>
-                        {conditions.map(condition => (
-                          <option key={condition.value} value={condition.value}>
-                            {condition.label}
-                          </option>
-                        ))}
-                      </select>
-                      {renderFieldError('condition', borrowedBookErrors)}
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="borrowed_description">Description (Optional)</label>
-                      <textarea
-                        id="borrowed_description"
-                        name="description"
-                        className={getFieldErrorClass('description', borrowedBookErrors, 'form-input form-textarea')}
-                        value={borrowedBookForm.description}
-                        onChange={handleBorrowedBookChange}
-                        onBlur={handleBorrowedBookBlur}
-                        placeholder="Any additional details about the book condition..."
-                        rows="3"
-                      />
-                      {renderFieldError('description', borrowedBookErrors)}
-                    </div>
-
-                    <div className="form-actions">
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="btn btn-primary"
-                      >
-                        {loading ? 'Submitting...' : 'Submit Donation'}
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <div className="no-data">
-                    <p>You don't have any borrowed books to donate</p>
-                    <a href="/books" className="btn btn-primary">
-                      Browse Books to Borrow
-                    </a>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* Donation History */}
           {showDonationHistory && (
