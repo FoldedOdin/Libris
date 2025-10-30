@@ -237,29 +237,48 @@ def approve_donation(request, pk):
         if category_name not in valid_categories:
             category_name = 'Fiction'  # Default to Fiction if not in valid choices
         
-        # Create a new book from the donation
-        book = Book.objects.create(
-            title=donation.book_title,
-            author=donation.author,
-            category=category_name,
-            description=donation.description or f"Donated by {donation.user.username}",
-            available_copies=1,
-            total_copies=1,
-            price=0.00,  # Donated books are free
-            publication_date=None,
-            pages=None,
-            language='English',
-            isbn=''
-        )
+        # Get quantity from donation (default to 1 if not set)
+        quantity = getattr(donation, 'quantity', 1) or 1
+        
+        # Check if book already exists
+        existing_book = Book.objects.filter(
+            title__iexact=donation.book_title,
+            author__iexact=donation.author
+        ).first()
+        
+        if existing_book:
+            # Update existing book stock
+            existing_book.total_copies += quantity
+            existing_book.available_copies += quantity
+            existing_book.save()
+            book = existing_book
+            message = f'Donation approved successfully. Added {quantity} copies to existing book.'
+        else:
+            # Create a new book from the donation
+            book = Book.objects.create(
+                title=donation.book_title,
+                author=donation.author,
+                category=category_name,
+                description=donation.description or f"Donated by {donation.user.username}",
+                available_copies=quantity,
+                total_copies=quantity,
+                price=0.00,  # Donated books are free
+                publication_date=None,
+                pages=None,
+                language='English',
+                isbn=''
+            )
+            message = f'Donation approved successfully. Added {quantity} new copies to catalog.'
         
         # Update donation status
         donation.status = 'approved'
         donation.save()
         
         return Response({
-            'message': 'Donation approved successfully',
+            'message': message,
             'book_id': book.id,
-            'book_title': book.title
+            'book_title': book.title,
+            'quantity': quantity
         })
     except Donation.DoesNotExist:
         return Response({'error': 'Donation not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -350,9 +369,41 @@ def approve_sale(request, pk):
         sale = Sale.objects.get(pk=pk)
         sale.status = 'approved'
         sale.save()
-        return Response({'message': 'Sale approved successfully'})
+        
+        # Check if book already exists in catalog
+        existing_book = Book.objects.filter(
+            title__iexact=sale.book_title,
+            author__iexact=sale.author
+        ).first()
+        
+        if existing_book:
+            # Update existing book's price only
+            existing_book.price = sale.price
+            existing_book.save()
+            message = f'Sale approved successfully. Book price updated to ₹{sale.price}'
+            book_id = existing_book.id
+        else:
+            # Create a new book in the catalog with the sale price
+            book = Book.objects.create(
+                title=sale.book_title,
+                author=sale.author,
+                category=sale.category.name if sale.category else 'Other',
+                description=sale.description or f'Book sold by {sale.user.username}',
+                price=sale.price,
+                total_copies=1,
+                available_copies=1
+            )
+            message = f'Sale approved successfully and book added to catalog with price ₹{sale.price}'
+            book_id = book.id
+        
+        return Response({
+            'message': message,
+            'book_id': book_id
+        })
     except Sale.DoesNotExist:
         return Response({'error': 'Sale not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['POST'])

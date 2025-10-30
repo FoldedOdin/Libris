@@ -108,6 +108,7 @@ class Donation(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     condition = models.CharField(max_length=100, default="Good")
     description = models.TextField(blank=True, null=True)
+    quantity = models.IntegerField(default=1)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

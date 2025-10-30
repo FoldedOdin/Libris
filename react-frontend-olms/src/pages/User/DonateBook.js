@@ -32,6 +32,7 @@ const DonateBook = () => {
     author: '',
     category: '',
     condition: '',
+    quantity: '1',
     description: ''
   });
 
@@ -95,6 +96,7 @@ const DonateBook = () => {
         author: newBookForm.author.trim(),
         category: newBookForm.category || null,
         condition: newBookForm.condition,
+        quantity: parseInt(newBookForm.quantity) || 1,
         description: newBookForm.description.trim() || ''
       };
 
@@ -107,6 +109,7 @@ const DonateBook = () => {
         author: '',
         category: '',
         condition: '',
+        quantity: '1',
         description: ''
       });
 
@@ -245,6 +248,26 @@ const DonateBook = () => {
                         ))}
                       </select>
                       {renderFieldError('condition', newBookErrors)}
+                    </div>
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="quantity">Quantity (Number of Copies) *</label>
+                      <input
+                        type="number"
+                        id="quantity"
+                        name="quantity"
+                        className={getFieldErrorClass('quantity', newBookErrors)}
+                        value={newBookForm.quantity}
+                        onChange={handleNewBookChange}
+                        onBlur={handleNewBookBlur}
+                        min="1"
+                        max="100"
+                        placeholder="Enter number of copies"
+                        required
+                      />
+                      {renderFieldError('quantity', newBookErrors)}
                     </div>
                   </div>
 

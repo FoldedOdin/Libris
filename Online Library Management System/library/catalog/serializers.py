@@ -37,7 +37,7 @@ class DonationSerializer(serializers.ModelSerializer):
         model = Donation
         fields = [
             'id', 'user', 'user_name', 'book_title', 'author', 'category', 
-            'category_name', 'condition', 'description', 'status', 
+            'category_name', 'condition', 'description', 'quantity', 'status', 
             'created_at', 'updated_at'
         ]
         read_only_fields = ['created_at', 'updated_at']
