@@ -205,8 +205,14 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, attrs):
+        import logging
+        logger = logging.getLogger(__name__)
+        
         username = attrs.get('username')
         password = attrs.get('password')
+
+        logger.info(f"Login attempt for username: {username}")
+        logger.debug(f"Password length: {len(password) if password else 0}")
 
         if username and password:
             # Try to authenticate with username first
@@ -221,11 +227,16 @@ class UserLoginSerializer(serializers.Serializer):
                     pass
             
             if not user:
-                raise serializers.ValidationError('Invalid credentials')
+                logger.warning(f"Authentication failed for: {username}")
+                raise serializers.ValidationError('Invalid username or password')
             if not user.is_active:
+                logger.warning(f"Inactive account login attempt: {username}")
                 raise serializers.ValidationError('Your account has been deactivated. Please contact the administrator.')
+            
+            logger.info(f"Authentication successful for: {user.username}")
             attrs['user'] = user
         else:
+            logger.error(f"Missing credentials - username: {bool(username)}, password: {bool(password)}")
             raise serializers.ValidationError('Must include username and password')
         
         return attrs

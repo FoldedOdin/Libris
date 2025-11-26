@@ -49,11 +49,14 @@ export const authHelpers = {
   login: async (credentials) => {
     try {
       console.log('Starting login process...', credentials.username);
+      console.log('Credentials keys:', Object.keys(credentials));
+      console.log('Password present:', !!credentials.password, 'Length:', credentials.password?.length);
       
       // Get CSRF token first
       const csrfToken = await getCSRFToken();
       console.log('CSRF token obtained:', csrfToken ? 'Yes' : 'No');
       
+      console.log('Sending login request with data:', { username: credentials.username, password: '***' });
       const result = await apiRequest(() => apiClient.post('/login/', credentials));
       console.log('API request result:', result);
       

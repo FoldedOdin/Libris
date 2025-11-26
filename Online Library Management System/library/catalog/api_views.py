@@ -46,6 +46,13 @@ def get_csrf_token(request):
     from django.middleware.csrf import get_token
     token = get_token(request)
     return Response({'csrfToken': token})
+
+
+# Stub endpoint to prevent 404 errors from browser extensions/monitoring
+@api_view(['GET', 'POST'])
+@permission_classes([permissions.AllowAny])
+def stub_endpoint(request):
+    return Response({'status': 'ok'}, status=status.HTTP_204_NO_CONTENT)
 from .serializers import (
     BookSerializer, DonationSerializer, SaleSerializer, 
     TransactionSerializer, UserSerializer, CategorySerializer,
@@ -77,19 +84,22 @@ class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
     
     def post(self, request):
-        print(f"Login request data: {request.data}")
-        print(f"Login request headers: {dict(request.headers)}")
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        logger.info(f"Login request received - Content-Type: {request.content_type}")
         
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
             login(request, user)
+            logger.info(f"Login successful for user: {user.username}")
             return Response({
                 'user': UserSerializer(user).data,
                 'message': 'Login successful'
             })
         
-        print(f"Login serializer errors: {serializer.errors}")
+        logger.warning(f"Login validation failed: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

@@ -50,7 +50,7 @@ A comprehensive web-based library management system built with Django REST Frame
 
 #### For Windows:
 ```bash
-install.bat
+.\install.bat
 ```
 
 #### For Linux/Mac:

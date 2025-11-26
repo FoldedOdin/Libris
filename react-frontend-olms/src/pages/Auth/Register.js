@@ -52,8 +52,11 @@ const Register = () => {
   };
 
   const validateForm = () => {
+    console.log('Validating form with data:', formData);
+    
     // First validate basic fields
     const isBasicValid = validateFormFields();
+    console.log('Basic validation result:', isBasicValid);
     
     // Then validate password confirmation separately
     const confirmPasswordError = validationRules.passwordConfirm(
@@ -62,6 +65,7 @@ const Register = () => {
     );
     
     if (confirmPasswordError) {
+      console.log('Password confirmation error:', confirmPasswordError);
       setFormData(prev => ({
         ...prev,
         errors: {
@@ -72,6 +76,7 @@ const Register = () => {
       return false;
     }
     
+    console.log('Form validation passed!');
     return isBasicValid;
   };
 
@@ -79,6 +84,7 @@ const Register = () => {
     e.preventDefault();
     
     if (!validateForm()) {
+      console.log('Form validation failed:', errors);
       return;
     }
 
@@ -94,6 +100,10 @@ const Register = () => {
         password: formData.password,
         password_confirm: formData.confirm_password
       };
+      
+      console.log('Submitting registration data:', { ...registrationData, password: '***', password_confirm: '***' });
+      console.log('DEBUG - Registration password:', formData.password); // TEMPORARY DEBUG - REMOVE LATER
+      console.log('DEBUG - Confirm password:', formData.confirm_password); // TEMPORARY DEBUG - REMOVE LATER
 
       const result = await register(registrationData);
 
@@ -102,9 +112,34 @@ const Register = () => {
         const redirectPath = isAdmin() ? '/admin/dashboard' : '/dashboard';
         navigate(redirectPath, { replace: true });
       } else {
-        handleApiError(result.error);
+        // Handle backend validation errors
+        if (result.data && typeof result.data === 'object') {
+          // Display field-specific errors from backend
+          const backendErrors = {};
+          Object.keys(result.data).forEach(field => {
+            const errorValue = result.data[field];
+            if (Array.isArray(errorValue)) {
+              backendErrors[field] = errorValue[0];
+            } else if (typeof errorValue === 'string') {
+              backendErrors[field] = errorValue;
+            }
+          });
+          
+          if (Object.keys(backendErrors).length > 0) {
+            setFormData(prev => ({
+              ...prev,
+              errors: backendErrors
+            }));
+            handleApiError('Please fix the errors in the form');
+          } else {
+            handleApiError(result.error);
+          }
+        } else {
+          handleApiError(result.error);
+        }
       }
     } catch (error) {
+      console.error('Registration error:', error);
       handleApiError(error);
     } finally {
       setIsLoading(false);
@@ -218,6 +253,9 @@ const Register = () => {
               disabled={isLoading}
             />
             {renderFieldError('password', errors)}
+            <small className="form-text text-muted">
+              Password must be at least 8 characters and contain uppercase, lowercase, and a number
+            </small>
           </div>
 
           <div className="form-group">

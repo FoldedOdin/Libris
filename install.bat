@@ -1,4 +1,4 @@
-@echo off
+sh@echo off
 echo ========================================
 echo Online Library Management System
 echo Installation Script for Windows

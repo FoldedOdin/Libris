@@ -1,5 +1,5 @@
 // Form validation utilities
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 export const validationRules = {
   // Required field validation
@@ -226,7 +226,7 @@ export const useFormValidation = (schema, initialData = {}) => {
   const [touched, setTouched] = useState({});
 
   // Validate a single field
-  const validateField = (fieldName, value) => {
+  const validateField = useCallback((fieldName, value) => {
     const fieldRules = schema.rules[fieldName];
     if (!fieldRules) return null;
 
@@ -244,10 +244,10 @@ export const useFormValidation = (schema, initialData = {}) => {
       }
     }
     return null;
-  };
+  }, [schema]);
 
   // Handle field change with validation
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     
     setFormData(prev => ({
@@ -256,27 +256,33 @@ export const useFormValidation = (schema, initialData = {}) => {
     }));
 
     // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+    setErrors(prev => {
+      if (prev[name]) {
+        return {
+          ...prev,
+          [name]: ''
+        };
+      }
+      return prev;
+    });
 
     // Real-time validation for touched fields
-    if (touched[name]) {
-      const fieldError = validateField(name, value);
-      if (fieldError) {
-        setErrors(prev => ({
-          ...prev,
-          [name]: fieldError
-        }));
+    setTouched(prev => {
+      if (prev[name]) {
+        const fieldError = validateField(name, value);
+        if (fieldError) {
+          setErrors(prevErrors => ({
+            ...prevErrors,
+            [name]: fieldError
+          }));
+        }
       }
-    }
-  };
+      return prev;
+    });
+  }, [validateField]);
 
   // Handle field blur (mark as touched and validate)
-  const handleBlur = (e) => {
+  const handleBlur = useCallback((e) => {
     const { name, value } = e.target;
     
     setTouched(prev => ({
@@ -289,10 +295,10 @@ export const useFormValidation = (schema, initialData = {}) => {
       ...prev,
       [name]: fieldError || ''
     }));
-  };
+  }, [validateField]);
 
   // Validate entire form
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     const { isValid, errors: formErrors } = schema.validate(formData);
     setErrors(formErrors);
     
@@ -304,14 +310,14 @@ export const useFormValidation = (schema, initialData = {}) => {
     setTouched(allTouched);
     
     return isValid;
-  };
+  }, [schema, formData]);
 
   // Reset form
-  const resetForm = (newData = {}) => {
+  const resetForm = useCallback((newData = {}) => {
     setFormData(newData);
     setErrors({});
     setTouched({});
-  };
+  }, []);
 
   return {
     formData,

@@ -163,6 +163,20 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
+# Session cookie settings for cross-origin requests
+# Using 'Lax' for development (localhost). Use 'None' with SECURE=True in production with HTTPS
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_AGE = 86400  # 24 hours
+SESSION_COOKIE_DOMAIN = None  # Allow cookies on localhost
+
+# CSRF cookie settings for cross-origin requests
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False  # Must be False so JavaScript can read it
+CSRF_COOKIE_DOMAIN = None  # Allow cookies on localhost
+
 # REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

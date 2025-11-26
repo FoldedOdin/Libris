@@ -6,6 +6,9 @@ urlpatterns = [
     path('', api_views.api_root, name='api-root'),
     path('csrf/', api_views.get_csrf_token, name='api-csrf-token'),
     
+    # Stub endpoints to prevent 404 errors
+    path('rum', api_views.stub_endpoint, name='api-rum'),
+    
     # Authentication
     path('register/', api_views.RegisterView.as_view(), name='api-register'),
     path('login/', api_views.LoginView.as_view(), name='api-login'),

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { transactionsAPI } from '../../api/transactions';
@@ -28,13 +28,7 @@ const UserDashboard = () => {
     }
   });
 
-  useEffect(() => {
-    if (user) {
-      fetchDashboardData();
-    }
-  }, [user, location.pathname]); // Refetch when route changes
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     if (!user) {
       setLoading(false);
       return;
@@ -86,7 +80,13 @@ const UserDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchDashboardData();
+    }
+  }, [user, location.pathname, fetchDashboardData]); // Refetch when route changes
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';

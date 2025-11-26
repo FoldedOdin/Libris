@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFormValidation, validationSchemas, getFieldErrorClass, renderFieldError } from '../../utils/validation';
@@ -12,6 +12,7 @@ const Login = () => {
   const { login, isAdmin } = useAuth();
   
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Get the intended destination or default redirect
   const from = location.state?.from?.pathname || null;
@@ -32,11 +33,22 @@ const Login = () => {
     errors,
     handleChange: handleFormChange,
     handleBlur,
-    validateForm
+    validateForm,
+    resetForm
   } = useFormValidation(validationSchemas.login, {
     username: '',
     password: ''
   });
+
+  // Clear form when component mounts or location changes
+  useEffect(() => {
+    resetForm({ username: '', password: '' });
+    // Also clear the actual input fields to override browser autofill
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    if (usernameInput) usernameInput.value = '';
+    if (passwordInput) passwordInput.value = '';
+  }, [location.pathname, resetForm]);
 
   const handleChange = (e) => {
     handleFormChange(e);
@@ -51,6 +63,7 @@ const Login = () => {
     e.preventDefault();
     
     if (!validateForm()) {
+      console.log('Login form validation failed:', errors);
       return;
     }
 
@@ -58,10 +71,16 @@ const Login = () => {
     clearApiError();
 
     try {
-      const result = await login({
+      const loginData = {
         username: formData.username,
         password: formData.password
-      });
+      };
+      console.log('Attempting login with username:', loginData.username);
+      console.log('Password present:', !!loginData.password, 'Length:', loginData.password?.length);
+      console.log('Login data keys:', Object.keys(loginData));
+      console.log('DEBUG - Password value:', loginData.password); // TEMPORARY DEBUG - REMOVE LATER
+      
+      const result = await login(loginData);
 
       if (result.success) {
         // Redirect based on user role and intended destination
@@ -115,6 +134,8 @@ const Login = () => {
               className={getFieldErrorClass('username', errors)}
               placeholder="Enter your username or email"
               disabled={isLoading}
+              autoComplete="username"
+              key={`username-${location.pathname}`}
             />
             {renderFieldError('username', errors)}
           </div>
@@ -123,17 +144,41 @@ const Login = () => {
             <label htmlFor="password" className="form-label">
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={getFieldErrorClass('password', errors)}
-              placeholder="Enter your password"
-              disabled={isLoading}
-            />
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={getFieldErrorClass('password', errors)}
+                placeholder="Enter your password"
+                disabled={isLoading}
+                autoComplete="current-password"
+                key={location.pathname}
+                style={{ paddingRight: '40px' }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '5px',
+                  color: '#666',
+                  fontSize: '18px'
+                }}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
             {renderFieldError('password', errors)}
           </div>
 

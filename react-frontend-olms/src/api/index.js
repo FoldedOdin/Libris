@@ -88,11 +88,19 @@ export const handleApiError = (error) => {
 
     switch (status) {
       case 400:
+        // Handle Django REST Framework error format
+        let userMessage = getUserFriendlyMessage(data);
+        
+        // Check for non_field_errors (common in DRF)
+        if (data.non_field_errors && Array.isArray(data.non_field_errors)) {
+          userMessage = data.non_field_errors[0];
+        }
+        
         return {
           type: 'validation',
           message: data.message || data.error || 'Invalid request data. Please check your input.',
           details: data.errors || data,
-          userMessage: getUserFriendlyMessage(data) || 'Please check your input and try again.'
+          userMessage: userMessage || 'Please check your input and try again.'
         };
       case 401:
         return {
