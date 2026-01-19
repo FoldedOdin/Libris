@@ -1,402 +1,447 @@
-# Online Library Management System (OLMS)
+# 📚 Online Library Management System (OLMS)
 
-A comprehensive web-based library management system built with Django REST Framework (backend) and React (frontend).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/downloads/)
+[![Django](https://img.shields.io/badge/Django-5.2.6-green.svg)](https://www.djangoproject.com/)
+[![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-16+-green.svg)](https://nodejs.org/)
 
-## Features
+A modern, comprehensive web-based library management system built with Django REST Framework (backend) and React (frontend). Features a professional landing page, role-based access control, and complete library operations including borrowing, donations, and sales.
 
-### For Users
+## 🌟 Features Overview
 
-- Browse and search book catalog
-- Borrow and return books
-- View borrowed books and history
-- Donate books to the library
-- Sell books through the platform
-- Track overdue books and fines
+### 🎨 **Modern Landing Page**
+- Professional gradient design with smooth animations
+- Responsive layout optimized for all devices
+- Feature showcase with interactive cards
+- Clear call-to-action buttons
+- Statistics display and branding
 
-### For Administrators
+### 👥 **User Management**
+- Role-based access control (Admin/User)
+- Secure authentication with session management
+- User registration and profile management
+- Account activation/deactivation
 
-- Manage books (Add, Edit, Delete)
-- Manage users (Create, Edit, Activate/Deactivate)
-- Track borrowed books
-- Review and approve/reject donations
-- Review and approve/reject book sales
-- View dashboard with statistics
+### 📖 **Book Management**
+- Complete CRUD operations for books
+- Advanced search and filtering
+- Category-based organization
+- Stock tracking and availability
+- ISBN support
 
-## Technology Stack
+### 🔄 **Borrowing System**
+- 14-day automatic borrow period
+- Overdue detection and fine calculation (₹5/day)
+- Return processing with fine settlement
+- Borrowing history tracking
 
-### Backend
+### 💝 **Donation System**
+- User-friendly donation form
+- Quantity tracking for multiple copies
+- Admin approval workflow
+- Approved donations added as free books
 
-- Python 3.13
-- Django 5.2.6
-- Django REST Framework
-- SQLite Database
+### 💰 **Sales System**
+- User book listing with custom pricing
+- Admin approval process
+- Mark as sold functionality
+- Price updates for existing books
 
-### Frontend
+### 📊 **Admin Dashboard**
+- Comprehensive statistics
+- User management tools
+- Transaction monitoring
+- Approval workflows for donations/sales
 
-- React 18
-- React Router v6
-- Axios for API calls
-- CSS3 for styling
+## 🚀 Quick Start
 
-## System Requirements
+### Prerequisites
 
-- Python 3.13 or higher
-- Node.js 16 or higher
-- npm or yarn
+- **Python 3.13+**
+- **Node.js 16+**
+- **npm or yarn**
 
-## Installation & Setup
+### 🔧 Automated Installation (Recommended)
 
-### Automated Installation (Recommended)
-
-#### For Windows:
+#### Windows:
 ```bash
 .\install.bat
 ```
 
-#### For Linux/Mac:
+#### Linux/Mac:
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
 
-The installation script will:
-1. Install root dependencies (concurrently)
-2. Install frontend dependencies
-3. Install backend dependencies
-4. Run database migrations
-
-After installation, run:
+#### Start Development Servers:
 ```bash
-cd .\react-frontend-olms\
-```
-```bash
+cd react-frontend-olms
 npm run dev
 ```
 
 This will start:
-- Backend API at: `http://localhost:8000`
-- Frontend at: `http://localhost:3000`
+- **Backend API**: http://localhost:8000
+- **Frontend**: http://localhost:3000
 
-### Manual Installation (Alternative)
+### 🛠️ Manual Installation
 
-1. Install root dependencies:
+<details>
+<summary>Click to expand manual installation steps</summary>
 
+#### 1. Clone the Repository
+```bash
+git clone https://github.com/Foldedodin/online-library-management-system.git
+cd online-library-management-system
+```
+
+#### 2. Install Root Dependencies
 ```bash
 npm install
 ```
 
-2. Install frontend dependencies:
-
-```bash
-npm run install-all
-```
-
-3. Setup backend (first time only):
-
+#### 3. Backend Setup
 ```bash
 cd "Online Library Management System/library"
 pip install -r requirements.txt
 python manage.py migrate
-cd ../..
-```
-
-4. Run both servers with one command:
-
-```bash
-npm run dev
-```
-
-This will start:
-
-- Backend API at: `http://localhost:8000`
-- Frontend at: `http://localhost:3000`
-
-### Manual Setup (Alternative)
-
-#### Backend Setup
-
-1. Navigate to the backend directory:
-
-```bash
-cd "Online Library Management System/library"
-```
-
-2. Create and activate virtual environment (optional but recommended):
-
-```bash
-python -m venv venv
-venv\Scripts\activate  # On Windows
-```
-
-3. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-4. Run migrations:
-
-```bash
-python manage.py migrate
-```
-
-5. Start the Django development server:
-
-```bash
 python manage.py runserver
 ```
 
-The backend API will be available at: `http://localhost:8000`
-
-#### Frontend Setup
-
-1. Navigate to the frontend directory:
-
+#### 4. Frontend Setup (New Terminal)
 ```bash
 cd react-frontend-olms
-```
-
-2. Install dependencies:
-
-```bash
 npm install
-```
-
-3. Start the React development server:
-
-```bash
 npm start
 ```
 
-The frontend will be available at: `http://localhost:3000`
+</details>
 
-## Default Login Credentials
+## 🔐 Default Credentials
 
-### Administrator Account
+### Administrator
+- **Username**: `admin`
+- **Password**: `admin123`
+- **Email**: `admin@library.com`
 
-- **Username:** `admin`
-- **Password:** `admin123`
-- **Email:** `admin@library.com`
-- **Role:** Admin
+### Test Users
+- **Username**: `user1` / `user2`
+- **Password**: `User@123`
+- **Emails**: `user1@library.com` / `user2@library.com`
 
-### User Accounts
-
-#### User 1
-
-- **Username:** `user1`
-- **Password:** `User@123`
-- **Email:** `user1@library.com`
-- **Name:** John Doe
-- **Role:** User
-
-#### User 2
-
-- **Username:** `user2`
-- **Password:** `User@123`
-- **Email:** `user2@library.com`
-- **Name:** Jane Smith
-- **Role:** User
-
-## Available Scripts
-
-From the root directory:
-
-- `npm run dev` - Run both backend and frontend servers concurrently
-- `npm run backend` - Run only the Django backend server
-- `npm run frontend` - Run only the React frontend server
-- `npm run install-all` - Install frontend dependencies
-
-## User Registration
-
-New users can register through the signup page:
-
-1. Go to `http://localhost:3000`
-2. Click on "Sign Up"
-3. Fill in the registration form
-4. After registration, login with your credentials
-
-## Usage Guide
+## 📱 Usage Guide
 
 ### For Users
 
-1. **Browse Books**
+1. **📚 Browse Books**
+   - Search by title, author, or category
+   - View detailed book information
+   - Check availability status
 
-   - Navigate to "Browse Books" from the dashboard
-   - Search and filter books by title, author, or category
-   - View book details
+2. **📖 Borrow Books**
+   - One-click borrowing
+   - Automatic 14-day due date
+   - View borrowed books dashboard
 
-2. **Borrow Books**
+3. **🔄 Return Books**
+   - Easy return process
+   - Automatic fine calculation
+   - Payment tracking
 
-   - Click "Borrow" on any available book
-   - Books are automatically due in 14 days
-   - View borrowed books in "My Borrowed Books"
+4. **💝 Donate Books**
+   - Submit donation requests
+   - Track approval status
+   - Contribute to library collection
 
-3. **Return Books**
-
-   - Go to "My Borrowed Books"
-   - Click "Return" on the book you want to return
-   - Late returns incur a fine of ₹5 per day
-
-4. **Donate Books**
-
-   - Navigate to "Donate Books"
-   - Enter book details (title, author, category, condition, quantity)
-   - Specify how many copies you're donating
-   - Submit for admin approval
-   - Approved donations are added to the library catalog as free books
-
-5. **Sell Books**
-   - Navigate to "Sell Books"
-   - Enter your own book details and set your price
-   - Submit for admin approval
-   - Approved sales are added to the catalog with your specified price
-   - If the book already exists, only the price is updated
+5. **💰 Sell Books**
+   - List books for sale
+   - Set custom prices
+   - Admin approval process
 
 ### For Administrators
 
-1. **Manage Books**
+1. **📊 Dashboard Management**
+   - View system statistics
+   - Monitor user activity
+   - Track transactions
 
-   - Add new books to the catalog
-   - Edit existing book information
-   - Delete books from the system
-   - Track book availability and stock
+2. **👥 User Management**
+   - Create/edit user accounts
+   - Manage permissions
+   - Account activation/deactivation
 
-2. **Manage Users**
+3. **📚 Book Management**
+   - Add/edit/delete books
+   - Manage categories
+   - Track inventory
 
-   - View all registered users
-   - Edit user information
-   - Activate/Deactivate user accounts
-   - Delete users if needed
-
-3. **Review Donations**
-
-   - View pending donations in tabs (Pending/Approved/Rejected)
-   - Approve donations to add books to catalog
-   - Reject donations with reason
-
-4. **Review Sales**
-
-   - View pending sales in tabs (Pending/Approved/Rejected/Sold)
+4. **✅ Approval Workflows**
+   - Review donations
    - Approve sales listings
-   - Mark approved sales as sold
-   - Reject inappropriate listings
+   - Manage transactions
 
-5. **Track Borrowed Books**
-   - View all currently borrowed books
-   - See overdue books
-   - View borrowing history
+## 🏗️ Architecture
 
-## API Endpoints
-
-### Authentication
-
-- `POST /api/register/` - User registration
-- `POST /api/login/` - User login
-- `POST /api/logout/` - User logout
-- `GET /api/user/` - Get current user
-
-### Books
-
-- `GET /api/books/` - List all books
-- `POST /api/books/` - Create new book (Admin)
-- `GET /api/books/{id}/` - Get book details
-- `PUT /api/books/{id}/` - Update book (Admin)
-- `DELETE /api/books/{id}/` - Delete book (Admin)
-
-### Transactions
-
-- `GET /api/borrowed-books/` - Get borrowed books
-- `POST /api/books/{id}/borrow/` - Borrow a book
-- `POST /api/transactions/{id}/return/` - Return a book
-
-### Donations
-
-- `GET /api/donations/` - List donations
-- `POST /api/donations/` - Create donation
-- `POST /api/donations/{id}/approve/` - Approve donation (Admin)
-- `POST /api/donations/{id}/reject/` - Reject donation (Admin)
-
-### Sales
-
-- `GET /api/sales/` - List sales
-- `POST /api/sales/` - Create sale listing
-- `POST /api/sales/{id}/approve/` - Approve sale (Admin)
-- `POST /api/sales/{id}/reject/` - Reject sale (Admin)
-
-### Users (Admin only)
-
-- `GET /api/users/` - List all users
-- `PUT /api/users/{id}/` - Update user
-- `DELETE /api/users/{id}/` - Delete user
-
-## Currency
-
-The system uses Indian Rupees (₹) as the currency for:
-
-- Book prices
-- Sale listings
-- Late return fines (₹5 per day)
-
-## Project Structure
-
+### Backend (Django)
 ```
-Online Library Management System/
-├── library/                    # Django backend
-│   ├── catalog/               # Main app
-│   │   ├── models.py         # Database models
-│   │   ├── serializers.py    # DRF serializers
-│   │   ├── api_views.py      # API views
-│   │   └── urls.py           # URL routing
-│   ├── library/              # Project settings
-│   └── manage.py             # Django management script
-│
-react-frontend-olms/           # React frontend
+Online Library Management System/library/
+├── catalog/                 # Main application
+│   ├── models.py           # Database models
+│   ├── serializers.py      # API serializers
+│   ├── api_views.py        # API endpoints
+│   ├── api_urls.py         # API routing
+│   └── admin.py            # Admin interface
+├── library/                # Project settings
+│   ├── settings.py         # Configuration
+│   ├── urls.py             # URL routing
+│   └── wsgi.py             # WSGI config
+└── manage.py               # Django CLI
+```
+
+### Frontend (React)
+```
+react-frontend-olms/
 ├── src/
-│   ├── api/                  # API service files
-│   ├── components/           # Reusable components
-│   ├── contexts/             # React contexts
-│   ├── pages/               # Page components
-│   │   ├── Admin/           # Admin pages
-│   │   ├── Auth/            # Login/Register
-│   │   └── User/            # User pages
-│   ├── styles/              # CSS files
-│   └── utils/               # Utility functions
-└── public/                   # Static files
+│   ├── api/                # API service layer
+│   ├── components/         # Reusable components
+│   │   ├── common/         # Shared components
+│   │   └── forms/          # Form components
+│   ├── contexts/           # React contexts
+│   ├── pages/              # Page components
+│   │   ├── Admin/          # Admin pages
+│   │   ├── Auth/           # Authentication
+│   │   └── User/           # User pages
+│   ├── styles/             # CSS stylesheets
+│   ├── hooks/              # Custom hooks
+│   └── utils/              # Utility functions
+└── public/                 # Static assets
 ```
 
-## Troubleshooting
+## 🔌 API Documentation
 
-### Backend Issues
+### Authentication Endpoints
+```
+POST /api/register/         # User registration
+POST /api/login/            # User login
+POST /api/logout/           # User logout
+GET  /api/user/             # Current user info
+GET  /api/csrf/             # CSRF token
+```
 
-**Port already in use:**
+### Book Management
+```
+GET    /api/books/          # List books
+POST   /api/books/          # Create book (Admin)
+GET    /api/books/{id}/     # Book details
+PUT    /api/books/{id}/     # Update book (Admin)
+DELETE /api/books/{id}/     # Delete book (Admin)
+GET    /api/categories/     # List categories
+```
 
+### Transaction Management
+```
+GET  /api/transactions/           # List transactions
+GET  /api/my-borrowed-books/      # User's borrowed books
+GET  /api/borrowed-books/         # All borrowed books (Admin)
+POST /api/books/{id}/borrow/      # Borrow book
+POST /api/transactions/{id}/return/ # Return book
+```
+
+### Donation System
+```
+GET  /api/donations/              # List donations
+POST /api/donations/              # Create donation
+GET  /api/my-donations/           # User's donations
+POST /api/donations/{id}/approve/ # Approve (Admin)
+POST /api/donations/{id}/reject/  # Reject (Admin)
+```
+
+### Sales System
+```
+GET  /api/sales/                  # List sales
+POST /api/sales/                  # Create sale
+GET  /api/my-sales/               # User's sales
+POST /api/sales/{id}/approve/     # Approve (Admin)
+POST /api/sales/{id}/reject/      # Reject (Admin)
+```
+
+### User Management (Admin)
+```
+GET    /api/users/          # List users
+GET    /api/users/{id}/     # User details
+PUT    /api/users/{id}/     # Update user
+DELETE /api/users/{id}/     # Delete user
+```
+
+### Dashboard
+```
+GET /api/dashboard/stats/   # System statistics
+```
+
+## 🛠️ Available Scripts
+
+### Root Directory
 ```bash
-# Kill the process using port 8000
+npm run dev          # Start both servers
+npm run backend      # Django server only
+npm run frontend     # React server only
+npm run install-all  # Install all dependencies
+```
+
+### Frontend Directory
+```bash
+npm start           # Development server
+npm run build       # Production build
+npm test            # Run tests
+npm run eject       # Eject from Create React App
+```
+
+### Backend Directory
+```bash
+python manage.py runserver      # Start server
+python manage.py migrate        # Run migrations
+python manage.py createsuperuser # Create admin
+python manage.py collectstatic  # Collect static files
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+#### Backend (.env)
+```env
+SECRET_KEY=your-secret-key
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+DATABASE_NAME=db.sqlite3
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+```
+
+#### Frontend (.env)
+```env
+REACT_APP_API_URL=http://localhost:8000
+REACT_APP_ENVIRONMENT=development
+GENERATE_SOURCEMAP=true
+REACT_APP_ENABLE_ANALYTICS=false
+```
+
+## 🚀 Deployment
+
+### Production Checklist
+
+1. **Backend**
+   - Set `DEBUG=False`
+   - Configure production database
+   - Set up static file serving
+   - Configure CORS for production domain
+   - Set secure session cookies
+
+2. **Frontend**
+   - Build production bundle: `npm run build`
+   - Configure API URL for production
+   - Set up CDN for static assets
+   - Enable HTTPS
+
+3. **Security**
+   - Use environment variables for secrets
+   - Enable CSRF protection
+   - Configure secure headers
+   - Set up SSL/TLS certificates
+
+## 🧪 Testing
+
+### Backend Tests
+```bash
+cd "Online Library Management System/library"
+python manage.py test
+```
+
+### Frontend Tests
+```bash
+cd react-frontend-olms
+npm test
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+<details>
+<summary>Port Already in Use</summary>
+
+**Backend (Port 8000):**
+```bash
+# Windows
 netstat -ano | findstr :8000
 taskkill /PID <PID> /F
+
+# Linux/Mac
+lsof -ti:8000 | xargs kill -9
 ```
 
-**Database errors:**
+**Frontend (Port 3000):**
+```bash
+# Use different port
+set PORT=3001 && npm start  # Windows
+PORT=3001 npm start         # Linux/Mac
+```
+</details>
+
+<details>
+<summary>Database Issues</summary>
 
 ```bash
 # Reset database
 python manage.py flush
 python manage.py migrate
 ```
+</details>
 
-### Frontend Issues
-
-**Port 3000 already in use:**
-
-```bash
-# Kill the process or use a different port
-set PORT=3001 && npm start
-```
-
-**Module not found errors:**
+<details>
+<summary>Module Not Found</summary>
 
 ```bash
-# Reinstall dependencies
+# Backend
+pip install -r requirements.txt
+
+# Frontend
 rm -rf node_modules package-lock.json
 npm install
 ```
+</details>
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit changes: `git commit -am 'Add feature'`
+4. Push to branch: `git push origin feature-name`
+5. Submit a Pull Request
+
+### Development Guidelines
+
+- Follow PEP 8 for Python code
+- Use ESLint/Prettier for JavaScript
+- Write tests for new features
+- Update documentation
+- Follow semantic versioning
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔒 Security
+
+For security concerns, please review our [SECURITY.md](SECURITY.md) file and report vulnerabilities responsibly.
+
+## 🙏 Acknowledgments
+
+- Django REST Framework team
+- React development team
+- Open source community
+- Contributors and testers
+
+---
+
+**Made with ❤️ for the library community**

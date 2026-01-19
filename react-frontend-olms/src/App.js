@@ -10,6 +10,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import './styles/global.css';
 import './styles/components.css';
 import './styles/pages.css';
+import './styles/landing.css';
 
 // Import critical pages (loaded immediately for better UX)
 import Login from './pages/Auth/Login';
