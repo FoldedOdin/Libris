@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 Online Library Management System (OLMS)
+Copyright (c) 2026 Libris
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -56,8 +56,8 @@ ATTRIBUTION
 If you use this software in your project, we appreciate (but do not require) 
 attribution in the following form:
 
-"This project uses the Online Library Management System (OLMS), 
-available at https://github.com/Foldedodin/online-library-management-system"
+"This project uses Libris, 
+available at https://github.com/Foldedodin/libris"
 
 ================================================================================
 
@@ -86,6 +86,6 @@ licensed under the same MIT License that covers the project.
 CONTACT
 
 For questions about this license, please contact:
-- Project Repository: https://github.com/Foldedodin/online-library-management-system
-- Issues: https://github.com/Foldedodin/online-library-management-system/issues
+- Project Repository: https://github.com/Foldedodin/libris
+- Issues: https://github.com/Foldedodin/libris/issues
 - Security: See SECURITY.md for security-related inquiries

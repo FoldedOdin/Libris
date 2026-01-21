@@ -1,6 +1,6 @@
 sh@echo off
 echo ========================================
-echo Online Library Management System
+echo Libris - Modern Library Management
 echo Installation Script for Windows
 echo ========================================
 echo.

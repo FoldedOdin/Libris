@@ -1,6 +1,6 @@
-# 🤝 Contributing to Online Library Management System (OLMS)
+# 🤝 Contributing to Libris
 
-Thank you for your interest in contributing to OLMS! We welcome contributions from developers of all skill levels. This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to Libris! We welcome contributions from developers of all skill levels. This document provides guidelines and information for contributors.
 
 ## 📋 Table of Contents
 
@@ -49,13 +49,13 @@ We pledge to make participation in our project a harassment-free experience for 
 1. Fork the repository on GitHub
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/Foldedodin/online-library-management-system.git
-   cd online-library-management-system
+   git clone https://github.com/Foldedodin/libris.git
+   cd libris
    ```
 
 3. Add the original repository as upstream:
    ```bash
-   git remote add upstream https://github.com/Foldedodin/online-library-management-system.git
+   git remote add upstream https://github.com/Foldedodin/libris.git
    ```
 
 ## 🛠️ Development Setup
@@ -508,9 +508,7 @@ Regular contributors may be invited to become maintainers with:
 
 ## 🎉 Thank You!
 
-Thank you for contributing to OLMS! Your contributions help make this project better for everyone. Whether you're fixing bugs, adding features, improving documentation, or helping other users, every contribution is valuable.
-
----
+Thank you for contributing to Libris! Your contributions help make this project better for everyone. Whether you're fixing bugs, adding features, improving documentation, or helping other users, every contribution is valuable.
 
 **Happy Contributing!** 🚀
 

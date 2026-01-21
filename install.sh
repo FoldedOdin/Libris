@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "========================================"
-echo "Online Library Management System"
+echo "Libris - Modern Library Management"
 echo "Installation Script for Unix/Linux/Mac"
 echo "========================================"
 echo ""

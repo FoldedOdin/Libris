@@ -19,7 +19,7 @@ We take security vulnerabilities seriously. If you discover a security issue, pl
 
 Instead, please report security vulnerabilities by emailing:
 - **Email**: [security@foldedodin.dev](mailto:security@foldedodin.dev)
-- **Subject**: `[SECURITY] Online Library Management System - [Brief Description]`
+- **Subject**: `[SECURITY] Libris - [Brief Description]`
 
 ### 📝 What to Include
 
@@ -252,4 +252,4 @@ This security policy is subject to our Terms of Service and Privacy Policy. By r
 **Last Updated**: January 2026
 **Version**: 1.0
 
-Thank you for helping keep the Online Library Management System secure! 🙏
+Thank you for helping keep Libris secure! 🙏

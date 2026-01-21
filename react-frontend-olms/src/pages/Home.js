@@ -141,7 +141,7 @@ const Home = () => {
           <div className="nav-content">
             <div className="nav-brand">
               <span className="brand-icon">📚</span>
-              <span className="brand-text">OLMS</span>
+              <span className="brand-text">Libris</span>
             </div>
             <div className="nav-actions">
               <button 
@@ -330,10 +330,10 @@ const Home = () => {
           <div className="footer-content">
             <div className="footer-brand">
               <span className="brand-icon">📚</span>
-              <span className="brand-text">Online Library Management System</span>
+              <span className="brand-text">Libris</span>
             </div>
             <div className="footer-text">
-              <p>&copy; 2024 OLMS. Empowering readers, one book at a time.</p>
+              <p>&copy; 2024 Libris. Empowering readers, one book at a time.</p>
             </div>
           </div>
         </div>

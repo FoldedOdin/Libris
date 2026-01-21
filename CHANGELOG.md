@@ -1,6 +1,6 @@
 # 📝 Changelog
 
-All notable changes to the Online Library Management System (OLMS) project will be documented in this file.
+All notable changes to Libris will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🎉 Initial Release
 
-This is the first stable release of the Online Library Management System, featuring a complete full-stack web application with modern UI and comprehensive library management capabilities.
+This is the first stable release of Libris, featuring a complete full-stack web application with modern UI and comprehensive library management capabilities.
 
 ### ✨ Added
 

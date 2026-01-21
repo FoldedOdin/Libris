@@ -15,7 +15,7 @@ from .models import Book, Donation, Sale, Transaction, CustomUser, Category
 @permission_classes([permissions.AllowAny])
 def api_root(request):
     return Response({
-        'message': 'Online Library Management System API',
+        'message': 'Libris API',
         'version': '1.0',
         'endpoints': {
             'authentication': {

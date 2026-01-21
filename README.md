@@ -1,4 +1,4 @@
-# 📚 Online Library Management System (OLMS)
+# 📚 Libris - Modern Library Management System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/downloads/)
@@ -92,8 +92,8 @@ This will start:
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/Foldedodin/online-library-management-system.git
-cd online-library-management-system
+git clone https://github.com/Foldedodin/libris.git
+cd libris
 ```
 
 #### 2. Install Root Dependencies
