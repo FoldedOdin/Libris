@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Libris - Modern Library Management System",
   "scripts": {
-    "dev": "concurrently --names \"BACKEND,FRONTEND\" --prefix-colors \"blue,green\" \"npm run backend\" \"npm run frontend\"",
+    "dev": "concurrently --names \"BACKEND,FRONTEND\" --prefix-colors \"blue.bold,green.bold\" \"npm run backend\" \"npm run frontend\"",
     "backend": "cd \"Online Library Management System/library\" && python manage.py runserver",
     "frontend": "cd react-frontend-olms && npm start",
-    "install-all": "cd react-frontend-olms && npm install"
+    "install-all": "npm install && cd react-frontend-olms && npm install && cd \"../Online Library Management System/library\" && pip install -r requirements.txt",
+    "migrate": "cd \"Online Library Management System/library\" && python manage.py migrate"
   },
   "keywords": [
     "library",

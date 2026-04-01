@@ -1,4 +1,4 @@
-# 📚 Libris - Modern Library Management System
+# Libris - Modern Library Management System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/downloads/)
@@ -11,6 +11,7 @@ A modern, comprehensive web-based library management system built with Django RE
 ## 🌟 Features Overview
 
 ### 🎨 **Modern Landing Page**
+
 - Professional gradient design with smooth animations
 - Responsive layout optimized for all devices
 - Feature showcase with interactive cards
@@ -18,12 +19,14 @@ A modern, comprehensive web-based library management system built with Django RE
 - Statistics display and branding
 
 ### 👥 **User Management**
+
 - Role-based access control (Admin/User)
 - Secure authentication with session management
 - User registration and profile management
 - Account activation/deactivation
 
 ### 📖 **Book Management**
+
 - Complete CRUD operations for books
 - Advanced search and filtering
 - Category-based organization
@@ -31,24 +34,28 @@ A modern, comprehensive web-based library management system built with Django RE
 - ISBN support
 
 ### 🔄 **Borrowing System**
+
 - 14-day automatic borrow period
 - Overdue detection and fine calculation (₹5/day)
 - Return processing with fine settlement
 - Borrowing history tracking
 
 ### 💝 **Donation System**
+
 - User-friendly donation form
 - Quantity tracking for multiple copies
 - Admin approval workflow
 - Approved donations added as free books
 
 ### 💰 **Sales System**
+
 - User book listing with custom pricing
 - Admin approval process
 - Mark as sold functionality
 - Price updates for existing books
 
 ### 📊 **Admin Dashboard**
+
 - Comprehensive statistics
 - User management tools
 - Transaction monitoring
@@ -65,23 +72,27 @@ A modern, comprehensive web-based library management system built with Django RE
 ### 🔧 Automated Installation (Recommended)
 
 #### Windows:
+
 ```bash
 .\install.bat
 ```
 
 #### Linux/Mac:
+
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
 
 #### Start Development Servers:
+
 ```bash
 cd react-frontend-olms
 npm run dev
 ```
 
 This will start:
+
 - **Backend API**: http://localhost:8000
 - **Frontend**: http://localhost:3000
 
@@ -91,17 +102,20 @@ This will start:
 <summary>Click to expand manual installation steps</summary>
 
 #### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/Foldedodin/libris.git
 cd libris
 ```
 
 #### 2. Install Root Dependencies
+
 ```bash
 npm install
 ```
 
 #### 3. Backend Setup
+
 ```bash
 cd "Online Library Management System/library"
 pip install -r requirements.txt
@@ -110,6 +124,7 @@ python manage.py runserver
 ```
 
 #### 4. Frontend Setup (New Terminal)
+
 ```bash
 cd react-frontend-olms
 npm install
@@ -121,11 +136,13 @@ npm start
 ## 🔐 Default Credentials
 
 ### Administrator
+
 - **Username**: `admin`
 - **Password**: `admin123`
 - **Email**: `admin@library.com`
 
 ### Test Users
+
 - **Username**: `user1` / `user2`
 - **Password**: `User@123`
 - **Emails**: `user1@library.com` / `user2@library.com`
@@ -184,6 +201,7 @@ npm start
 ## 🏗️ Architecture
 
 ### Backend (Django)
+
 ```
 Online Library Management System/library/
 ├── catalog/                 # Main application
@@ -200,6 +218,7 @@ Online Library Management System/library/
 ```
 
 ### Frontend (React)
+
 ```
 react-frontend-olms/
 ├── src/
@@ -221,6 +240,7 @@ react-frontend-olms/
 ## 🔌 API Documentation
 
 ### Authentication Endpoints
+
 ```
 POST /api/register/         # User registration
 POST /api/login/            # User login
@@ -230,6 +250,7 @@ GET  /api/csrf/             # CSRF token
 ```
 
 ### Book Management
+
 ```
 GET    /api/books/          # List books
 POST   /api/books/          # Create book (Admin)
@@ -240,6 +261,7 @@ GET    /api/categories/     # List categories
 ```
 
 ### Transaction Management
+
 ```
 GET  /api/transactions/           # List transactions
 GET  /api/my-borrowed-books/      # User's borrowed books
@@ -249,6 +271,7 @@ POST /api/transactions/{id}/return/ # Return book
 ```
 
 ### Donation System
+
 ```
 GET  /api/donations/              # List donations
 POST /api/donations/              # Create donation
@@ -258,6 +281,7 @@ POST /api/donations/{id}/reject/  # Reject (Admin)
 ```
 
 ### Sales System
+
 ```
 GET  /api/sales/                  # List sales
 POST /api/sales/                  # Create sale
@@ -267,6 +291,7 @@ POST /api/sales/{id}/reject/      # Reject (Admin)
 ```
 
 ### User Management (Admin)
+
 ```
 GET    /api/users/          # List users
 GET    /api/users/{id}/     # User details
@@ -275,6 +300,7 @@ DELETE /api/users/{id}/     # Delete user
 ```
 
 ### Dashboard
+
 ```
 GET /api/dashboard/stats/   # System statistics
 ```
@@ -282,6 +308,7 @@ GET /api/dashboard/stats/   # System statistics
 ## 🛠️ Available Scripts
 
 ### Root Directory
+
 ```bash
 npm run dev          # Start both servers
 npm run backend      # Django server only
@@ -290,6 +317,7 @@ npm run install-all  # Install all dependencies
 ```
 
 ### Frontend Directory
+
 ```bash
 npm start           # Development server
 npm run build       # Production build
@@ -298,6 +326,7 @@ npm run eject       # Eject from Create React App
 ```
 
 ### Backend Directory
+
 ```bash
 python manage.py runserver      # Start server
 python manage.py migrate        # Run migrations
@@ -310,6 +339,7 @@ python manage.py collectstatic  # Collect static files
 ### Environment Variables
 
 #### Backend (.env)
+
 ```env
 SECRET_KEY=your-secret-key
 DEBUG=True
@@ -319,6 +349,7 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 ```
 
 #### Frontend (.env)
+
 ```env
 REACT_APP_API_URL=http://localhost:8000
 REACT_APP_ENVIRONMENT=development
@@ -352,12 +383,14 @@ REACT_APP_ENABLE_ANALYTICS=false
 ## 🧪 Testing
 
 ### Backend Tests
+
 ```bash
 cd "Online Library Management System/library"
 python manage.py test
 ```
 
 ### Frontend Tests
+
 ```bash
 cd react-frontend-olms
 npm test
@@ -371,6 +404,7 @@ npm test
 <summary>Port Already in Use</summary>
 
 **Backend (Port 8000):**
+
 ```bash
 # Windows
 netstat -ano | findstr :8000
@@ -381,11 +415,13 @@ lsof -ti:8000 | xargs kill -9
 ```
 
 **Frontend (Port 3000):**
+
 ```bash
 # Use different port
 set PORT=3001 && npm start  # Windows
 PORT=3001 npm start         # Linux/Mac
 ```
+
 </details>
 
 <details>
@@ -396,6 +432,7 @@ PORT=3001 npm start         # Linux/Mac
 python manage.py flush
 python manage.py migrate
 ```
+
 </details>
 
 <details>
@@ -409,6 +446,7 @@ pip install -r requirements.txt
 rm -rf node_modules package-lock.json
 npm install
 ```
+
 </details>
 
 ## 🤝 Contributing

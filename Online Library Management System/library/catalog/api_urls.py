@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 from . import api_views
 
 urlpatterns = [
@@ -14,6 +15,10 @@ urlpatterns = [
     path('login/', api_views.LoginView.as_view(), name='api-login'),
     path('logout/', api_views.LogoutView.as_view(), name='api-logout'),
     path('user/', api_views.CurrentUserView.as_view(), name='api-current-user'),
+    
+    # JWT Token Management
+    path('token/refresh/', TokenRefreshView.as_view(), name='api-token-refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='api-token-verify'),
     
     # Books
     path('books/', api_views.BookListCreateView.as_view(), name='api-books'),

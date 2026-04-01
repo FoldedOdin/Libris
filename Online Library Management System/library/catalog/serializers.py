@@ -137,25 +137,25 @@ class TransactionSerializer(serializers.ModelSerializer):
                     'category': obj.book.category
                 }
             return None
-        except:
+        except Exception:
             return None
     
     def get_user_name(self, obj):
         try:
             return obj.user.username if obj.user else 'Unknown User'
-        except:
+        except Exception:
             return 'Unknown User'
     
     def get_book_title(self, obj):
         try:
             return obj.book.title if obj.book else 'Unknown Book'
-        except:
+        except Exception:
             return 'Unknown Book'
     
     def get_book_author(self, obj):
         try:
             return obj.book.author if obj.book else 'Unknown Author'
-        except:
+        except Exception:
             return 'Unknown Author'
     
     def get_due_date(self, obj):
@@ -211,8 +211,7 @@ class UserLoginSerializer(serializers.Serializer):
         username = attrs.get('username')
         password = attrs.get('password')
 
-        logger.info(f"Login attempt for username: {username}")
-        logger.debug(f"Password length: {len(password) if password else 0}")
+        logger.info("Login attempt for username: %s", username)
 
         if username and password:
             # Try to authenticate with username first
