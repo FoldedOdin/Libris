@@ -7,9 +7,10 @@ import { Button, Card, LoadingSpinner, ErrorMessage } from '../components/common
 
 const LiveActivityStrip = () => {
   const activities = [
+    { icon: "📘", text: "Arjun borrowed 'Deep Work'" },
+    { icon: "�", text: "120 new books added today" },
+    { icon: "�", text: "Trending: AI Systems" },
     { icon: "📘", text: "Sarah borrowed 'Atomic Habits'" },
-    { icon: "📊", text: "124 new books added this week" },
-    { icon: "🔥", text: "Trending: AI & Systems Design" },
     { icon: "🎓", text: "Alex completed 'Clean Code'" },
     { icon: "🌟", text: "New Collection: Mental Models" },
     { icon: "👥", text: "50+ new readers joined today" }
@@ -24,6 +25,7 @@ const LiveActivityStrip = () => {
       >
         {[...activities, ...activities, ...activities].map((activity, i) => (
            <div key={i} className="text-xs text-secondary font-weight-medium d-flex align-items-center gap-2">
+             <span className="position-relative d-flex rounded-circle" style={{ width: '6px', height: '6px', background: '#3b82f6', boxShadow: '0 0 8px #3b82f6' }}></span>
              <span>{activity.icon}</span> <span>{activity.text}</span>
            </div>
         ))}
@@ -142,7 +144,7 @@ const Home = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-section position-relative pt-5" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', background: 'radial-gradient(ellipse at 50% 0%, #1e3a8a 0%, #0F172A 70%)' }}>
+      <section className="hero-section position-relative pt-5" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', background: 'radial-gradient(circle at 30% 40%, rgba(37, 99, 235, 0.25), transparent 60%), #0F172A' }}>
         <div className="container mt-5 pt-5">
           <div className="row align-items-center">
             
@@ -159,12 +161,11 @@ const Home = () => {
               
               <h1 className="font-weight-bold text-white mb-4" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
                 Your Knowledge.<br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-light to-accent">
-                  Organized. Accessible.<br/>Alive.
-                </span>
+                <span className="text-primary-500">Organized.</span> <span className="text-white">Accessible.</span><br/>
+                <span className="text-accent">Alive.</span>
               </h1>
               
-              <p className="text-secondary mb-5 pr-lg-5 font-weight-regular" style={{ fontSize: '1.125rem', lineHeight: 1.6, maxWidth: '520px' }}>
+              <p className="text-secondary mb-5 pr-lg-5 font-weight-regular" style={{ fontSize: '1.125rem', lineHeight: 1.6, maxWidth: '480px' }}>
                 Experience the modern productivity system designed for readers and organizations. Stop searching for your books, start interacting with your digital library.
               </p>
               
@@ -229,26 +230,33 @@ const Home = () => {
                     <div className="flex-grow-1 p-5 bg-secondary position-relative">
                       <div className="h5 text-white mb-4 font-weight-semibold">Continue Reading</div>
                       
-                      <div className="d-flex gap-4 mb-5">
-                        {dummyBooks.map((img, i) => (
-                          <motion.div 
-                            key={i} 
-                            whileHover={{ y: -5 }}
-                            className="flex-1 bg-primary border border-light rounded-xl overflow-hidden cursor-pointer shadow-soft group"
-                          >
-                            <div className="w-100 position-relative overflow-hidden" style={{ aspectRatio: '3/4' }}>
-                              <img src={img} alt="Book cover" className="w-100 h-100 object-cover book-cover-img transition-all" style={{ objectFit: 'cover', opacity: 0.8 }} />
-                              <div className="position-absolute bottom-0 w-100 h-50 bg-gradient-to-t from-black to-transparent opacity-60"></div>
-                            </div>
-                            <div className="p-3">
-                              <div className="h-2 w-75 bg-secondary rounded-full mb-2"></div>
-                              <div className="h-2 w-50 bg-tertiary rounded-full"></div>
-                              <div className="mt-3 w-100 bg-tertiary h-1 rounded-full overflow-hidden">
-                                <motion.div initial={{ width: 0 }} animate={{ width: `${30 + i*20}%` }} transition={{ delay: 1, duration: 1 }} className="h-100 bg-primary-500"></motion.div>
+                      <div className="d-flex mb-5 overflow-hidden position-relative" style={{ margin: '0 -1.25rem', padding: '0 1.25rem' }}>
+                        <motion.div 
+                          className="d-flex gap-4"
+                          animate={{ x: [0, -1000] }} 
+                          transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+                        >
+                          {[...dummyBooks, ...dummyBooks, ...dummyBooks].map((img, i) => (
+                            <motion.div 
+                              key={i} 
+                              whileHover={{ y: -6, scale: 1.02, boxShadow: '0 0 20px rgba(255,255,255,0.1)' }}
+                              className="bg-primary border border-light rounded-xl overflow-hidden cursor-pointer shadow-soft group"
+                              style={{ minWidth: '140px', flex: '0 0 auto', transition: 'all 0.3s ease' }}
+                            >
+                              <div className="w-100 position-relative overflow-hidden" style={{ aspectRatio: '3/4' }}>
+                                <img src={img} alt="Book cover" className="w-100 h-100 object-cover book-cover-img transition-all" style={{ objectFit: 'cover', opacity: 0.8 }} />
+                                <div className="position-absolute bottom-0 w-100 h-50 bg-gradient-to-t from-black to-transparent opacity-60"></div>
                               </div>
-                            </div>
-                          </motion.div>
-                        ))}
+                              <div className="p-3">
+                                <div className="h-2 w-75 bg-secondary rounded-full mb-2"></div>
+                                <div className="h-2 w-50 bg-tertiary rounded-full"></div>
+                                <div className="mt-3 w-100 bg-tertiary h-1 rounded-full overflow-hidden">
+                                  <motion.div initial={{ width: 0 }} animate={{ width: `${30 + (i%3)*20}%` }} transition={{ delay: 1, duration: 1 }} className="h-100 bg-primary-500"></motion.div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </motion.div>
                       </div>
                     </div>
                   </div>
@@ -280,15 +288,25 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Inline Stats Section */}
-      <section className="border-y border-light bg-secondary position-relative">
+      {/* Stats Section */}
+      <section className="py-5 position-relative">
         <div className="container">
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-center py-2 divide-y md:divide-y-0 md:divide-x divide-border-light">
-            <div className="flex-1 w-100 text-center border-right-md border-light"><AnimatedCounter end={12000} label="Resources Available" /></div>
-            <div className="d-none d-md-block h-16 w-px bg-border-dark"></div>
-            <div className="flex-1 w-100 text-center border-right-md border-light"><AnimatedCounter end={3200} label="Active Readers" /></div>
-            <div className="d-none d-md-block h-16 w-px bg-border-dark"></div>
-            <div className="flex-1 w-100 text-center"><AnimatedCounter end={99} label="System Uptime" duration={2} /></div>
+          <div className="row justify-content-center gap-4">
+            <div className="col-12 col-md-3">
+              <motion.div whileHover={{ y: -5, boxShadow: '0 0 20px rgba(37,99,235,0.2)' }} className="bg-secondary border border-light rounded-xl pt-2 pb-0 text-center shadow-glow h-100">
+                 <AnimatedCounter end={12000} label="Resources Available" />
+              </motion.div>
+            </div>
+            <div className="col-12 col-md-3">
+              <motion.div whileHover={{ y: -5, boxShadow: '0 0 20px rgba(37,99,235,0.2)' }} className="bg-secondary border border-light rounded-xl pt-2 pb-0 text-center shadow-glow h-100">
+                 <AnimatedCounter end={3200} label="Active Readers" />
+              </motion.div>
+            </div>
+            <div className="col-12 col-md-3">
+              <motion.div whileHover={{ y: -5, boxShadow: '0 0 20px rgba(37,99,235,0.2)' }} className="bg-secondary border border-light rounded-xl pt-2 pb-0 text-center shadow-glow h-100">
+                 <AnimatedCounter end={99} label="System Uptime" duration={2} />
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -311,12 +329,20 @@ const Home = () => {
                 transition={{ duration: 1.5, delay: 0.5 }}
                 className="h-100 bg-primary-500 shadow-glow"
               ></motion.div>
+              <motion.div 
+                initial={{ left: 0 }} 
+                whileInView={{ left: '100%' }} 
+                viewport={{ once: true }} 
+                transition={{ duration: 1.5, delay: 0.5 }}
+                className="position-absolute w-3 h-3 rounded-circle bg-white shadow-glow"
+                style={{ top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }}
+              ></motion.div>
             </div>
 
             {[
-              { icon: <Search size={24}/>, step: "Step 1", title: "Discover", opacity: 0.5, desc: "Search across thousands of resources instantly. Our intelligent engine finds exactly what you need." },
-              { icon: <BookOpen size={24}/>, step: "Step 2", title: "Engage", opacity: 0.8, desc: "Borrow digital or physical copies seamlessly. Manage your reading queue with prioritization." },
-              { icon: <Database size={24}/>, step: "Step 3", title: "Synthesize", opacity: 1, desc: "Build your personal knowledge graph. Track insights and connections automatically." }
+              { icon: <Search size={24}/>, step: "Step 1", title: "Discover", opacity: 0.5, glow: 'none', desc: "Search across thousands of resources instantly. Our intelligent engine finds exactly what you need." },
+              { icon: <BookOpen size={24}/>, step: "Step 2", title: "Engage", opacity: 0.8, glow: '0 0 15px rgba(59,130,246,0.3)', desc: "Borrow digital or physical copies seamlessly. Manage your reading queue with prioritization." },
+              { icon: <Database size={24}/>, step: "Step 3", title: "Synthesize", opacity: 1, glow: '0 0 30px rgba(59,130,246,0.8)', desc: "Build your personal knowledge graph. Track insights and connections automatically." }
             ].map((step, index) => (
               <div key={index} className="col-12 col-lg-4 text-center position-relative z-10 px-lg-4">
                 <motion.div 
@@ -328,7 +354,7 @@ const Home = () => {
                 >
                   <div 
                     className="w-20 h-20 bg-secondary border border-light rounded-2xl d-flex align-items-center justify-content-center mb-4 shadow-strong text-white position-relative"
-                    style={{ opacity: step.opacity, transition: 'all 0.3s', zIndex: 10 }}
+                    style={{ opacity: step.opacity, boxShadow: step.glow, transition: 'all 0.3s', zIndex: 10 }}
                     onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
                     onMouseLeave={(e) => e.currentTarget.style.opacity = step.opacity}
                   >
@@ -350,26 +376,26 @@ const Home = () => {
       <section className="py-5 my-5 overflow-hidden position-relative bg-secondary border-y border-light">
         <div className="container py-5">
           <div className="row align-items-center position-relative z-10">
-            <div className="col-12 col-lg-5 mb-5 mb-lg-0 pr-lg-5">
+            <div className="col-12 col-lg-4 mb-5 mb-lg-0 pr-lg-5">
               <div className="badge border border-accent text-accent px-3 py-1 rounded-full mb-4 d-inline-block font-weight-semibold text-xs shadow-soft" style={{ background: 'rgba(245, 158, 11, 0.1)' }}>USP &bull; Signature Feature</div>
               <h2 className="display-4 font-weight-bold text-white mb-4 tracking-tight">Turn your library into a living intelligence system.</h2>
               <p className="text-lg text-secondary mb-5">
                 Libris automatically maps connections between authors, topics, and your reading history, transforming a static catalog into an interconnected neural network of insights.
               </p>
-              <Button variant="outline" className="rounded-full shadow-glow">Explore the Graph API</Button>
+              <Button variant="outline" className="rounded-full shadow-glow">Explore Your Knowledge Graph</Button>
             </div>
             
-            <div className="col-12 col-lg-7 position-relative">
-              <div className="rounded-3xl border border-light bg-primary overflow-hidden shadow-strong position-relative" style={{ height: '450px' }}>
+            <div className="col-12 col-lg-8 position-relative">
+              <div className="rounded-3xl border border-light overflow-hidden shadow-strong position-relative" style={{ height: '450px', background: 'radial-gradient(circle, rgba(59,130,246,0.15), transparent 60%), #020617' }}>
                 <div className="position-absolute top-0 left-0 w-100 h-100 opacity-20 pointer-events-none" style={{ backgroundImage: `radial-gradient(circle at 20px 20px, rgba(255,255,255,0.2) 2px, transparent 0)`, backgroundSize: '40px 40px' }}></div>
                 
                 {/* Advanced Graph Interactive Mockup */}
                 <div className="w-100 h-100 position-relative">
                   {/* Lines/Connections */}
                   <svg className="position-absolute w-100 h-100 top-0 left-0 pointer-events-none" style={{ zIndex: 1 }}>
-                    <motion.path d="M 150 150 Q 250 200 350 250" fill="transparent" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="2" />
-                    <motion.path d="M 350 250 Q 400 150 500 120" fill="transparent" stroke="rgba(59, 130, 246, 0.3)" strokeWidth="1" strokeDasharray="5,5" />
-                    <motion.path d="M 350 250 Q 300 350 200 400" fill="transparent" stroke="rgba(245, 158, 11, 0.4)" strokeWidth="2" />
+                    <motion.path d="M 150 150 Q 250 200 350 250" fill="transparent" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="2" strokeDasharray="5 5" animate={{ strokeDashoffset: [0, -20] }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} />
+                    <motion.path d="M 350 250 Q 400 150 500 120" fill="transparent" stroke="rgba(59, 130, 246, 0.3)" strokeWidth="1" strokeDasharray="5 5" animate={{ strokeDashoffset: [0, 20] }} transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }} />
+                    <motion.path d="M 350 250 Q 300 350 200 400" fill="transparent" stroke="rgba(245, 158, 11, 0.4)" strokeWidth="2" strokeDasharray="5 5" animate={{ strokeDashoffset: [0, -20] }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} />
                   </svg>
 
                   {/* Nodes */}
@@ -377,14 +403,15 @@ const Home = () => {
                     className="position-absolute w-16 h-16 bg-primary-600 rounded-circle border-2 border-primary-400 z-10 d-flex align-items-center justify-content-center text-white cursor-pointer shadow-glow"
                     style={{ left: '350px', top: '250px', transform: 'translate(-50%, -50%)' }}
                     whileHover={{ scale: 1.2 }}
+                    animate={{ y: [0, -8, 0] }} transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
                     onMouseEnter={() => setActiveGraphNode('core')}
                     onMouseLeave={() => setActiveGraphNode(null)}
                   >
                     <BookOpen size={24}/>
                     <AnimatePresence>
                       {activeGraphNode === 'core' && (
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="position-absolute bg-white text-dark text-xs p-2 rounded-md shadow-xl w-48 text-center" style={{ top: '-60px' }}>
-                          <strong>Machine Learning</strong><br/><span className="text-secondary">12 connected resources</span>
+                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="position-absolute bg-white text-dark text-xs p-2 rounded-md shadow-xl w-48 text-center" style={{ top: '-80px' }}>
+                          <strong>"Atomic Habits"</strong><br/><span className="text-secondary">Connected to: Productivity, Behavior, Systems</span>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -394,7 +421,7 @@ const Home = () => {
                     className="position-absolute w-12 h-12 bg-secondary rounded-circle border border-light z-10 d-flex align-items-center justify-content-center text-secondary cursor-pointer"
                     style={{ left: '150px', top: '150px', transform: 'translate(-50%, -50%)' }}
                     whileHover={{ scale: 1.2, backgroundColor: '#3B82F6', color: 'white', borderColor: '#60A5FA' }}
-                    animate={{ y: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 4 }}
+                    animate={{ y: [0, 5, 0], x: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                   >
                     <Users size={16}/>
                   </motion.div>
@@ -403,7 +430,7 @@ const Home = () => {
                     className="position-absolute w-14 h-14 bg-tertiary rounded-circle border border-accent z-10 d-flex align-items-center justify-content-center text-accent cursor-pointer shadow-soft"
                     style={{ left: '200px', top: '400px', transform: 'translate(-50%, -50%)' }}
                     whileHover={{ scale: 1.2 }}
-                    animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 3, delay: 1 }}
+                    animate={{ y: [0, -5, 0], x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 6, delay: 1, ease: "easeInOut" }}
                   >
                     <Database size={18}/>
                   </motion.div>
@@ -412,9 +439,10 @@ const Home = () => {
                     className="position-absolute w-10 h-10 bg-secondary rounded-circle border border-light z-10 d-flex align-items-center justify-content-center text-secondary cursor-pointer"
                     style={{ left: '500px', top: '120px', transform: 'translate(-50%, -50%)' }}
                     whileHover={{ scale: 1.2, backgroundColor: '#10B981', color: 'white' }}
+                    animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 3, delay: 0.5, ease: "easeInOut" }}
                   >
                     <BookOpen size={14}/>
-                  </motion.div>
+                   </motion.div>
                 </div>
               </div>
             </div>
@@ -425,7 +453,7 @@ const Home = () => {
       {/* Bottom CTA Section */}
       <section className="py-5 my-5 position-relative">
         <div className="container">
-          <div className="bg-gradient-to-r from-primary-900 to-primary text-center p-5 rounded-3xl position-relative overflow-hidden shadow-strong border border-primary-700">
+          <div className="text-center p-5 rounded-3xl position-relative overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(37,99,235,0.2), rgba(168,85,247,0.2))', border: '1px solid rgba(255,255,255,0.1)' }}>
             <div className="position-absolute top-0 right-0 w-[600px] h-[600px] bg-primary-500 rounded-full blur-[100px] opacity-20" style={{ transform: 'translate(30%, -30%)' }}></div>
             
             <div className="position-relative z-10 py-5">
@@ -441,13 +469,13 @@ const Home = () => {
               <h2 className="display-4 font-weight-bold text-white mb-4 tracking-tight" style={{ letterSpacing: '-0.02em' }}>
                 Build a smarter way to think,<br/>learn, and grow.
               </h2>
-              <p className="text-lg text-primary-100 mb-5 max-w-2xl mx-auto opacity-80">
+              <p className="text-lg mb-5 max-w-2xl mx-auto opacity-80" style={{ color: '#dbdbdb' }}>
                 Join over 3,000 knowledge workers who have transformed their personal libraries into active intelligence centers.
               </p>
-              <Button variant="primary" size="lg" onClick={() => navigate('/register')} className="rounded-full shadow-glow px-5 py-3 text-lg border-0 btn-white-hover">
+              <Button variant="primary" size="lg" onClick={() => navigate('/register')} className="rounded-full px-5 py-3 text-lg border-0 text-white bg-gradient-to-r from-primary-600 to-primary-400" style={{ boxShadow: '0 0 30px rgba(37,99,235,0.5)' }}>
                 Get Started Free
               </Button>
-              <div className="text-xs text-primary-100 mt-4 opacity-70">
+              <div className="text-xs mt-4 opacity-70" style={{ color: '#bdbdbd' }}>
                 No credit card required. Free 14-day trial on Pro.
               </div>
             </div>
@@ -466,42 +494,42 @@ const Home = () => {
                 </div>
                 <span className="font-weight-bold text-xl text-white">Libris</span>
               </div>
-              <p className="text-secondary text-sm pe-lg-5 mb-4">
+              <p className="text-secondary text-sm pe-lg-5 mb-4 opacity-80">
                 The modern knowledge OS for individuals and enterprise libraries. Organize, discover, and synthesize information faster.
               </p>
               <div className="d-flex gap-3">
-                 <div className="w-8 h-8 rounded-circle bg-tertiary border border-light d-flex align-items-center justify-content-center text-secondary cursor-pointer hover:text-white transition-all">𝕏</div>
-                 <div className="w-8 h-8 rounded-circle bg-tertiary border border-light d-flex align-items-center justify-content-center text-secondary cursor-pointer hover:text-white transition-all">in</div>
-                 <div className="w-8 h-8 rounded-circle bg-tertiary border border-light d-flex align-items-center justify-content-center text-secondary cursor-pointer hover:text-white transition-all">gh</div>
+                 <motion.div whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(255,255,255,0.2)' }} className="w-8 h-8 rounded-circle bg-tertiary border border-light d-flex align-items-center justify-content-center text-secondary cursor-pointer hover-text-white transition-all">𝕏</motion.div>
+                 <motion.div whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(255,255,255,0.2)' }} className="w-8 h-8 rounded-circle bg-tertiary border border-light d-flex align-items-center justify-content-center text-secondary cursor-pointer hover-text-white transition-all">in</motion.div>
+                 <motion.div whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(255,255,255,0.2)' }} className="w-8 h-8 rounded-circle bg-tertiary border border-light d-flex align-items-center justify-content-center text-secondary cursor-pointer hover-text-white transition-all">gh</motion.div>
               </div>
             </div>
             
             <div className="col-6 col-md-3 col-lg-2">
               <h4 className="text-white font-weight-semibold text-sm text-uppercase letter-spacing-wide mb-4">Product</h4>
               <ul className="list-unstyled d-flex flex-column gap-3 text-sm">
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">Features</a></li>
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">Pricing</a></li>
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">Knowledge Graph API</a></li>
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">Changelog</a></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">Features</a></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">Pricing</a></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">Knowledge Graph API</a></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">Changelog</a></li>
               </ul>
             </div>
             
             <div className="col-6 col-md-3 col-lg-2">
               <h4 className="text-white font-weight-semibold text-sm text-uppercase letter-spacing-wide mb-4">Company</h4>
               <ul className="list-unstyled d-flex flex-column gap-3 text-sm">
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">About Us</a></li>
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">Careers</a> <span className="badge bg-primary-900 text-primary-light text-xs ml-1 rounded-full border-0">Hiring</span></li>
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">Blog</a></li>
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">Contact</a></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">About Us</a></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">Careers</a> <span className="badge bg-primary-900 text-primary-light text-xs ml-1 rounded-full border-0">Hiring</span></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">Blog</a></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">Contact</a></li>
               </ul>
             </div>
             
             <div className="col-6 col-md-3 col-lg-2 mt-4 mt-md-0">
               <h4 className="text-white font-weight-semibold text-sm text-uppercase letter-spacing-wide mb-4">Legal</h4>
               <ul className="list-unstyled d-flex flex-column gap-3 text-sm">
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">Privacy Policy</a></li>
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">Terms of Service</a></li>
-                <li><a href="#" className="text-secondary hover-text-primary transition-all">Cookie Policy</a></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">Privacy Policy</a></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">Terms of Service</a></li>
+                <li><a href="#" className="text-secondary hover-text-primary transition-all footer-link position-relative">Cookie Policy</a></li>
               </ul>
             </div>
           </div>
