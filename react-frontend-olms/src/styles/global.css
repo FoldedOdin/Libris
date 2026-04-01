@@ -130,13 +130,9 @@ code {
   --border-radius-full: 9999px;
 
   /* Shadows - Depth System */
-  --box-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  --box-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
-  --box-shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.3);
-  --box-shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-  --box-shadow-navbar: 0 4px 20px rgba(0, 0, 0, 0.4);
-  --box-shadow-card: var(--box-shadow-md);
+  --box-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.2);
+  --box-shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.4);
+  --box-shadow-glow: 0 0 20px rgba(37, 99, 235, 0.5);
 
   /* Z-Index Scale */
   --z-dropdown: 1000;
@@ -1466,6 +1462,27 @@ html {
 .opacity-10 { opacity: 0.1; }
 .opacity-20 { opacity: 0.2; }
 .opacity-30 { opacity: 0.3; }
+.opacity-60 { opacity: 0.6; }
+.opacity-70 { opacity: 0.7; }
+.opacity-80 { opacity: 0.8; }
+.opacity-100 { opacity: 1; }
+
+.pointer-events-none { pointer-events: none; }
+.cursor-pointer { cursor: pointer; }
+
+.tracking-tight { letter-spacing: -0.025em; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+/* Custom component hovers used in Home.js */
+.book-card:hover .book-cover-img { opacity: 1 !important; transform: scale(1.05); }
+.nav-sidebar-item:hover { color: #ffffff !important; background: rgba(255,255,255,0.05); border-radius: 6px; }
+.btn-white-hover { background-color: #ffffff; color: var(--primary-color) !important; font-weight: bold; }
+.btn-white-hover:hover { background-color: var(--primary-50); color: var(--primary-800) !important; }
 
 .pointer-events-none { pointer-events: none; }
 .cursor-pointer { cursor: pointer; }
@@ -1520,9 +1537,9 @@ html {
 .border-primary-800 { border-color: #1e40af; }
 .border-border-dark { border-color: var(--border-dark); }
 
-.shadow-xl { box-shadow: var(--box-shadow-xl); }
-.shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-.shadow-primary-500\/50 { box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.5); }
+.shadow-soft { box-shadow: var(--box-shadow-soft); }
+.shadow-strong { box-shadow: var(--box-shadow-strong); }
+.shadow-glow { box-shadow: var(--box-shadow-glow); }
 
 .opacity-20 { opacity: 0.2; }
 .blur-\[100px\] { filter: blur(100px); }

@@ -39,56 +39,36 @@
 
 .btn-primary {
   color: #ffffff;
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-  border-color: #007bff;
-  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+  border: none;
+  box-shadow: var(--box-shadow-glow);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-  border-color: #0056b3;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-700) 100%);
   color: #ffffff;
   text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 30px rgba(37, 99, 235, 0.7);
 }
 
 .btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.4);
-  background: linear-gradient(135deg, #004085 0%, #003366 100%);
-}
-
-.btn-primary:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  box-shadow: var(--box-shadow-glow);
 }
 
 .btn-secondary {
-  color: #495057;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-color: #ced4da;
-  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.15);
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid var(--border-medium);
+  box-shadow: var(--box-shadow-soft);
 }
 
 .btn-secondary:hover {
-  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
-  border-color: #adb5bd;
-  color: #495057;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
+  color: var(--text-white);
   text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
-}
-
-.btn-secondary:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
-  background: linear-gradient(135deg, #dee2e6 0%, #ced4da 100%);
-}
-
-.btn-secondary:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.25);
 }
 
 .btn-success {
