@@ -14,12 +14,9 @@ const Sidebar = ({ isOpen, onToggle }) => {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Only render sidebar for admin users
-  if (!isAdmin()) {
-    return null;
-  }
-
   useEffect(() => {
+    if (!isAdmin()) return;
+
     const fetchStats = async () => {
       try {
         setIsLoading(true);
@@ -48,7 +45,12 @@ const Sidebar = ({ isOpen, onToggle }) => {
     };
 
     fetchStats();
-  }, []);
+  }, [isAdmin]);
+
+  // Only render sidebar for admin users
+  if (!isAdmin()) {
+    return null;
+  }
 
   const isActiveLink = (path) => {
     return location.pathname === path || location.pathname.startsWith(path + '/');

@@ -108,12 +108,11 @@ const Navbar = () => {
           ) : (
             // Guest navigation
             <div className="navbar-nav">
-              <Link to="/login" className="navbar-link" onClick={closeMobileMenu}>
-                Login
-              </Link>
-              <Link to="/register" className="navbar-link" onClick={closeMobileMenu}>
-                Register
-              </Link>
+              <Link to="/#features" className="navbar-link" onClick={closeMobileMenu}>Features</Link>
+              <Link to="/#pricing" className="navbar-link" onClick={closeMobileMenu}>Pricing</Link>
+              <Link to="/#about" className="navbar-link" onClick={closeMobileMenu}>About</Link>
+              <Link to="/login" className="navbar-link" onClick={closeMobileMenu}>Login</Link>
+              <Link to="/register" className="navbar-link" onClick={closeMobileMenu}>Get Started</Link>
             </div>
           )}
         </div>
