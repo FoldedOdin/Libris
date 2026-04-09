@@ -1,7 +1,7 @@
 {
   "name": "libris",
   "version": "1.0.0",
-  "description": "Libris - Modern Library Management System",
+  "description": "A modern web-based library management system built with Django REST Framework and React, featuring book borrowing, donations, sales, and role-based access control.",
   "scripts": {
     "dev": "concurrently --names \"BACKEND,FRONTEND\" --prefix-colors \"blue.bold,green.bold\" \"npm run backend\" \"npm run frontend\"",
     "backend": "cd \"Online Library Management System/library\" && python manage.py runserver",
@@ -11,9 +11,16 @@
   },
   "keywords": [
     "library",
-    "management",
+    "library-management",
     "django",
-    "react"
+    "django-rest-framework",
+    "react",
+    "python",
+    "javascript",
+    "rest-api",
+    "web-application",
+    "book-management",
+    "borrowing-system"
   ],
   "author": "",
   "license": "ISC",
